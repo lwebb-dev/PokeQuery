@@ -1,0 +1,67 @@
+﻿using PokeApiNet;
+using PokeLib;
+using System;
+using System.IO;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace PokeCache
+{
+    public class Application
+    {
+        private readonly PokeApiClient client;
+        private readonly string CACHE_DIRECTORY;
+
+        public Application()
+        {
+            this.client = new PokeApiClient();
+            this.CACHE_DIRECTORY = Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
+        }
+
+        public async Task RunAsync()
+        {
+            if (!Directory.Exists(this.CACHE_DIRECTORY))
+                Directory.CreateDirectory(this.CACHE_DIRECTORY);
+
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/pokemon.txt"))
+                await this.WriteNamedResourceFile<Pokemon>("pokemon");
+            else
+                Console.WriteLine("pokemon.txt exists, skipping...");
+
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/moves.txt"))
+                await this.WriteNamedResourceFile<Move>("moves");
+            else
+                Console.WriteLine("moves.txt exists, skipping...");
+
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/items.txt"))
+                await this.WriteNamedResourceFile<Item>("items");
+            else
+                Console.WriteLine("items.txt exists, skipping...");
+
+            Console.WriteLine("Done!");
+        }
+
+        private async Task WriteNamedResourceFile<T>(string resourceType)
+            where T : NamedApiResource
+        {
+            string filename = $"{this.CACHE_DIRECTORY}/{resourceType}.txt";
+            NamedApiResourceList<T> namedResources = await this.client.GetNamedResourcePageAsync<T>(100000, 0);
+            using StreamWriter file = new(filename);
+
+            foreach (var nr in namedResources.Results)
+            {
+                string json = JsonSerializer.Serialize(new CachedResource
+                {
+                    Name = nr.Name,
+                    ResourceType = resourceType,
+                    Url = nr.Url,
+                    Json = string.Empty
+                });
+
+                await file.WriteLineAsync(json);
+            }
+
+            await file.DisposeAsync();
+        }
+    }
+}

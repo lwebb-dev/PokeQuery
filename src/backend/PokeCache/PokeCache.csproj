@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove=".env" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PokeApiNet" Version="3.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PokeLib\PokeLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include=".env">
+			<CopyToOutputDirectory>always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+</Project>
