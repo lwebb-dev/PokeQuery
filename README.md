@@ -18,7 +18,7 @@ Next, run `.\scripts\build-env-files.py` to build .env files for each app projec
 
 Finally, build & run PokeCache project to cache PokeApi Resources:
 
-    cd .\src\PokeCache
+    cd .\src\backend\PokeCache
     dotnet build PokeCache.csproj
     cd .\bin\Debug\net6.0
     .\PokeCache.exe
