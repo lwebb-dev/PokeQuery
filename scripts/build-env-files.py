@@ -1,7 +1,7 @@
 import os
 
 repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-projects = [ "src/backend/PokeCache", "src/backend/PokeConsole" ]
+projects = [ "src/backend/PokeCache", "src/backend/PokeConsole", "src/backend/PokeQuery" ]
 envVars = [ "CACHE_DIRECTORY", "MAX_RESULT_SIZE" ]
 values = []
 

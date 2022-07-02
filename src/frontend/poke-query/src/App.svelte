@@ -17,8 +17,12 @@
   }
 
   function handleSearch(): any {
-    console.log("handleSearch hit!");
     results = [];
+
+    if (query === null || typeof(query) === "undefined" || query === "") {
+      return;
+    }
+
     while (pokemon.findIndex((x) => x.name.search(query) > -1 ) !== -1) {
       resultIndex = pokemon.findIndex((x) => x.name.search(query) > -1 );
       results.push(pokemon[resultIndex]);
@@ -39,7 +43,7 @@
 <main>
   <h1>PokeQuery</h1>
 
-  <input type="text" bind:value={query} />
+  <input type="text" bind:value={query} minlength="1" />
   <button on:click={handleSearch}>Search 🔎</button>
   <div class="cbSection">
     <div class="checkbox">
