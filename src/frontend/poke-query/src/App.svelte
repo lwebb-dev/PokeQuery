@@ -1,13 +1,6 @@
 <script lang="ts">
 
-  let pokemon: any[] = [
-    { name: "bulbasaur", type: "grass" },
-    { name: "charmander", type: "fire" },
-    { name: "squirtle", type: "water" },
-    { name: "pikachu", type: "electric" }
-  ];
   let results: any[] = [];
-  let resultIndex: number;
   let query: string;
 
   function handleKeyDown(event) {
@@ -16,26 +9,26 @@
     }
   }
 
-  function handleSearch(): any {
+  async function handleSearch() {
     results = [];
 
     if (query === null || typeof(query) === "undefined" || query === "") {
       return;
     }
 
-    while (pokemon.findIndex((x) => x.name.search(query) > -1 ) !== -1) {
-      resultIndex = pokemon.findIndex((x) => x.name.search(query) > -1 );
-      results.push(pokemon[resultIndex]);
-      pokemon.splice(resultIndex, 1);
-    }
+    let requestUri: string = `${process.env.API_BASE_URI}?query=${query}`;
 
-    console.log(results);
-    pokemon = [
-      { name: "bulbasaur", type: "grass" },
-      { name: "charmander", type: "fire" },
-      { name: "squirtle", type: "water" },
-      { name: "pikachu", type: "electric" }
-    ];
+    await fetch(requestUri)
+    .then(r => {
+      if (!r.ok) {
+        console.log("API FAILED TO RETURN 200 OK");
+        return;
+      }
+      return r.json();
+    })
+    .then(data => {
+      results = data;
+    });
   }
 
 </script>
@@ -64,7 +57,7 @@
     {#each results as result}
     <div class="resultItem">
       <h3>{result.name}</h3>
-      <h4>{result.type}</h4>
+      <h4>{result.resourceType}</h4>
     </div>
     {/each}
   </div>

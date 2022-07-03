@@ -7,11 +7,22 @@ using System.IO;
 
 LoadEnv();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddPokeCache();
 builder.Services.AddSingleton<IQueryService, QueryService>();
+
+builder.Services.AddCors();
 builder.Services.AddControllers();
+
 WebApplication app = builder.Build();
+
+app.UseCors(builder => builder
+     .AllowAnyOrigin()
+     .AllowAnyMethod()
+     .AllowAnyHeader());
+
 app.MapControllers();
+
 app.Run();
 
 static void LoadEnv()

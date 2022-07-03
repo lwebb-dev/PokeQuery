@@ -30,7 +30,8 @@ namespace PokeQuery.Services
             this.pokeCache.LoadResourceFileIntoCache($"{this.CACHE_DIRECTORY}\\items.txt");
 
 #pragma warning disable CA2253
-            this.logger.LogInformation("PokeCache Instance {0} Loaded With {1} Objects.", this.pokeCache.InstanceId, this.pokeCache.Cache.Count);
+            this.logger.LogInformation("PokeCache Instance {0} Loaded With {1} Objects.", 
+                this.pokeCache.InstanceId, this.pokeCache.Cache.Count);
 #pragma warning restore CA2253
         }
 
@@ -61,24 +62,24 @@ namespace PokeQuery.Services
             //    };
             //}
 
-            foreach (CachedResource item in result)
-            {
-                if (string.IsNullOrEmpty(item.Json))
-                {
-                    switch (item.ResourceType)
-                    {
-                        case "pokemon":
-                            item.Json = await this.GetPokeApiJsonResult<Pokemon>(item);
-                            break;
-                        case "items":
-                            item.Json = await this.GetPokeApiJsonResult<Item>(item);
-                            break;
-                        case "moves":
-                            item.Json = await this.GetPokeApiJsonResult<Move>(item);
-                            break;
-                    }
-                }
-            }
+            //foreach (CachedResource item in result)
+            //{
+            //    if (string.IsNullOrEmpty(item.Json))
+            //    {
+            //        switch (item.ResourceType)
+            //        {
+            //            case "pokemon":
+            //                item.Json = await this.GetPokeApiJsonResult<Pokemon>(item);
+            //                break;
+            //            case "items":
+            //                item.Json = await this.GetPokeApiJsonResult<Item>(item);
+            //                break;
+            //            case "moves":
+            //                item.Json = await this.GetPokeApiJsonResult<Move>(item);
+            //                break;
+            //        }
+            //    }
+            //}
 
             return result;
         }
