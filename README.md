@@ -23,4 +23,4 @@ Finally, build & run PokeCache project to cache PokeApi Resources:
     cd .\bin\Debug\net6.0
     .\PokeCache.exe
 
-You should now be able to build & run PokeConsole project and begin querying results against an in-memory cache of the resources pulled from PokeCache.
+You should now be able to build & run PokeQuery project and begin querying results against an in-memory cache of the resources pulled from PokeCache.
