@@ -7,13 +7,21 @@ namespace PokeLib.Services
 {
     public sealed class PokeCache : IPokeCache
     {
+        private static string FILE_EXTENSION => ".txt";
+        private static string[] RESOURCE_TYPES => new[] { "pokemon", "moves", "items"};
+
         public IList<CachedResource> Cache { get; }
         public Guid InstanceId { get; }
 
-        public PokeCache()
+        public PokeCache(string cacheDirectory)
         {
             this.Cache = new List<CachedResource>();
             this.InstanceId = Guid.NewGuid();
+
+            foreach (string resourceType in RESOURCE_TYPES)
+            {
+                this.LoadResourceFileIntoCache($"{cacheDirectory}\\{resourceType}{FILE_EXTENSION}");
+            }
         }
 
         /// <summary>
@@ -21,23 +29,21 @@ namespace PokeLib.Services
         /// </summary>
         /// <param name="fileDirectory">Exact file location on local filesystem</param>
         /// <returns>Number of new objects added to Cache</returns>
-        public int LoadResourceFileIntoCache(string fileDirectory)
+        private void LoadResourceFileIntoCache(string fileDirectory)
         {
-            int result = 0;
             string[] lines;
 
             if (!File.Exists(fileDirectory))
-                return result;
+                return;
 
             lines = File.ReadAllLines(fileDirectory);
 
             foreach (string line in lines)
             {
                 this.Cache.Add(JsonSerializer.Deserialize<CachedResource>(line));
-                result++;
             }
 
-            return result;
+            return;
         }
 
     }

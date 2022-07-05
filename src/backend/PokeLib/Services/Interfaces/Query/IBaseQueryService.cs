@@ -1,10 +1,9 @@
-﻿using PokeLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PokeQuery.Services
+namespace PokeLib.Services
 {
-    public interface IQueryService
+    public interface IBaseQueryService
     {
         Task<IEnumerable<CachedResource>> QueryAsync(string query);
         Task<string> QueryJsonAsync(string query);

@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PokeLib.Extensions;
-using PokeQuery.Services;
+using PokeLib.Services;
 using System;
 using System.IO;
 
 LoadEnv();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPokeCache();
-builder.Services.AddSingleton<IQueryService, QueryService>();
+builder.Services.AddPokeCache(Environment.GetEnvironmentVariable("CACHE_DIRECTORY"));
+builder.Services.AddSingleton<ITextFileQueryService, TextFileQueryService>();
 
 builder.Services.AddCors();
 builder.Services.AddControllers();

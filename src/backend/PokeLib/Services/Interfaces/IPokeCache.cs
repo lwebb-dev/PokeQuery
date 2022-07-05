@@ -7,6 +7,5 @@ namespace PokeLib.Services
     {
         IList<CachedResource> Cache { get; }
         Guid InstanceId { get; }
-        int LoadResourceFileIntoCache(string fileDirectory);
     }
 }

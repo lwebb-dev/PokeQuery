@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PokeLib;
-using PokeQuery.Services;
+using PokeLib.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,9 +10,9 @@ namespace PokeQuery.Controllers
     [Route("[controller]")]
     public class QueryController : ControllerBase
     {
-        private readonly IQueryService queryService;
+        private readonly ITextFileQueryService queryService;
 
-        public QueryController(IQueryService queryService)
+        public QueryController(ITextFileQueryService queryService)
         {
             this.queryService = queryService;
         }
