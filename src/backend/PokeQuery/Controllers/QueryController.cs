@@ -10,9 +10,10 @@ namespace PokeQuery.Controllers
     [Route("[controller]")]
     public class QueryController : ControllerBase
     {
-        private readonly ITextFileQueryService queryService;
+        //private readonly IInMemoryCacheQueryService queryService;
+        private readonly IRedisQueryService queryService;
 
-        public QueryController(ITextFileQueryService queryService)
+        public QueryController(IRedisQueryService queryService)
         {
             this.queryService = queryService;
         }

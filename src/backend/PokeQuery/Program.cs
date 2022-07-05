@@ -8,8 +8,12 @@ using System.IO;
 LoadEnv();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPokeCache(Environment.GetEnvironmentVariable("CACHE_DIRECTORY"));
-builder.Services.AddSingleton<ITextFileQueryService, TextFileQueryService>();
+string cacheDirectory = Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
+string redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
+builder.Services.AddInMemoryCache(cacheDirectory);
+builder.Services.AddRedisCache(cacheDirectory, redisConnectionString);
+builder.Services.AddSingleton<IInMemoryCacheQueryService, InMemoryCacheQueryService>();
+builder.Services.AddSingleton<IRedisQueryService, RedisQueryService>();
 
 builder.Services.AddCors();
 builder.Services.AddControllers();

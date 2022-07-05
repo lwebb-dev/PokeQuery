@@ -2,7 +2,6 @@
 using PokeApiNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -12,17 +11,13 @@ namespace PokeLib.Services
     {
         internal readonly ILogger<BaseQueryService> logger;
         internal readonly PokeApiClient client;
-        internal readonly string CACHE_DIRECTORY;
         internal readonly byte MAX_RESULT_SIZE;
-        internal readonly IPokeCache pokeCache;
 
-        public BaseQueryService(ILogger<BaseQueryService> logger, IPokeCache pokeCache)
+        public BaseQueryService(ILogger<BaseQueryService> logger)
         {
             this.logger = logger;
-            this.CACHE_DIRECTORY = Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
             this.MAX_RESULT_SIZE = byte.Parse(Environment.GetEnvironmentVariable("MAX_RESULT_SIZE"));
             this.client = new PokeApiClient();
-            this.pokeCache = pokeCache;
         }
 
         public abstract Task<IEnumerable<CachedResource>> QueryAsync(string query = "");
@@ -33,8 +28,24 @@ namespace PokeLib.Services
             return JsonSerializer.Serialize(result);
         }
 
-        internal abstract Task<string> GetPokeApiJsonResult<T>(CachedResource cachedResource)
-            where T : NamedApiResource;
+        public async Task<string> GetPokeApiJsonResult<T>(CachedResource cachedResource)
+            where T : NamedApiResource
+        {
+            string[] splitUri = cachedResource.Url.Split("/");
+            int id = int.Parse(splitUri[^2]);
+            T result = await this.client.GetResourceAsync<T>(id);
+            return JsonSerializer.Serialize(result);
+        }
+
+
+        internal static string[] GetQueryValues(string query)
+        {
+            if (string.IsNullOrEmpty(query) || query.Length < 3)
+                return Array.Empty<string>();
+
+            string sanitizedQuery = query.ToLower().Replace(' ', '-');
+            return sanitizedQuery.Split(' ');
+        }
 
     }
 }

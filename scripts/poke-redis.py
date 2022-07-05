@@ -36,7 +36,7 @@ if (len(sys.argv) == 3 and sys.argv[2].lower() == "--new-volume"):
 
 if (sys.argv[1].lower() == "up"):
     os.system("docker pull redis")
-    os.system(f"docker run --volume {volumeName}:/data --name {volumeName} -d redis redis-server --save 60 1 --loglevel warning")
+    os.system(f"docker run --volume {volumeName}:/data --name {volumeName} -p 6379:6379 -d redis redis-server --save 60 1 --loglevel warning")
 
 if (sys.argv[1].lower() == "down"):
     os.system(f"docker stop {volumeName}")

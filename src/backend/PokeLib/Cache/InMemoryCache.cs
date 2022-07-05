@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace PokeLib.Services
+namespace PokeLib.Cache
 {
-    public sealed class PokeCache : IPokeCache
+    public sealed class InMemoryCache : BaseCache, IInMemoryCache
     {
-        private static string FILE_EXTENSION => ".txt";
-        private static string[] RESOURCE_TYPES => new[] { "pokemon", "moves", "items"};
+        public IList<CachedResource> Cache { get; set; }
 
-        public IList<CachedResource> Cache { get; }
-        public Guid InstanceId { get; }
-
-        public PokeCache(string cacheDirectory)
+        public InMemoryCache(string cacheDirectory) 
+            : base(cacheDirectory)
         {
             this.Cache = new List<CachedResource>();
-            this.InstanceId = Guid.NewGuid();
 
-            foreach (string resourceType in RESOURCE_TYPES)
+            foreach (string resourceType in base.RESOURCE_TYPES)
             {
-                this.LoadResourceFileIntoCache($"{cacheDirectory}\\{resourceType}{FILE_EXTENSION}");
+                this.LoadResourceFileIntoCache($"{base.CACHE_DIRECTORY}\\{resourceType}{base.FILE_EXTENSION}");
             }
         }
 
@@ -29,7 +24,7 @@ namespace PokeLib.Services
         /// </summary>
         /// <param name="fileDirectory">Exact file location on local filesystem</param>
         /// <returns>Number of new objects added to Cache</returns>
-        private void LoadResourceFileIntoCache(string fileDirectory)
+        public override void LoadResourceFileIntoCache(string fileDirectory)
         {
             string[] lines;
 
@@ -45,6 +40,5 @@ namespace PokeLib.Services
 
             return;
         }
-
     }
 }

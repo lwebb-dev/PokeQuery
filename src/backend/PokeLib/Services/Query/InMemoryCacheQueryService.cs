@@ -1,38 +1,39 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
+using PokeLib.Cache;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PokeLib.Services
 {
-    public sealed class TextFileQueryService : BaseQueryService, ITextFileQueryService
+    public sealed class InMemoryCacheQueryService : BaseQueryService, IInMemoryCacheQueryService
     {
-        public TextFileQueryService(ILogger<BaseQueryService> logger, IPokeCache pokeCache) 
-            : base(logger, pokeCache)
+        private readonly IInMemoryCache inMemoryCache;
+
+        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache) 
+            : base(logger)
         {
+            this.inMemoryCache = inMemoryCache;
+
             #pragma warning disable CA2253
-            this.logger.LogInformation("PokeCache Instance {0} Loaded From Text Files With {1} Objects.",
-                this.pokeCache.InstanceId, this.pokeCache.Cache.Count);
+            this.logger.LogInformation("In Memory Cache Instance {0} Loaded With {1} Objects.",
+                this.inMemoryCache.InstanceId, this.inMemoryCache.Cache.Count);
             #pragma warning restore CA2253
         }
 
         public override async Task<IEnumerable<CachedResource>> QueryAsync(string query = "")
         {
             IList<CachedResource> result = new List<CachedResource>();
+            string[] queryValues = GetQueryValues(query);
 
-            if (string.IsNullOrEmpty(query) || query.Length < 3)
+            if (queryValues.Length <= 0)
                 return result;
 
-
-            string sanitizedQuery = query.ToLower().Replace(' ', '-');
-            string[] queryValues = sanitizedQuery.Split(' ');
-            result = this.pokeCache.Cache
+            result = this.inMemoryCache.Cache
                 .Where(x => x.Name.ContainsAny(queryValues))
                 //.Where(x => x.Name.IndexOfMany(queryValues) < 4)
                 .OrderBy(x => x.Name.IndexOfMany(queryValues))
-                .Take(this.MAX_RESULT_SIZE).ToList();
+                .Take(base.MAX_RESULT_SIZE).ToList();
 
             if (!result.Any())
                 return result;
@@ -66,14 +67,5 @@ namespace PokeLib.Services
 
             return result;
         }
-
-        internal override async Task<string> GetPokeApiJsonResult<T>(CachedResource cachedResource)
-        {
-            string[] splitUri = cachedResource.Url.Split("/");
-            int id = int.Parse(splitUri[^2]);
-            T result = await this.client.GetResourceAsync<T>(id);
-            return JsonSerializer.Serialize(result);
-        }
-
     }
 }
