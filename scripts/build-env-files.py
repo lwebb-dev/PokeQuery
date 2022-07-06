@@ -2,7 +2,7 @@ import os
 
 repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 projects = [ "src/backend/PokeCache", "src/backend/PokeQuery", "src/frontend/poke-query" ]
-envVars = [ "CACHE_DIRECTORY", "MAX_RESULT_SIZE", "API_BASE_URI", "REDIS_CONNECTION_STRING" ]
+envVars = [ "MAX_RESULT_SIZE", "API_BASE_URI", "REDIS_CONNECTION_STRING" ]
 values = []
 
 os.system("cls" if os.name == "nt" else "clear")
