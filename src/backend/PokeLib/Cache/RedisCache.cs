@@ -58,5 +58,10 @@ namespace PokeLib.Cache
 
             return JsonSerializer.Deserialize<CachedResource>(result);
         }
+
+        public bool UpdateCachedResource(CachedResource cachedResource)
+        {
+            return this.Db.StringSet(cachedResource.Name, JsonSerializer.Serialize(cachedResource));
+        }
     }
 }

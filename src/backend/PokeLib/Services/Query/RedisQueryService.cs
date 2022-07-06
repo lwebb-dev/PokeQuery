@@ -37,6 +37,9 @@ namespace PokeLib.Services
 
             foreach (CachedResource result in results)
             {
+                if (results.Count == 1 && results[0] == null)
+                    break;
+
                 if (string.IsNullOrEmpty(result.Json))
                 {
                     switch (result.ResourceType)
@@ -51,6 +54,8 @@ namespace PokeLib.Services
                             result.Json = await base.GetPokeApiJsonResultAsync<Move>(result);
                             break;
                     }
+
+                    this.redisCache.UpdateCachedResource(result);
                 }
             }
 
