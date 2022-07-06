@@ -20,8 +20,7 @@ namespace PokeCache
 
         public async Task RunAsync()
         {
-            if (!Directory.Exists(this.CACHE_DIRECTORY))
-                Directory.CreateDirectory(this.CACHE_DIRECTORY);
+            Directory.CreateDirectory(this.CACHE_DIRECTORY);
 
             if (!File.Exists($"{this.CACHE_DIRECTORY}/pokemon.txt"))
                 await this.WriteNamedResourceFile<Pokemon>("pokemon");
@@ -44,9 +43,11 @@ namespace PokeCache
         private async Task WriteNamedResourceFile<T>(string resourceType)
             where T : NamedApiResource
         {
-            string filename = $"{this.CACHE_DIRECTORY}/{resourceType}.txt";
+            DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{resourceType}");
+            string absoluteFilename = $"{resourceDir.FullName}.txt";
             NamedApiResourceList<T> namedResources = await this.client.GetNamedResourcePageAsync<T>(100000, 0);
-            using StreamWriter file = new(filename);
+
+            using StreamWriter file = new(absoluteFilename);
 
             foreach (var nr in namedResources.Results)
             {
@@ -59,8 +60,18 @@ namespace PokeCache
                 });
 
                 await file.WriteLineAsync(json);
+
+                if (!File.Exists($"{resourceDir}/{nr.Name}.txt"))
+                    await WriteBlankJsonTextFile($"{resourceDir}/{nr.Name}.txt");
             }
 
+            await file.DisposeAsync();
+        }
+
+        private static async Task WriteBlankJsonTextFile(string absoluteFilePath)
+        {
+            using StreamWriter file = new(absoluteFilePath);
+            await file.WriteAsync(string.Empty);
             await file.DisposeAsync();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PokeApiNet;
 using PokeLib.Cache;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,8 +10,8 @@ namespace PokeLib.Services
     public class RedisQueryService : BaseQueryService, IRedisQueryService
     {
         private readonly IRedisCache redisCache;
-        public RedisQueryService(ILogger<BaseQueryService> logger, IRedisCache redisCache, IConfiguration configuration) 
-            : base(logger, configuration)
+        public RedisQueryService(ILogger<BaseQueryService> logger, IRedisCache redisCache, IConfiguration configuration, PokeApiClient client) 
+            : base(logger, configuration, client)
         {
             this.redisCache = redisCache;
 
@@ -23,18 +24,37 @@ namespace PokeLib.Services
 
         public override async Task<IEnumerable<CachedResource>> QueryAsync(string query = "")
         {
-            IList<CachedResource> result = new List<CachedResource>();
+            IList<CachedResource> results = new List<CachedResource>();
             string[] queryValues = GetQueryValues(query);
 
             if (queryValues.Length <= 0)
-                return result;
+                return results;
 
            foreach (string queryValue in queryValues)
+           {
+               results.Add(await this.redisCache.GetCachedResourceAsync(queryValue));
+           }
+
+            foreach (CachedResource result in results)
             {
-                result.Add(await this.redisCache.GetCachedResourceAsync(queryValue));
+                if (string.IsNullOrEmpty(result.Json))
+                {
+                    switch (result.ResourceType)
+                    {
+                        case "pokemon":
+                            result.Json = await base.GetPokeApiJsonResultAsync<Pokemon>(result);
+                            break;
+                        case "items":
+                            result.Json = await base.GetPokeApiJsonResultAsync<Item>(result);
+                            break;
+                        case "moves":
+                            result.Json = await base.GetPokeApiJsonResultAsync<Move>(result);
+                            break;
+                    }
+                }
             }
 
-           return result;
+            return results;
         }
     }
 }

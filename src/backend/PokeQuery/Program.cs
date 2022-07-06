@@ -13,6 +13,7 @@ IConfiguration configuration = builder.Configuration;
 
 builder.WebHost.UseUrls(configuration["API_BASE_URI"]);
 
+builder.Services.AddPokeApiClient();
 builder.Services.AddInMemoryCache(configuration);
 builder.Services.AddRedisCache(configuration);
 builder.Services.AddSingleton<IInMemoryCacheQueryService, InMemoryCacheQueryService>();

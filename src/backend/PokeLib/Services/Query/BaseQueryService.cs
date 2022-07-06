@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -15,12 +16,15 @@ namespace PokeLib.Services
         internal readonly PokeApiClient client;
 
         internal byte MAX_RESULT_SIZE => byte.Parse(this.configuration["MAX_RESULT_SIZE"]);
+        private string CACHE_DIRECTORY => this.configuration["CACHE_DIRECTORY"];
+        private string FILE_EXTENSION => ".txt";
 
-        public BaseQueryService(ILogger<BaseQueryService> logger, IConfiguration configuration)
+
+        public BaseQueryService(ILogger<BaseQueryService> logger, IConfiguration configuration, PokeApiClient client)
         {
             this.logger = logger;
             this.configuration = configuration;
-            this.client = new PokeApiClient();
+            this.client = client;
         }
 
         public abstract Task<IEnumerable<CachedResource>> QueryAsync(string query = "");
@@ -31,15 +35,18 @@ namespace PokeLib.Services
             return JsonSerializer.Serialize(result);
         }
 
-        public async Task<string> GetPokeApiJsonResult<T>(CachedResource cachedResource)
+        public async Task<string> GetPokeApiJsonResultAsync<T>(CachedResource cachedResource)
             where T : NamedApiResource
         {
             string[] splitUri = cachedResource.Url.Split("/");
             int id = int.Parse(splitUri[^2]);
             T result = await this.client.GetResourceAsync<T>(id);
-            return JsonSerializer.Serialize(result);
+            this.logger.LogInformation("Request made to PokeApi on {0} at {1}", DateTime.UtcNow, cachedResource.Url);
+            cachedResource.Json = JsonSerializer.Serialize(result);
+            string absoluteJsonFilePath = $"{this.CACHE_DIRECTORY}/{cachedResource.ResourceType}/{cachedResource.Name}{FILE_EXTENSION}";
+            await File.WriteAllTextAsync(absoluteJsonFilePath, cachedResource.Json);
+            return cachedResource.Json;
         }
-
 
         internal static string[] GetQueryValues(string query)
         {

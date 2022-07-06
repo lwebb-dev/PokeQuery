@@ -19,22 +19,25 @@ namespace PokeLib.Cache
 
             foreach (string resourceType in base.RESOURCE_TYPES)
             {
-                this.LoadResourceFileIntoCache($"{base.CACHE_DIRECTORY}\\{resourceType}{base.FILE_EXTENSION}");
+                this.LoadResourceFileIntoCache(resourceType);
             }
         }
 
-        public override void LoadResourceFileIntoCache(string fileDirectory)
+        public override void LoadResourceFileIntoCache(string resourceType)
         {
-            if (!File.Exists(fileDirectory))
+            string absoluteResourceDir = $"{base.CACHE_DIRECTORY}\\{resourceType}";
+            string absoluteFilepath = $"{absoluteResourceDir}{base.FILE_EXTENSION}";
+            if (!File.Exists(absoluteFilepath))
                 return;
 
-            string[] lines = File.ReadAllLines(fileDirectory);
+            string[] lines = File.ReadAllLines(absoluteFilepath);
             CachedResource resource;
 
             foreach (string line in lines)
             {
                 resource = JsonSerializer.Deserialize<CachedResource>(line);
-                this.Db.StringSet(resource.Name, line);
+                resource.Json = File.ReadAllText($"{absoluteResourceDir}/{resource.Name}{base.FILE_EXTENSION}");
+                this.Db.StringSet(resource.Name, JsonSerializer.Serialize(resource));
             }
 
             return;

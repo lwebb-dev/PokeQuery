@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PokeApiNet;
 using PokeLib.Cache;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace PokeLib.Services
     {
         private readonly IInMemoryCache inMemoryCache;
 
-        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache, IConfiguration configuration) 
-            : base(logger, configuration)
+        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache, IConfiguration configuration, PokeApiClient client) 
+            : base(logger, configuration, client)
         {
             this.inMemoryCache = inMemoryCache;
 
@@ -47,24 +48,24 @@ namespace PokeLib.Services
             //    };
             //}
 
-            //foreach (CachedResource item in result)
-            //{
-            //    if (string.IsNullOrEmpty(item.Json))
-            //    {
-            //        switch (item.ResourceType)
-            //        {
-            //            case "pokemon":
-            //                item.Json = await this.GetPokeApiJsonResult<Pokemon>(item);
-            //                break;
-            //            case "items":
-            //                item.Json = await this.GetPokeApiJsonResult<Item>(item);
-            //                break;
-            //            case "moves":
-            //                item.Json = await this.GetPokeApiJsonResult<Move>(item);
-            //                break;
-            //        }
-            //    }
-            //}
+            foreach (CachedResource item in result)
+            {
+                if (string.IsNullOrEmpty(item.Json))
+                {
+                    switch (item.ResourceType)
+                    {
+                        case "pokemon":
+                            item.Json = await this.GetPokeApiJsonResultAsync<Pokemon>(item);
+                            break;
+                        case "items":
+                            item.Json = await this.GetPokeApiJsonResultAsync<Item>(item);
+                            break;
+                        case "moves":
+                            item.Json = await this.GetPokeApiJsonResultAsync<Move>(item);
+                            break;
+                    }
+                }
+            }
 
             return result;
         }
