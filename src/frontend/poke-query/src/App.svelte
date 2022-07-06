@@ -6,6 +6,7 @@
   function handleKeyDown(event) {
     if (event.keyCode === 13) {
       handleSearch();
+
     }
   }
 
@@ -28,8 +29,10 @@
     })
     .then(data => {
       results = data;
-    });
-  }
+      results.forEach(x => x.json = JSON.parse(x.json));
+  });
+  console.log(results[0])
+}
 
 </script>
 
@@ -56,8 +59,10 @@
   <div class="resultContainer">
     {#each results as result}
     <div class="resultItem">
-      <h3>{result.name}</h3>
-      <h4>{result.resourceType}</h4>
+      <h3>{result.json.Name}</h3>
+      {#each result.json.Types as type}
+        <h4>{type.Type.Name}</h4>
+      {/each}
     </div>
     {/each}
   </div>
