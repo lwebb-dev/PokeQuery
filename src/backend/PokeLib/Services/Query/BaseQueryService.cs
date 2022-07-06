@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,15 @@ namespace PokeLib.Services
     public abstract class BaseQueryService : IBaseQueryService
     {
         internal readonly ILogger<BaseQueryService> logger;
+        internal readonly IConfiguration configuration;
         internal readonly PokeApiClient client;
-        internal readonly byte MAX_RESULT_SIZE;
 
-        public BaseQueryService(ILogger<BaseQueryService> logger)
+        internal byte MAX_RESULT_SIZE => byte.Parse(this.configuration["MAX_RESULT_SIZE"]);
+
+        public BaseQueryService(ILogger<BaseQueryService> logger, IConfiguration configuration)
         {
             this.logger = logger;
-            this.MAX_RESULT_SIZE = byte.Parse(Environment.GetEnvironmentVariable("MAX_RESULT_SIZE"));
+            this.configuration = configuration;
             this.client = new PokeApiClient();
         }
 

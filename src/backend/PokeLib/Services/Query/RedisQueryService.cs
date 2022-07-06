@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PokeLib.Cache;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,8 +9,8 @@ namespace PokeLib.Services
     public class RedisQueryService : BaseQueryService, IRedisQueryService
     {
         private readonly IRedisCache redisCache;
-        public RedisQueryService(ILogger<BaseQueryService> logger, IRedisCache redisCache) 
-            : base(logger)
+        public RedisQueryService(ILogger<BaseQueryService> logger, IRedisCache redisCache, IConfiguration configuration) 
+            : base(logger, configuration)
         {
             this.redisCache = redisCache;
 

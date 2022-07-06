@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PokeLib.Cache;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace PokeLib.Services
     {
         private readonly IInMemoryCache inMemoryCache;
 
-        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache) 
-            : base(logger)
+        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache, IConfiguration configuration) 
+            : base(logger, configuration)
         {
             this.inMemoryCache = inMemoryCache;
 
