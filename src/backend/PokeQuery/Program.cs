@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PokeLib.Extensions;
 using PokeLib.Services;
 using PokeLib.Utilities;
-using System;
 
 EnvironmentVarUtility.LoadEnvironmentVariablesFromDotEnv();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-string cacheDirectory = Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
-string redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
-builder.Services.AddInMemoryCache(cacheDirectory);
-builder.Services.AddRedisCache(cacheDirectory, redisConnectionString);
+IConfiguration configuration = builder.Configuration;
+
+builder.WebHost.UseUrls(configuration["API_BASE_URI"]);
+
+builder.Services.AddInMemoryCache(configuration);
+builder.Services.AddRedisCache(configuration);
 builder.Services.AddSingleton<IInMemoryCacheQueryService, InMemoryCacheQueryService>();
 builder.Services.AddSingleton<IRedisQueryService, RedisQueryService>();
 
