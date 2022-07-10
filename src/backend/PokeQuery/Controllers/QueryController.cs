@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PokeLib;
+using PokeLib.Models;
 using PokeLib.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,16 +19,16 @@ namespace PokeQuery.Controllers
             this.queryService = queryService;
         }
 
-        [HttpGet("/")]
-        public async Task<IEnumerable<CachedResource>> GetAsync(string query)
+        [HttpPost("/query")]
+        public async Task<ActionResult<IEnumerable<CachedResource>>> GetAsync(QueryOptions json)
         {
-            return await this.queryService.QueryAsync(query);
+            return Ok(await this.queryService.QueryAsync(json));
         }
 
-        [HttpGet("/json")]
-        public async Task<string> GetJsonAsync(string query)
+        [HttpPost("/json")]
+        public async Task<ActionResult<string>> GetJsonAsync(QueryOptions json)
         {
-            return await this.queryService.QueryJsonAsync(query);
+            return Ok(await this.queryService.QueryJsonAsync(json));
         }
     }
 }

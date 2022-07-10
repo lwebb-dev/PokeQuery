@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokeLib.Cache;
+using PokeLib.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,12 @@ namespace PokeLib.Services
     {
         private readonly IInMemoryCache inMemoryCache;
 
-        public InMemoryCacheQueryService(ILogger<InMemoryCacheQueryService> logger, IInMemoryCache inMemoryCache, IConfiguration configuration, PokeApiClient client) 
-            : base(logger, configuration, client)
+        public InMemoryCacheQueryService(
+            ILogger<InMemoryCacheQueryService> logger, 
+            IInMemoryCache inMemoryCache, 
+            IConfiguration configuration, 
+            PokeApiClient client
+            ) : base(logger, configuration, client)
         {
             this.inMemoryCache = inMemoryCache;
 
@@ -23,22 +28,24 @@ namespace PokeLib.Services
             #pragma warning restore CA2253
         }
 
-        public override async Task<IEnumerable<CachedResource>> QueryAsync(string query = "")
+        public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)
         {
-            IList<CachedResource> result = new List<CachedResource>();
-            string[] queryValues = GetQueryValues(query);
+            IList<CachedResource> results = new List<CachedResource>();
+            string query = base.GetSanitizedQuery(json.Query);
 
-            if (queryValues.Length <= 0)
-                return result;
+            if (string.IsNullOrEmpty(query))
+                return results;
 
-            result = this.inMemoryCache.Cache
-                .Where(x => x.Name.ContainsAny(queryValues))
+            results = this.inMemoryCache.Cache
+                .Where(x => x.Name.Contains(query))
                 //.Where(x => x.Name.IndexOfMany(queryValues) < 4)
-                .OrderBy(x => x.Name.IndexOfMany(queryValues))
+                .OrderBy(x => x.Name.IndexOfMany(query))
                 .Take(base.MAX_RESULT_SIZE).ToList();
 
-            if (!result.Any())
-                return result;
+            if (!results.Any())
+                return results;
+
+            results = base.FilterByTypeOptions(results, json);
 
             //if (queryResult.First().Name.ToLower().Replace(' ', '-') == sanitizedQuery)
             //{
@@ -48,26 +55,12 @@ namespace PokeLib.Services
             //    };
             //}
 
-            foreach (CachedResource item in result)
+            foreach (CachedResource result in results)
             {
-                if (string.IsNullOrEmpty(item.Json))
-                {
-                    switch (item.ResourceType)
-                    {
-                        case "pokemon":
-                            item.Json = await this.GetPokeApiJsonResultAsync<Pokemon>(item);
-                            break;
-                        case "items":
-                            item.Json = await this.GetPokeApiJsonResultAsync<Item>(item);
-                            break;
-                        case "moves":
-                            item.Json = await this.GetPokeApiJsonResultAsync<Move>(item);
-                            break;
-                    }
-                }
+                result.Json = await base.GetFullResourceFromPokeApiAsync(result);
             }
 
-            return result;
+            return results;
         }
     }
 }

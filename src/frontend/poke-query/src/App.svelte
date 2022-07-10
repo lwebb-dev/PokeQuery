@@ -2,6 +2,9 @@
 
   let results: any[] = [];
   let query: string;
+  let includePokemon: boolean = true;
+  let includeItems: boolean = false;
+  let includeMoves: boolean = false;
 
   const capitalize = (value: string): string => {
     
@@ -24,9 +27,24 @@
       return;
     }
 
-    let requestUri: string = `${process.env.API_BASE_URI}?query=${query}`;
+    let requestUri: string = `${process.env.API_BASE_URI}/query`;
+    let requestBody = {
+      Query: query, 
+      IncludePokemon: includePokemon,
+      IncludeItems: includeItems,
+      IncludeMoves: includeMoves
+    };
 
-    await fetch(requestUri)
+    console.log(requestBody);
+
+    await fetch(requestUri, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestBody)
+  })
     .then(r => {
       if (!r.ok) {
         console.log("API FAILED TO RETURN 200 OK");
@@ -50,15 +68,15 @@
   <button on:click={handleSearch}>Search 🔎</button>
   <div class="cbSection">
     <div class="checkbox">
-      <input id ="cbPkmn" type="checkbox" checked />
+      <input id ="cbPkmn" type="checkbox" bind:checked={includePokemon} />
       <label for="cbPkmn">Pokemon</label>  
     </div>
     <div class="checkbox">
-      <input id ="cbItems" type="checkbox" />
+      <input id ="cbItems" type="checkbox" bind:checked={includeItems} />
       <label for="cbItems">Items</label>  
     </div>
     <div class="checkbox">
-      <input id ="cbMoves" type="checkbox" />
+      <input id ="cbMoves" type="checkbox" bind:checked={includeMoves} />
       <label for="cbMoves">Moves</label>  
     </div>  
   </div>

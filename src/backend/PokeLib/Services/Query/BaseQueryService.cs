@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokeLib.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,11 +28,11 @@ namespace PokeLib.Services
             this.client = client;
         }
 
-        public abstract Task<IEnumerable<CachedResource>> QueryAsync(string query = "");
+        public abstract Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json);
 
-        public async Task<string> QueryJsonAsync(string query = "")
+        public async Task<string> QueryJsonAsync(QueryOptions json)
         {
-            IEnumerable<CachedResource> result = await this.QueryAsync(query);
+            IEnumerable<CachedResource> result = await this.QueryAsync(json);
             return JsonSerializer.Serialize(result);
         }
 
@@ -48,14 +49,59 @@ namespace PokeLib.Services
             return cachedResource.Json;
         }
 
-        internal static string[] GetQueryValues(string query)
+        internal string GetSanitizedQuery(string query)
         {
             if (string.IsNullOrEmpty(query) || query.Length < 3)
-                return Array.Empty<string>();
+                return string.Empty;
 
-            string sanitizedQuery = query.ToLower().Replace(' ', '-');
-            return sanitizedQuery.Split(' ');
+            return query.ToLower().Replace(' ', '-');
         }
 
+        internal IList<CachedResource> FilterByTypeOptions(IList<CachedResource> cachedResources, QueryOptions options)
+        {
+            List<CachedResource> filteredResults = new List<CachedResource>();
+
+            foreach (CachedResource cachedResource in cachedResources)
+            {
+                if (cachedResource.ResourceType == "pokemon" && options.IncludePokemon)
+                {
+                    filteredResults.Add(cachedResource);
+                    continue;
+                }
+
+                if (cachedResource.ResourceType == "item" && options.IncludeItems)
+                {
+                    filteredResults.Add(cachedResource);
+                    continue;
+                }
+
+                if (cachedResource.ResourceType == "move" && options.IncludeMoves)
+                {
+                    filteredResults.Add(cachedResource);
+                    continue;
+                }
+            }
+
+            return filteredResults;
+        }
+
+        internal async Task<string> GetFullResourceFromPokeApiAsync(CachedResource resource)
+        {
+            if (!string.IsNullOrEmpty(resource.Json))
+                return resource.Json;
+
+            if (resource.ResourceType == "pokemon")
+            {
+                return await this.GetPokeApiJsonResultAsync<Pokemon>(resource);
+            }
+
+            if (resource.ResourceType == "items")
+                return await this.GetPokeApiJsonResultAsync<Item>(resource);
+
+            if (resource.ResourceType == "moves")
+                return await this.GetPokeApiJsonResultAsync<Move>(resource);
+
+            throw new NotImplementedException("Unknown Resource Type.");
+        }
     }
 }
