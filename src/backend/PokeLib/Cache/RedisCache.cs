@@ -1,4 +1,5 @@
 ﻿using StackExchange.Redis;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -45,8 +46,26 @@ namespace PokeLib.Cache
 
         public int GetKeyCount()
         {
-            IServer server = this.Redis.GetServer(this.Redis.GetEndPoints().First());
-            return server.Keys(pattern: "*").Count();
+            return this.GetKeys("*").Count();
+        }
+
+        public async Task<IEnumerable<CachedResource>> GetCachedResourcesByPatternAsync(string pattern)
+        {
+            IEnumerable<RedisKey> keys = this.GetKeys(pattern);
+            IList<CachedResource> results = new List<CachedResource>();
+            string keyString = string.Empty;
+
+            foreach (RedisKey key in keys)
+            {
+                keyString = key.ToString();
+
+                if (key.ToString() == "(null)")
+                    continue;
+
+                results.Add(await this.GetCachedResourceAsync(keyString));
+            }
+
+            return results;
         }
 
         public async Task<CachedResource> GetCachedResourceAsync(string key)
@@ -62,6 +81,12 @@ namespace PokeLib.Cache
         public bool UpdateCachedResource(CachedResource cachedResource)
         {
             return this.Db.StringSet(cachedResource.Name, JsonSerializer.Serialize(cachedResource));
+        }
+
+        private IEnumerable<RedisKey> GetKeys(string pattern)
+        {
+            IServer server = this.Redis.GetServer(this.Redis.GetEndPoints().First());
+            return server.Keys(pattern: pattern);
         }
     }
 }

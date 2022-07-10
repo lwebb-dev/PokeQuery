@@ -4,6 +4,7 @@ using PokeApiNet;
 using PokeLib.Cache;
 using PokeLib.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PokeLib.Services
@@ -29,18 +30,18 @@ namespace PokeLib.Services
 
         public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)
         {
-            IList<CachedResource> results = new List<CachedResource>();
+            IEnumerable<CachedResource> results = Enumerable.Empty<CachedResource>();
             string query = base.GetSanitizedQuery(json.Query);
 
             if (string.IsNullOrEmpty(query))
                 return results;
 
-            results.Add(await this.redisCache.GetCachedResourceAsync(query));
-            results = base.FilterByTypeOptions(results, json);
+            results = await this.redisCache.GetCachedResourcesByPatternAsync($"*{query}*");
+            results = base.FilterByTypeOptions(results, json).Take(base.MAX_RESULT_SIZE);
 
             foreach (CachedResource result in results)
             {
-                if (results.Count == 1 && results[0] == null)
+                if (results.Count() == 1 && results.First() == null)
                     break;
 
                 result.Json = await base.GetFullResourceFromPokeApiAsync(result);

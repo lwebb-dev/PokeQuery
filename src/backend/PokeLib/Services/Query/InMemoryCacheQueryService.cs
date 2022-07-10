@@ -30,7 +30,7 @@ namespace PokeLib.Services
 
         public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)
         {
-            IList<CachedResource> results = new List<CachedResource>();
+            IEnumerable<CachedResource> results = Enumerable.Empty<CachedResource>();
             string query = base.GetSanitizedQuery(json.Query);
 
             if (string.IsNullOrEmpty(query))
@@ -40,7 +40,7 @@ namespace PokeLib.Services
                 .Where(x => x.Name.Contains(query))
                 //.Where(x => x.Name.IndexOfMany(queryValues) < 4)
                 .OrderBy(x => x.Name.IndexOfMany(query))
-                .Take(base.MAX_RESULT_SIZE).ToList();
+                .Take(base.MAX_RESULT_SIZE);
 
             if (!results.Any())
                 return results;

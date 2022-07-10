@@ -8,9 +8,16 @@
 
   const capitalize = (value: string): string => {
     
-    let chars = value.split('');
-    chars[0] = value.toUpperCase()[0];
-    return chars.join('');
+    let words: string[] = value.split('-');
+    let newWords: string[] = [];
+
+    words.forEach((x) => {
+      let chars = x.split('');
+      chars[0] = x.toUpperCase()[0];
+      newWords.push(chars.join(''));
+    });
+
+    return newWords.join(' ');
   }
 
   const handleKeyDown = (event): void => {
@@ -84,7 +91,7 @@
   <div class="resultContainer">
     {#each results as result}
     <div class="resultItem">
-      <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+      <!-- <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/> -->
       <h3>{capitalize(result.json.Name)}</h3>
     </div>
     {/each}

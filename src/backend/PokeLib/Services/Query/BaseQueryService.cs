@@ -57,7 +57,7 @@ namespace PokeLib.Services
             return query.ToLower().Replace(' ', '-');
         }
 
-        internal IList<CachedResource> FilterByTypeOptions(IList<CachedResource> cachedResources, QueryOptions options)
+        internal IList<CachedResource> FilterByTypeOptions(IEnumerable<CachedResource> cachedResources, QueryOptions options)
         {
             List<CachedResource> filteredResults = new List<CachedResource>();
 
@@ -69,13 +69,13 @@ namespace PokeLib.Services
                     continue;
                 }
 
-                if (cachedResource.ResourceType == "item" && options.IncludeItems)
+                if (cachedResource.ResourceType == "items" && options.IncludeItems)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
                 }
 
-                if (cachedResource.ResourceType == "move" && options.IncludeMoves)
+                if (cachedResource.ResourceType == "moves" && options.IncludeMoves)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
