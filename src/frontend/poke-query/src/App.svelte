@@ -20,6 +20,10 @@
     return newWords.join(' ');
   }
 
+  const interpolateEffectChance = (effect: string, chance: number): string => {
+    return effect.replaceAll("$effect_chance%", `${chance}%`);
+  };
+
   const handleKeyDown = (event): void => {
     if (event.keyCode === 13) {
       handleSearch();
@@ -42,8 +46,6 @@
       IncludeMoves: includeMoves
     };
 
-    console.log(requestBody);
-
     await fetch(requestUri, {
     method: 'POST',
     headers: {
@@ -63,7 +65,7 @@
       results = data;
       results.forEach(x => x.json = JSON.parse(x.json));
   });
-  console.log(results[0].json)
+  console.log(results)
 }
 
 </script>
@@ -89,11 +91,36 @@
   </div>
 
   <div class="resultContainer">
+
     {#each results as result}
-    <div class="resultItem">
-      <!-- <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/> -->
-      <h3>{capitalize(result.json.Name)}</h3>
-    </div>
+      {#if result.resourceType === "pokemon"}
+        <div class="result pkmn">
+          <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+          <h3>{capitalize(result.json.Name)}</h3>
+          <p>
+            {#each result.json.Types as pkmnType}
+              <span class="typeChiclet">
+                {capitalize(pkmnType.Type.Name)}
+              </span>
+            {/each}
+          </p>
+        </div>
+      {:else if result.resourceType === "items"}
+      <div class="result item">
+        <img src="{result.json.Sprites.Default}" alt="{result.name}"/>
+        <h3>{capitalize(result.json.Name)}</h3>
+        {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
+          <p>{result.json.EffectEntries[0].ShortEffect}</p>
+        {/if}
+      </div>
+      {:else}
+        <div class="result move">
+          <h3>{capitalize(result.json.Name)}</h3>
+          {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
+          <p>{interpolateEffectChance(result.json.EffectEntries[0].ShortEffect, result.json.EffectChance)}</p>
+        {/if}
+        </div>
+      {/if}
     {/each}
   </div>
 
@@ -129,17 +156,39 @@
   .resultContainer {
     display: flex;
     justify-content: center;
-
+    flex-wrap: wrap;
   }
 
-  .resultItem {
-      background-color: #EAEAEA;
-      text-align: center;
-      color: black;
-      padding: 1em 2em 1em 2em;
-      margin: 1em;
-      border-radius: 15%; 
-      box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
-    }
+  .result {
+    flex-basis: 12%;
+    text-align: center;
+    color: black;
+    width: 12em;
+    height: 12em;
+    padding: 1em 2em 1em 2em;
+    margin: 1em;
+    border-radius: 15%; 
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .pkmn {
+    background-color: #FC8686;
+  }
+
+  .item {
+    background-color: #ECF296;
+  }
+
+  .move {
+    background-color: #BEE4FA;
+  }
+
+  .typeChiclet {
+    margin: 1em;
+    color: #EAEAEA;
+    background-color: #232323;
+    padding: 5px 5px 5px 8px;
+    border-radius: 18%;
+  }
 
 </style>
