@@ -63,19 +63,19 @@ namespace PokeLib.Services
 
             foreach (CachedResource cachedResource in cachedResources)
             {
-                if (cachedResource.ResourceType == "pokemon" && options.IncludePokemon)
+                if (cachedResource.ResourceType == ResourceTypes.Pokemon && options.IncludePokemon)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
                 }
 
-                if (cachedResource.ResourceType == "items" && options.IncludeItems)
+                if (cachedResource.ResourceType == ResourceTypes.Items && options.IncludeItems)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
                 }
 
-                if (cachedResource.ResourceType == "moves" && options.IncludeMoves)
+                if (cachedResource.ResourceType == ResourceTypes.Moves && options.IncludeMoves)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
@@ -90,15 +90,15 @@ namespace PokeLib.Services
             if (!string.IsNullOrEmpty(resource.Json))
                 return resource.Json;
 
-            if (resource.ResourceType == "pokemon")
+            if (resource.ResourceType == ResourceTypes.Pokemon)
             {
                 return await this.GetPokeApiJsonResultAsync<Pokemon>(resource);
             }
 
-            if (resource.ResourceType == "items")
+            if (resource.ResourceType == ResourceTypes.Items)
                 return await this.GetPokeApiJsonResultAsync<Item>(resource);
 
-            if (resource.ResourceType == "moves")
+            if (resource.ResourceType == ResourceTypes.Moves)
                 return await this.GetPokeApiJsonResultAsync<Move>(resource);
 
             throw new NotImplementedException("Unknown Resource Type.");

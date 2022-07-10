@@ -1,5 +1,11 @@
 <script lang="ts">
 
+  enum ResourceTypes {
+    Pokemon = 0,
+    Moves = 1, 
+    Items = 2
+  }
+
   let results: any[] = [];
   let query: string;
   let includePokemon: boolean = true;
@@ -93,7 +99,7 @@
   <div class="resultContainer">
 
     {#each results as result}
-      {#if result.resourceType === "pokemon"}
+      {#if result.resourceType == ResourceTypes.Pokemon}
         <div class="result pkmn">
           <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
           <h3>{capitalize(result.json.Name)}</h3>
@@ -105,7 +111,7 @@
             {/each}
           </p>
         </div>
-      {:else if result.resourceType === "items"}
+      {:else if result.resourceType == ResourceTypes.Items}
       <div class="result item">
         <img src="{result.json.Sprites.Default}" alt="{result.name}"/>
         <h3>{capitalize(result.json.Name)}</h3>

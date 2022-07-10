@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PokeLib.Cache
@@ -33,10 +34,12 @@ namespace PokeLib.Cache
 
             string[] lines = File.ReadAllLines(absoluteFilepath);
             CachedResource resource;
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.Converters.Add(new JsonStringEnumConverter());
 
             foreach (string line in lines)
             {
-                resource = JsonSerializer.Deserialize<CachedResource>(line);
+                resource = JsonSerializer.Deserialize<CachedResource>(line, options);
                 resource.Json = File.ReadAllText($"{absoluteResourceDir}/{resource.Name}{base.FILE_EXTENSION}");
                 this.Db.StringSet(resource.Name, JsonSerializer.Serialize(resource));
             }

@@ -37,7 +37,9 @@ namespace PokeLib.Services
                 return results;
 
             results = await this.redisCache.GetCachedResourcesByPatternAsync($"*{query}*");
-            results = base.FilterByTypeOptions(results, json).Take(base.MAX_RESULT_SIZE);
+            results = base.FilterByTypeOptions(results, json)
+                .OrderBy(x => x.ResourceType)
+                .Take(base.MAX_RESULT_SIZE);
 
             foreach (CachedResource result in results)
             {

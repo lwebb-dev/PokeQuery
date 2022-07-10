@@ -54,7 +54,7 @@ namespace PokeCache
                 string json = JsonSerializer.Serialize(new CachedResource
                 {
                     Name = nr.Name,
-                    ResourceType = resourceType,
+                    ResourceType = (ResourceTypes)Enum.Parse(typeof(ResourceTypes), resourceType),
                     Url = nr.Url,
                     Json = string.Empty
                 });
