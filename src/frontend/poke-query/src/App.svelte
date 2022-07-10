@@ -3,14 +3,21 @@
   let results: any[] = [];
   let query: string;
 
-  function handleKeyDown(event) {
+  const capitalize = (value: string): string => {
+    
+    let chars = value.split('');
+    chars[0] = value.toUpperCase()[0];
+    return chars.join('');
+  }
+
+  const handleKeyDown = (event): void => {
     if (event.keyCode === 13) {
       handleSearch();
 
     }
   }
 
-  async function handleSearch() {
+  const handleSearch = async () => {
     results = [];
 
     if (query === null || typeof(query) === "undefined" || query === "") {
@@ -31,7 +38,7 @@
       results = data;
       results.forEach(x => x.json = JSON.parse(x.json));
   });
-  console.log(results[0])
+  console.log(results[0].json)
 }
 
 </script>
@@ -59,10 +66,8 @@
   <div class="resultContainer">
     {#each results as result}
     <div class="resultItem">
-      <h3>{result.json.Name}</h3>
-      {#each result.json.Types as type}
-        <h4>{type.Type.Name}</h4>
-      {/each}
+      <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+      <h3>{capitalize(result.json.Name)}</h3>
     </div>
     {/each}
   </div>
@@ -106,11 +111,9 @@
       background-color: #EAEAEA;
       text-align: center;
       color: black;
-      padding: 1em 1em 1em 0em;
+      padding: 1em 2em 1em 2em;
       margin: 1em;
       border-radius: 15%; 
-      height: 8em;
-      width: 8em;
       box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
     }
 
