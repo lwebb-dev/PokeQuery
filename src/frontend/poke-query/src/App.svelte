@@ -12,20 +12,6 @@
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
 
-  const capitalize = (value: string): string => {
-    
-    let words: string[] = value.split('-');
-    let newWords: string[] = [];
-
-    words.forEach((x) => {
-      let chars = x.split('');
-      chars[0] = x.toUpperCase()[0];
-      newWords.push(chars.join(''));
-    });
-
-    return newWords.join(' ');
-  }
-
   const interpolateEffectChance = (effect: string, chance: number): string => {
     return effect.replaceAll("$effect_chance%", `${chance}%`);
   };
@@ -76,125 +62,98 @@
 
 </script>
 
-<main>
-  <h1>PokeQuery</h1>
+<div class="container-fluid">
 
-  <input type="text" bind:value={query} minlength="1" />
-  <button on:click={handleSearch}>Search 🔎</button>
-  <div class="cbSection">
-    <div class="checkbox">
-      <input id ="cbPkmn" type="checkbox" bind:checked={includePokemon} />
-      <label for="cbPkmn">Pokemon</label>  
-    </div>
-    <div class="checkbox">
-      <input id ="cbItems" type="checkbox" bind:checked={includeItems} />
-      <label for="cbItems">Items</label>  
-    </div>
-    <div class="checkbox">
-      <input id ="cbMoves" type="checkbox" bind:checked={includeMoves} />
-      <label for="cbMoves">Moves</label>  
+    <h1 class="row mb-3 justify-content-center">PokeQuery</h1>
+
+    <div class="row justify-content-center">
+      <div class="col col-lg-3">
+        <input type="text" class="form-control form-control-lg" placeholder="pikachu, leftovers, etc..." bind:value={query} minlength="1" />
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-lg mb-3" on:click={handleSearch}>Search 🔎</button>
+      </div>
+      <div class="form-check d-flex justify-content-center">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" id="cbPkmn" type="checkbox" bind:checked={includePokemon} />
+          <label class="form-check-label" for="cbPkmn">Pokemon</label>  
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" id ="cbItems" type="checkbox" bind:checked={includeItems} />
+          <label class="form-check-label" for="cbItems">Items</label>  
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" id ="cbMoves" type="checkbox" bind:checked={includeMoves} />
+          <label class="form-check-label" for="cbMoves">Moves</label>  
+        </div>  
+      </div>
     </div>  
-  </div>
 
-  <div class="resultContainer">
+  <div class="container d-flex flex-wrap justify-content-center">
 
     {#each results as result}
+
       {#if result.resourceType == ResourceTypes.Pokemon}
-        <div class="result pkmn">
-          <img src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
-          <h3>{capitalize(result.json.Name)}</h3>
-          <p>
-            {#each result.json.Types as pkmnType}
-              <span class="typeChiclet">
-                {capitalize(pkmnType.Type.Name)}
-              </span>
-            {/each}
-          </p>
+        <div class="card mw-20 m-2 card-pkmn">
+          <img class="card-img-top h-25 pt-2 ps-5 pe-5" src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+          <div class="card-body">
+            <h4 class="card-title text-capitalize text-center">{result.json.Name}</h4>
+            <div class="d-flex justify-content-center">
+              {#each result.json.Types as pkmnType}
+                <div class="card-text m-2 text-capitalize">
+                  <p>{pkmnType.Type.Name}</p>
+                </div>
+              {/each}
+            </div>
+            <p class="card-text">Here's some more filler text to give the test cqrds some more body untill we parse the pokemon json data and add more of it to the display.</p>  
+          </div>
         </div>
+
       {:else if result.resourceType == ResourceTypes.Items}
-      <div class="result item">
-        <img src="{result.json.Sprites.Default}" alt="{result.name}"/>
-        <h3>{capitalize(result.json.Name)}</h3>
-        {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
-          <p>{result.json.EffectEntries[0].ShortEffect}</p>
-        {/if}
-      </div>
-      {:else}
-        <div class="result move">
-          <h3>{capitalize(result.json.Name)}</h3>
+      <div class="card mw-20 m-2 card-item">
+        <img  class="card-img-top h-25 pt-2 ps-5 pe-5" src="{result.json.Sprites.Default}" alt="{result.name}"/>
+        <div class="card-body">
+          <h4 class="card-title text-capitalize text-center">{result.json.Name}</h4>
           {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
-          <p>{interpolateEffectChance(result.json.EffectEntries[0].ShortEffect, result.json.EffectChance)}</p>
-        {/if}
+            <p class="card-text text-wrap">{result.json.EffectEntries[0].ShortEffect}</p>
+          {/if}  
         </div>
+      </div>
+
+      {:else}
+        <div class="card mw-20 m-2 card-move">
+          <div class="card-body">
+            <h4 class="card-title text-capitalize text-center">{result.json.Name}</h4>
+            {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
+              <p class="card-text text-wrap">{interpolateEffectChance(result.json.EffectEntries[0].ShortEffect, result.json.EffectChance)}</p>
+            {/if}  
+          </div>
+        </div>
+
       {/if}
     {/each}
   </div>
 
-</main>
+</div>
 
 <svelte:window on:keydown={handleKeyDown} />
 
 <style>
 
-  :root {
-    background-color: #595959;
-    color: #EAEAEA;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  /* input[type=text] {
-    border: none;
-    background-color: #EAEAEA;
-    height: 2em;
-    
-  } */
-
-  .cbSection {
-    display: flex;
-    justify-content: center;
-  }
-
-  .resultContainer {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .result {
-    flex-basis: 12%;
-    text-align: center;
-    color: black;
-    width: 12em;
-    height: 12em;
-    padding: 1em 2em 1em 2em;
-    margin: 1em;
-    border-radius: 15%; 
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .pkmn {
+  .card-pkmn {
     background-color: #FC8686;
+    width: 18rem;
   }
 
-  .item {
+  .card-item {
     background-color: #ECF296;
+    width: 18rem;
   }
 
-  .move {
+  .card-move {
     background-color: #BEE4FA;
+    width: 18rem;
   }
 
-  .typeChiclet {
-    margin: 1em;
-    color: #EAEAEA;
-    background-color: #232323;
-    padding: 5px 5px 5px 8px;
-    border-radius: 18%;
-  }
 
 </style>
