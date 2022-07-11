@@ -5,8 +5,6 @@ namespace PokeLib.Cache
     public abstract class BaseCache : IBaseCache
     {
         internal string FILE_EXTENSION => ".txt";
-        internal string[] RESOURCE_TYPES => new[] { "pokemon", "moves", "items"};
-
         internal readonly string CACHE_DIRECTORY;
         public Guid InstanceId { get; }
 
@@ -16,7 +14,7 @@ namespace PokeLib.Cache
             this.InstanceId = Guid.NewGuid();
         }
 
-        public abstract void LoadResourceFileIntoCache(string fileDirectory);
+        public abstract int LoadResourceFileIntoCache(ResourceTypes resourceType);
 
     }
 }

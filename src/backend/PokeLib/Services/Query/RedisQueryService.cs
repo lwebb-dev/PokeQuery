@@ -20,12 +20,6 @@ namespace PokeLib.Services
             ) : base(logger, configuration, client)
         {
             this.redisCache = redisCache;
-
-#pragma warning disable CA2253
-            this.logger.LogInformation("Redis Cache Instance {0} Loaded With {1} Objects.",
-                this.redisCache.InstanceId, this.redisCache.GetKeyCount());
-#pragma warning restore CA2253
-
         }
 
         public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)

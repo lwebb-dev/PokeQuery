@@ -1,4 +1,5 @@
 ﻿using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,18 +20,20 @@ namespace PokeLib.Cache
             this.Redis = ConnectionMultiplexer.Connect(redisConnectionString);
             this.Db = this.Redis.GetDatabase();
 
-            foreach (string resourceType in base.RESOURCE_TYPES)
+            foreach (ResourceTypes resourceType in Enum.GetValues(typeof(ResourceTypes)))
             {
                 this.LoadResourceFileIntoCache(resourceType);
             }
         }
 
-        public override void LoadResourceFileIntoCache(string resourceType)
+        public override int LoadResourceFileIntoCache(ResourceTypes resourceType)
         {
-            string absoluteResourceDir = $"{base.CACHE_DIRECTORY}\\{resourceType}";
+            string resourceTypeName = Enum.GetName(typeof(ResourceTypes), resourceType).ToLower();
+            string absoluteResourceDir = $"{base.CACHE_DIRECTORY}\\{resourceTypeName}";
             string absoluteFilepath = $"{absoluteResourceDir}{base.FILE_EXTENSION}";
+
             if (!File.Exists(absoluteFilepath))
-                return;
+                return 0;
 
             string[] lines = File.ReadAllLines(absoluteFilepath);
             CachedResource resource;
@@ -44,7 +47,7 @@ namespace PokeLib.Cache
                 this.Db.StringSet(resource.Name, JsonSerializer.Serialize(resource));
             }
 
-            return;
+            return lines.Length;
         }
 
         public int GetKeyCount()

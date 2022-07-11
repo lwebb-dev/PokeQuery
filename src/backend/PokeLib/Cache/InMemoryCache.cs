@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
@@ -13,9 +14,9 @@ namespace PokeLib.Cache
         {
             this.Cache = new List<CachedResource>();
 
-            foreach (string resourceType in base.RESOURCE_TYPES)
+            foreach (ResourceTypes resourceType in Enum.GetValues(typeof(ResourceTypes)))
             {
-                this.LoadResourceFileIntoCache($"{base.CACHE_DIRECTORY}\\{resourceType}{base.FILE_EXTENSION}");
+                this.LoadResourceFileIntoCache(resourceType);
             }
         }
 
@@ -24,12 +25,14 @@ namespace PokeLib.Cache
         /// </summary>
         /// <param name="fileDirectory">Exact file location on local filesystem</param>
         /// <returns>Number of new objects added to Cache</returns>
-        public override void LoadResourceFileIntoCache(string fileDirectory)
+        public override int LoadResourceFileIntoCache(ResourceTypes resourceType)
         {
+            string resourceTypeName = Enum.GetName(typeof(ResourceTypes), resourceType).ToLower();
+            string fileDirectory = $"{base.CACHE_DIRECTORY}\\{resourceTypeName}{base.FILE_EXTENSION}";
             string[] lines;
 
             if (!File.Exists(fileDirectory))
-                return;
+                return 0;
 
             lines = File.ReadAllLines(fileDirectory);
 
@@ -38,7 +41,7 @@ namespace PokeLib.Cache
                 this.Cache.Add(JsonSerializer.Deserialize<CachedResource>(line));
             }
 
-            return;
+            return lines.Length;
         }
     }
 }

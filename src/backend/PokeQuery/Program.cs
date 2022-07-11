@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PokeLib.Cache;
 using PokeLib.Extensions;
 using PokeLib.Services;
 using PokeLib.Utilities;
@@ -23,6 +24,8 @@ builder.Services.AddCors();
 builder.Services.AddControllers();
 
 WebApplication app = builder.Build();
+
+RedisLoaderUtility.LoadResourceFilesIntoCache(app.Logger, app.Services.GetRequiredService<IRedisCache>());
 
 app.UseCors(builder => builder
      .AllowAnyOrigin()
