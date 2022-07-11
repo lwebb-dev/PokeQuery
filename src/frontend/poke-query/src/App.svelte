@@ -95,7 +95,7 @@
 
       {#if result.resourceType == ResourceTypes.Pokemon}
         <div class="card mw-20 m-2 card-pkmn">
-          <img class="card-img-top h-25 pt-2 ps-5 pe-5" src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+          <img class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
           <div class="card-body">
             <h4 class="card-title text-capitalize text-center">{result.json.Name}</h4>
             <div class="d-flex justify-content-center">
@@ -105,13 +105,13 @@
                 </div>
               {/each}
             </div>
-            <p class="card-text">Here's some more filler text to give the test cqrds some more body untill we parse the pokemon json data and add more of it to the display.</p>  
+            <p class="card-text">Here's some more filler text to give the test cards some more body untill we parse the pokemon json data and add more of it to the display.</p>  
           </div>
         </div>
 
       {:else if result.resourceType == ResourceTypes.Items}
       <div class="card mw-20 m-2 card-item">
-        <img  class="card-img-top h-25 pt-2 ps-5 pe-5" src="{result.json.Sprites.Default}" alt="{result.name}"/>
+        <img  class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.Default}" alt="{result.name}"/>
         <div class="card-body">
           <h4 class="card-title text-capitalize text-center">{result.json.Name}</h4>
           {#if typeof(result.json.EffectEntries[0]) !== "undefined"}
@@ -139,6 +139,10 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <style>
+
+  .h-35 {
+    height: 35%;
+  }
 
   .card-pkmn {
     background-color: #FC8686;
