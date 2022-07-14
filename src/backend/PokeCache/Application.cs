@@ -12,6 +12,8 @@ namespace PokeCache
         private readonly PokeApiClient client;
         private readonly string CACHE_DIRECTORY;
 
+        public string FILE_EXTENSION => ".txt";
+
         public Application()
         {
             this.client = new PokeApiClient();
@@ -22,28 +24,28 @@ namespace PokeCache
         {
             Directory.CreateDirectory(this.CACHE_DIRECTORY);
 
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/pokemon.txt"))
-                await this.WriteNamedResourceFile<Pokemon>("pokemon");
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Pokemon)}{FILE_EXTENSION}"))
+                await this.WriteNamedResourceFile<Pokemon>(ResourceTypes.Pokemon);
             else
                 Console.WriteLine("pokemon.txt exists, skipping...");
 
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/moves.txt"))
-                await this.WriteNamedResourceFile<Move>("moves");
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Moves)}{FILE_EXTENSION}"))
+                await this.WriteNamedResourceFile<Move>(ResourceTypes.Moves);
             else
                 Console.WriteLine("moves.txt exists, skipping...");
 
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/items.txt"))
-                await this.WriteNamedResourceFile<Item>("items");
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Items)}{FILE_EXTENSION}"))
+                await this.WriteNamedResourceFile<Item>(ResourceTypes.Items);
             else
                 Console.WriteLine("items.txt exists, skipping...");
 
             Console.WriteLine("Done!");
         }
 
-        private async Task WriteNamedResourceFile<T>(string resourceType)
+        private async Task WriteNamedResourceFile<T>(ResourceTypes resourceType)
             where T : NamedApiResource
         {
-            DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{resourceType}");
+            DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), resourceType).ToLower()}");
             string absoluteFilename = $"{resourceDir.FullName}.txt";
             NamedApiResourceList<T> namedResources = await this.client.GetNamedResourcePageAsync<T>(100000, 0);
 
@@ -54,15 +56,15 @@ namespace PokeCache
                 string json = JsonSerializer.Serialize(new CachedResource
                 {
                     Name = nr.Name,
-                    ResourceType = (ResourceTypes)Enum.Parse(typeof(ResourceTypes), resourceType),
+                    ResourceType = resourceType,
                     Url = nr.Url,
                     Json = string.Empty
                 });
 
                 await file.WriteLineAsync(json);
 
-                if (!File.Exists($"{resourceDir}/{nr.Name}.txt"))
-                    await WriteBlankJsonTextFile($"{resourceDir}/{nr.Name}.txt");
+                if (!File.Exists($"{resourceDir}/{nr.Name}{FILE_EXTENSION}"))
+                    await WriteBlankJsonTextFile($"{resourceDir}/{nr.Name}{FILE_EXTENSION}");
             }
 
             await file.DisposeAsync();

@@ -126,7 +126,7 @@
 
       {#if result.resourceType == ResourceTypes.Pokemon}
         <div class="card mw-20 h-50 m-2 card-pkmn">
-          <img class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.FrontDefault}" alt="{result.name}"/>
+          <img class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.Other.Home.FrontDefault}" alt="{result.name}"/>
           <div class="card-body">
             <h4 class="card-title text-capitalize text-center">{result.json.Name.replaceAll('-', ' ')}</h4>
             <div class="d-flex justify-content-center" style="height:3em;">
