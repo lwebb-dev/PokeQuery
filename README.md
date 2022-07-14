@@ -12,7 +12,7 @@ First, make sure the following are installed correctly:
 2. [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 3. [Docker](https://docs.docker.com/engine/install/)
 
-From the repository root directory, simply run `python start.py`. This will:
+From the repository root directory, simply run `python start.py` and select the first (1) option from the menu. This will:
 
 1. Build .env files for each project using the default values.
 2. Run PokeCache, which will cache all the Named Resources in AppData from PokeApi for pokemon, items, and moves. These Named Resources act as the indexes for future queries.
