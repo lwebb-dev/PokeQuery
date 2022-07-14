@@ -79,7 +79,7 @@
   })
     .then(r => {
       if (!r.ok) {
-        console.log("API FAILED TO RETURN 200 OK");
+        throw new Error("API FAILED TO RETURN 200 OK");
         return;
       }
       return r.json();
