@@ -124,7 +124,7 @@
 
     {#each results as result}
 
-      {#if result.resourceType == ResourceTypes.Pokemon}
+      {#if result.resourceType === ResourceTypes.Pokemon && result.json.IsDefault === true}
         <div class="card mw-20 h-50 m-2 card-pkmn">
           <img class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.Other.Home.FrontDefault}" alt="{result.name}"/>
           <div class="card-body">
@@ -140,7 +140,7 @@
           </div>
         </div>
 
-      {:else if result.resourceType == ResourceTypes.Items}
+      {:else if result.resourceType === ResourceTypes.Items && !result.name.includes("-candy")}
       <div class="card mw-20 h-50 m-2 card-item">
         <img  class="card-img-top h-35 pt-2 ps-5 pe-5" src="{result.json.Sprites.Default}" alt="{result.name}"/>
         <div class="card-body">
@@ -151,7 +151,7 @@
         </div>
       </div>
 
-      {:else}
+      {:else if result.resourceType === ResourceTypes.Moves}
         <div class="card mw-20 h-50 m-2 card-move">
           <div class="card-body">
             <h4 class="card-title text-capitalize text-center">{result.json.Name.replaceAll('-', ' ')}</h4>
