@@ -104,7 +104,7 @@ def mainMenu(displayOptions):
         print("7. Stop Redis Container")
         print("8. Start PokeQuery Backend")
         print("9. Start poke-query Frontend")
-        print("10. Open Browser")
+        print("10. Open Frontend App In Browser")
         print("11. Open Repo in VS Code")
         print("12. Open PokeQuery.sln")
         print("X. Exit/Quit")
