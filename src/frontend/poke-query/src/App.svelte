@@ -12,6 +12,7 @@
 
   let results: any[] = [];
   let query: string;
+  let isLoading: boolean = false;
   let includePokemon: boolean = true;
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
@@ -28,6 +29,8 @@
     if (query === null || typeof(query) === "undefined" || query === "") {
       return;
     }
+
+    isLoading = true;
 
     let requestUri: string = `${process.env.API_BASE_URI}/query`;
     let requestBody = {
@@ -47,8 +50,8 @@
     })
     .then(r => {
       if (!r.ok) {
+        isLoading = false;
         throw new Error("API FAILED TO RETURN 200 OK");
-        return;
       }
       return r.json();
     })
@@ -57,6 +60,7 @@
       results.forEach(x => x.json = JSON.parse(x.json));
     });
 
+  isLoading = false;
   console.log(results)
   }
 </script>
@@ -88,7 +92,13 @@
       </div>
     </div>  
 
-  <div class="container d-flex flex-wrap justify-content-center">
+  <div class="container mt-3 d-flex flex-wrap justify-content-center">
+
+    {#if isLoading}
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    {/if}
 
     {#each results as result}
 
