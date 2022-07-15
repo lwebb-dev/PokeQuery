@@ -44,7 +44,7 @@ def openInVsCode():
     return
 
 def openInVisualStudio():
-    subprocess.check_call("python ./scripts/open-pokequery-solution.py\"", shell=True)
+    subprocess.Popen("python ./scripts/open-pokequery-solution.py", shell=True)
     return
 
 def lowerInput(prompt):
