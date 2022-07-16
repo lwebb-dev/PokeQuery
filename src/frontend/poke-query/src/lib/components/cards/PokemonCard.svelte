@@ -20,7 +20,9 @@
         <TypeChiclet typeName={pkmnType.Type.Name} />
       {/each}
     </div>
-    <StatsModal data={data} />
+    <div class="d-flex flex-wrap justify-content-center">
+      <StatsModal data={data} />
+    </div>
   </div>
 </div>
 
@@ -33,5 +35,6 @@
     border-color: #fc8686;
     border-width: 0.35em;
     width: 15rem;
+    height: 20rem;
   }
 </style>

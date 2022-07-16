@@ -64,7 +64,7 @@
   };
 </script>
 
-<div class="container-fluid mt-5">
+<div class="container-fluid my-3">
   <h1 class="row mb-3 justify-content-center">PokeQuery</h1>
   <div class="row justify-content-center">
     <div class="col col-lg-3">

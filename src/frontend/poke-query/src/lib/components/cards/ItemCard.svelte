@@ -25,5 +25,6 @@
     border-color: #ecf296;
     border-width: 0.35em;
     width: 15rem;
+    height: 20rem;
   }
 </style>

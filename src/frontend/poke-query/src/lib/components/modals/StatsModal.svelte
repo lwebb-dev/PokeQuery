@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     export let data;
     const MAX_STAT_VALUE = 255;
     let statData = data.json.Stats;
@@ -40,10 +42,10 @@
   
   <!-- Modal -->
   <div class="modal fade" id="{modalName}" tabindex="-1" aria-labelledby="{modalName}-Label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="{modalName}-Label">Stats</h5>
+          <h5 class="modal-title text-capitalize" id="{modalName}-Label">Stats: {data.name}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
