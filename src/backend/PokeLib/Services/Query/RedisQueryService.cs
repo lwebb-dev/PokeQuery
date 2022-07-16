@@ -32,6 +32,7 @@ namespace PokeLib.Services
 
             results = await this.redisCache.GetCachedResourcesByPatternAsync($"*{query}*");
             results = base.FilterByTypeOptions(results, json)
+                .Where(x => x.Id < 10000) // Exclude Forms
                 .OrderBy(x => x.SortIndex)
                 .Take(base.MAX_RESULT_SIZE);
 
