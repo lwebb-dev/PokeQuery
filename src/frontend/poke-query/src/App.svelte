@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ItemCard from "./lib/ItemCard.svelte";
-  import MoveCard from "./lib/MoveCard.svelte";
-  import PokemonCard from "./lib/PokemonCard.svelte";
+  import ItemCard from "./lib/components/cards/ItemCard.svelte";
+  import MoveCard from "./lib/components/cards/MoveCard.svelte";
+  import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
 
   enum ResourceTypes {
     Pokemon = 0,

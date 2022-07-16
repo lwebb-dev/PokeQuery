@@ -1,0 +1,84 @@
+<script>
+    export let data;
+    const MAX_STAT_VALUE = 255;
+    let statData = data.json.Stats;
+    let modalName = `statModal-${data.name}`;
+
+    const statNames = {
+        hp: "HP",
+        attack: "Attack",
+        defense: "Defense",
+        "special-attack": "Sp. Atk",
+        "special-defense": "Sp. Def",
+        speed: "Speed" 
+    };
+
+    const getStatPercent = (statValue) => {
+        return parseInt(((statValue / MAX_STAT_VALUE) * 100).toPrecision(2));
+    };
+
+    const getStatColorClass = (statValue) => {
+
+        if (statValue < 60)
+            return "danger";
+        
+        if (statValue < 120)
+            return "warning";
+
+        if (statValue < 180)
+            return "success";
+
+        return "info";
+    }
+
+</script>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{modalName}">
+    Stats
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="{modalName}" tabindex="-1" aria-labelledby="{modalName}-Label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="{modalName}-Label">Stats</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container px-5">
+            {#each statData as stat}
+                <div class="row">
+                    <div class="col-4 text-end">
+                        {statNames[stat.Stat.Name]}:
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-2 p-0 text-end">
+                                {stat.BaseStat}
+                            </div>
+                            <div class="col-10">
+                                <div class="progress">
+                                    <div 
+                                    class="progress-bar bg-{getStatColorClass(stat.BaseStat)}" 
+                                    role="progressbar" 
+                                    style="width: {getStatPercent((stat.BaseStat))}%"
+                                    aria-valuenow="{stat.BaseStat}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="{MAX_STAT_VALUE}"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/each}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
