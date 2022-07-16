@@ -2,9 +2,9 @@
   export let data;
 </script>
 
-<div class="card mw-20 h-50 m-2 card-item">
+<div class="card mw-20 m-2 card-item">
   <img
-    class="card-img-top h-25  pt-2 ps-5 pe-5"
+    class="card-img-top h-35  pt-2 ps-5 pe-5"
     src={data.json.Sprites.Default}
     alt={data.name}
   />
@@ -21,9 +21,15 @@
 </div>
 
 <style>
+
+  .h-35 {
+    height: 35%;
+  }
+
   .card-item {
     border-color: #ecf296;
     border-width: 0.35em;
+    font-size: 0.85rem;
     width: 15rem;
     height: 20rem;
   }

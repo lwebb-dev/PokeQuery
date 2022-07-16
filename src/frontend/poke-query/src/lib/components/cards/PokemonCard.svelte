@@ -5,7 +5,7 @@
   export let data;
 </script>
 
-<div class="card mw-20 h-50 m-2 card-pkmn">
+<div class="card mw-20 m-2 card-pkmn">
   <img
     class="card-img-top h-35 pt-2 ps-5 pe-5"
     src={data.json.Sprites.Other.Home.FrontDefault}
