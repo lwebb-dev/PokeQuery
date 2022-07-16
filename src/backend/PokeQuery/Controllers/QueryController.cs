@@ -30,5 +30,11 @@ namespace PokeQuery.Controllers
         {
             return Ok(await this.queryService.QueryJsonAsync(json));
         }
+
+        [HttpGet("/types")]
+        public async Task<ActionResult<IEnumerable<PokeApiNet.Type>>> GetTypesAsync()
+        {
+            return Ok(await this.queryService.GetTypesAsync());
+        }
     }
 }

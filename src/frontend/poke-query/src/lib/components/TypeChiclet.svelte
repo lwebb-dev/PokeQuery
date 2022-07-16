@@ -1,8 +1,8 @@
-<script>
-  export let typeName;
-  export let isStatic;
+<script lang="ts">
+  export let typeName: string;
+  export let isStatic: boolean;
 
-  let modalName = `typeModal-${typeName}`;
+  let modalName: string = `typeModal-${typeName}`;
 
   let typeColors = {
     grass: "#78C850",
@@ -25,7 +25,7 @@
     dark: "#4d4646",
   };
 
-  const typeColor = typeColors[typeName];
+  let typeColor: string = typeColors[typeName];
 
   const getFontColor = () => {
     const blackTypes = ["electric", "fairy", "ice"];

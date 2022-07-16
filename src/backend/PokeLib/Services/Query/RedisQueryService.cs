@@ -3,8 +3,10 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokeLib.Cache;
 using PokeLib.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PokeLib.Services
@@ -36,6 +38,21 @@ namespace PokeLib.Services
                 .OrderBy(x => x.SortIndex)
                 .Take(base.MAX_RESULT_SIZE);
 
+            await this.UpdateResultJsonIfNeeded(results);
+            return results;
+        }
+
+        public async Task<IEnumerable<PokeApiNet.Type>> GetTypesAsync()
+        {
+            IEnumerable<CachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
+            cacheResults = cacheResults.Where(x => x.ResourceType == ResourceTypes.Types);
+            await this.UpdateResultJsonIfNeeded(cacheResults);
+
+            return cacheResults.Select(x => JsonSerializer.Deserialize<PokeApiNet.Type>(x.Json));
+        }
+
+        private async Task UpdateResultJsonIfNeeded(IEnumerable<CachedResource> results)
+        {
             foreach (CachedResource result in results)
             {
                 if (results.Count() == 1 && results.First() == null)
@@ -44,8 +61,6 @@ namespace PokeLib.Services
                 result.Json = await base.GetFullResourceFromPokeApiAsync(result);
                 this.redisCache.UpdateCachedResource(result);
             }
-
-            return results;
         }
     }
 }

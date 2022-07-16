@@ -11,10 +11,39 @@
 
   let results: any[] = [];
   let query: string;
+  let baseUri: string = process.env.API_BASE_URI;
+
+  let loadingTypes: boolean = false;
   let isLoading: boolean = false;
+
   let includePokemon: boolean = true;
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
+
+  const init = async () => {
+    if (typeof(sessionStorage.typeData) === "undefined") {
+      loadingTypes = true;
+      await fetch(`${baseUri}/types`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }
+    })
+      .then((r) => {
+        if (!r.ok) {
+          loadingTypes = false;
+          throw new Error("API FAILED TO RETURN 200 OK ON /TYPES");
+        }
+        return r.json();
+      })
+      .then((data) => {
+        sessionStorage.typeData = JSON.stringify(data);
+        loadingTypes = false;
+      });
+
+    }
+  }
 
   const handleKeyDown = (event): void => {
     if (event.keyCode === 13) {
@@ -25,13 +54,16 @@
   const handleSearch = async () => {
     results = [];
 
+    if (loadingTypes)
+      return;
+
     if (query === null || typeof query === "undefined" || query === "") {
       return;
     }
 
     isLoading = true;
 
-    let requestUri: string = `${process.env.API_BASE_URI}/query`;
+    let requestUri: string = `${baseUri}/query`;
     let requestBody = {
       Query: query,
       IncludePokemon: includePokemon,
@@ -62,6 +94,8 @@
     isLoading = false;
     console.log(results);
   };
+
+  init();
 </script>
 
 <div class="container-fluid my-3">
@@ -80,7 +114,15 @@
       <button
         type="submit"
         class="btn btn-primary btn-lg mb-3"
-        on:click={handleSearch}>Search 🔎</button
+        on:click={handleSearch}>
+        {#if loadingTypes}
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        {:else}
+          Search 🔎
+        {/if}
+        </button
       >
     </div>
     <div class="form-check d-flex justify-content-center">

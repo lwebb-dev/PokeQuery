@@ -39,6 +39,11 @@ namespace PokeCache
             else
                 Console.WriteLine("items.txt exists, skipping...");
 
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Types)}{FILE_EXTENSION}"))
+                await this.WriteNamedResourceFile<PokeApiNet.Type>(ResourceTypes.Types);
+            else
+                Console.WriteLine("types.txt exists, skipping...");
+
             Console.WriteLine("Done!");
         }
 
