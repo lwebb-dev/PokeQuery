@@ -1,5 +1,5 @@
 <script>
-import TypeChiclet from "../TypeChiclet.svelte";
+  import TypeModal from "../modals/TypeModal.svelte";
 
 
   export let data;
@@ -21,8 +21,8 @@ import TypeChiclet from "../TypeChiclet.svelte";
     <h4 class="card-title text-capitalize text-center">
       {data.json.Name.replaceAll("-", " ")}
     </h4>
-    <div class="d-flex justify-content-center" style="height:3em;">
-      <TypeChiclet typeName={data.json.Type.Name} />
+    <div class="d-flex justify-content-center">
+      <TypeModal pkmnType={data.json.Type} />
     </div>
     <div class="d-flex flex-wrap justify-content-center my-2" style="column-gap: 1rem;">
       <p class="move-attribute"><strong>Power:</strong> {handleNull(data.json.Power)}</p>

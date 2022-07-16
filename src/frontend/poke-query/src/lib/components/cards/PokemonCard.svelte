@@ -1,6 +1,6 @@
 <script>
   import StatsModal from "../modals/StatsModal.svelte";
-  import TypeChiclet from "./../TypeChiclet.svelte";
+  import TypeModal from "../modals/TypeModal.svelte";
 
   export let data;
 </script>
@@ -15,9 +15,9 @@
     <h4 class="card-title text-capitalize text-center">
       {data.json.Name.replaceAll("-", " ")}
     </h4>
-    <div class="d-flex justify-content-center" style="height:3em;">
+    <div class="d-flex justify-content-center">
       {#each data.json.Types as pkmnType}
-        <TypeChiclet typeName={pkmnType.Type.Name} />
+        <TypeModal pkmnType={pkmnType.Type} />
       {/each}
     </div>
     <div class="d-flex flex-wrap justify-content-center">

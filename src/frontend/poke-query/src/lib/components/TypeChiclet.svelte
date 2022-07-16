@@ -1,5 +1,8 @@
 <script>
   export let typeName;
+  export let isStatic;
+
+  let modalName = `typeModal-${typeName}`;
 
   let typeColors = {
     grass: "#78C850",
@@ -19,8 +22,10 @@
     ice: "#98D8D8",
     dragon: "#7038F8",
     steel: "#919191",
-    dark: "#2E291B",
+    dark: "#4d4646",
   };
+
+  const typeColor = typeColors[typeName];
 
   const getFontColor = () => {
     const blackTypes = ["electric", "fairy", "ice"];
@@ -29,18 +34,96 @@
 
     return "white";
   };
+
+  const lightenDarkenColor = (col, amt) => {
+    var usePound = false;
+    if ( col[0] == "#" ) {
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    var num = parseInt(col, 16);
+
+    var r = (num >> 16) + amt;
+
+    if ( r > 255 ) r = 255;
+    else if  (r < 0) r = 0;
+
+    var b = ((num >> 8) & 0x00FF) + amt;
+
+    if ( b > 255 ) b = 255;
+    else if  (b < 0) b = 0;
+
+    var g = (num & 0x0000FF) + amt;
+
+    if ( g > 255 ) g = 255;
+    else if  ( g < 0 ) g = 0;
+
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+}
+
 </script>
 
+
+{#if isStatic === true}
+
 <div
-  class="card-text m-2 pt-1 ps-3 pe-3 text-capitalize chiclet"
-  style="background-color:{typeColors[typeName]};color:{getFontColor()}"
->
-  <p>{typeName}</p>
+  class="card-text m-2 pt-1 px-3 text-capitalize static-chiclet"
+  style="--type-color: {typeColor}; --font-color:{getFontColor()};">
+  <p>
+    {typeName}
+  </p>
 </div>
 
+{:else}
+
+<div
+  class="card-text m-2 pt-1 px-3 text-capitalize chiclet"
+  style="
+    --type-color: {typeColor}; 
+    --font-color:{getFontColor()}; 
+    --type-color-hover:{lightenDarkenColor(typeColor, -20)}; 
+    --type-color-active:{lightenDarkenColor(typeColor, -50)}"
+    data-bs-toggle="modal" 
+    data-bs-target="#{modalName}"
+    data-bs-dismiss="modal">
+  <p>
+    {typeName}
+  </p>
+</div>
+
+{/if}
+
+
 <style>
+
   .chiclet {
+    cursor: pointer;
+    width: 5rem;
+    height: 2rem;
     border-radius: 15px;
+    text-align: center;
     font-size: small;
+    background-color: var(--type-color);
+    color: var(--font-color);
+  }
+
+  .static-chiclet {
+    cursor: default;
+    width: 5rem;
+    height: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    font-size: small;
+    background-color: var(--type-color);
+    color: var(--font-color);
+  }
+
+  .chiclet:hover {
+    background-color: var(--type-color-hover);
+  }
+
+  .chiclet:active {
+    background-color: var(--type-color-active);
   }
 </style>
