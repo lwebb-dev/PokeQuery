@@ -6,5 +6,6 @@ namespace PokeLib.Services
     public interface IRedisQueryService : IBaseQueryService
     {
         Task<IEnumerable<PokeApiNet.Type>> GetTypesAsync();
+        Task<IEnumerable<PokeApiNet.VersionGroup>> GetVersionGroupsAsync();
     }
 }

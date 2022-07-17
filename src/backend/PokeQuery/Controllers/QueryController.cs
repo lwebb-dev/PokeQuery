@@ -36,5 +36,11 @@ namespace PokeQuery.Controllers
         {
             return Ok(await this.queryService.GetTypesAsync());
         }
+
+        [HttpGet("/version-groups")]
+        public async Task<ActionResult<IEnumerable<PokeApiNet.VersionGroup>>> GetVersionGroupsAsync()
+        {
+            return Ok(await this.queryService.GetVersionGroupsAsync());
+        }
     }
 }

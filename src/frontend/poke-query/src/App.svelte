@@ -14,7 +14,12 @@
   let baseUri: string = process.env.API_BASE_URI;
 
   let loadingTypes: boolean = false;
+  let loadingVersionGroups: boolean = false;
   let isLoading: boolean = false;
+
+  const loadingSessionData = (): boolean => {
+    return loadingTypes || loadingVersionGroups;
+  }
 
   let includePokemon: boolean = true;
   let includeItems: boolean = false;
@@ -41,8 +46,30 @@
         sessionStorage.typeData = JSON.stringify(data);
         loadingTypes = false;
       });
-
     }
+
+    if (typeof(sessionStorage.versionGroupData) === "undefined") {
+      loadingVersionGroups = true;
+      await fetch(`${baseUri}/version-groups`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }
+    })
+      .then((r) => {
+        if (!r.ok) {
+          loadingVersionGroups = false;
+          throw new Error("API FAILED TO RETURN 200 OK ON /VERSION-GROUPS");
+        }
+        return r.json();
+      })
+      .then((data) => {
+        sessionStorage.versionGroups = JSON.stringify(data);
+        loadingVersionGroups = false;
+      });
+    }
+
   }
 
   const handleKeyDown = (event): void => {
@@ -54,7 +81,7 @@
   const handleSearch = async () => {
     results = [];
 
-    if (loadingTypes)
+    if (loadingSessionData())
       return;
 
     if (query === null || typeof query === "undefined" || query === "") {
@@ -115,7 +142,7 @@
         type="submit"
         class="btn btn-primary btn-lg mb-3"
         on:click={handleSearch}>
-        {#if loadingTypes}
+        {#if !loadingSessionData()}
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>

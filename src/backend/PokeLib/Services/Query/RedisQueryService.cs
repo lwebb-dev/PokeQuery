@@ -51,6 +51,15 @@ namespace PokeLib.Services
             return cacheResults.Select(x => JsonSerializer.Deserialize<PokeApiNet.Type>(x.Json));
         }
 
+        public async Task<IEnumerable<VersionGroup>> GetVersionGroupsAsync()
+        {
+            IEnumerable<CachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
+            cacheResults = cacheResults.Where(x => x.ResourceType == ResourceTypes.VersionGroups);
+            await this.UpdateResultJsonIfNeeded(cacheResults);
+
+            return cacheResults.Select(x => JsonSerializer.Deserialize<VersionGroup>(x.Json));
+        }
+
         private async Task UpdateResultJsonIfNeeded(IEnumerable<CachedResource> results)
         {
             foreach (CachedResource result in results)
