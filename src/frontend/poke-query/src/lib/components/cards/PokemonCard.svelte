@@ -8,7 +8,7 @@ import StatsModal from "../modals/StatsModal.svelte";
 
 <div class="card mw-20 m-2 card-pkmn">
   <img
-    class="card-img-top h-35 pt-2 ps-5 pe-5"
+    class="card-img-top h-45 pt-2 ps-5 pe-5"
     src={data.json.Sprites.Other.Home.FrontDefault}
     alt={data.name}
   />
@@ -29,8 +29,8 @@ import StatsModal from "../modals/StatsModal.svelte";
 </div>
 
 <style>
-  .h-35 {
-    height: 35%;
+  .h-45 {
+    height: 45%;
   }
 
   .card-pkmn {
