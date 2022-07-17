@@ -36,7 +36,7 @@
 </script>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{modalName}">
+<button type="button" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#{modalName}">
     Stats
   </button>
   

@@ -1,5 +1,6 @@
 <script>
-  import StatsModal from "../modals/StatsModal.svelte";
+  import MovesModal from "../modals/MovesModal.svelte";
+import StatsModal from "../modals/StatsModal.svelte";
   import TypeModal from "../modals/TypeModal.svelte";
 
   export let data;
@@ -20,8 +21,9 @@
         <TypeModal pkmnType={pkmnType.Type} />
       {/each}
     </div>
-    <div class="d-flex flex-wrap justify-content-center">
+    <div class="d-flex mt-1 flex-wrap justify-content-center">
       <StatsModal data={data} />
+      <MovesModal data={data} />
     </div>
   </div>
 </div>
