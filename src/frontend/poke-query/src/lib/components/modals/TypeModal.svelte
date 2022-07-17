@@ -1,11 +1,19 @@
 <script>
+    import { typeDataStore } from "../../../store.js";
     import TypeChiclet from "../TypeChiclet.svelte";
 
   export let pkmnType;
+
+  let typeDataValue;
+
+  typeDataStore.subscribe(value => {
+    typeDataValue = value;
+});
   
   let typeName = pkmnType.Name;
   let modalName = `typeModal-${typeName}`;
-  let typeData = JSON.parse(sessionStorage.typeData.replaceAll(';', ''));
+  // @ts-ignore
+  let typeData = JSON.parse(typeDataValue.replaceAll(';', ''));
   let damageRelations = typeData.find(x => x.name === typeName).damageRelations;
 </script>
 
