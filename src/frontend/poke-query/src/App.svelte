@@ -2,7 +2,6 @@
   import ItemCard from "./lib/components/cards/ItemCard.svelte";
   import MoveCard from "./lib/components/cards/MoveCard.svelte";
   import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
-  import { typeDataStore } from "./store";
 
   enum ResourceTypes {
     Pokemon = 0,
@@ -14,12 +13,6 @@
   let query: string;
   let baseUri: string = process.env.API_BASE_URI;
 
-  let typeDataValue;
-
-typeDataStore.subscribe(value => {
-    typeDataValue = value;
-});
-
   let loadingTypes: boolean = false;
   let isLoading: boolean = false;
 
@@ -28,7 +21,7 @@ typeDataStore.subscribe(value => {
   let includeMoves: boolean = false;
 
   const init = async () => {
-    if (typeof(typeDataValue) === "undefined") {
+    if (typeof(sessionStorage.typeData) === "undefined") {
       loadingTypes = true;
       await fetch(`${baseUri}/types`, {
       method: "GET",
@@ -45,7 +38,7 @@ typeDataStore.subscribe(value => {
         return r.json();
       })
       .then((data) => {
-        typeDataStore.set(JSON.stringify(data));
+        sessionStorage.typeData = JSON.stringify(data);
         loadingTypes = false;
       });
 
