@@ -23,6 +23,10 @@
   let eggMoveData;
   let tutorMoveData;
 
+  const handleMachineAccordionClick = () => {
+    console.log(document.getElementById("machineButton").getAttribute("aria-expanded"));
+  }
+
   const loadMoveDataByVersion = () => {
     let moveDataClone = structuredClone(moveData);
 
@@ -184,10 +188,12 @@
                 <button
                   class="accordion-button collapsed"
                   type="button"
+                  id="machineButton"
                   data-bs-toggle="collapse"
                   data-bs-target="#panelsStayOpen-collapseTwo-{modalName}"
                   aria-expanded="false"
                   aria-controls="panelsStayOpen-collapseTwo-{modalName}"
+                  on:click={handleMachineAccordionClick}
                 >
                   Machine
                 </button>

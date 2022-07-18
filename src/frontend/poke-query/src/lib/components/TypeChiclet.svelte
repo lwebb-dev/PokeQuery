@@ -2,9 +2,9 @@
   export let typeName: string;
   export let isStatic: boolean;
 
-  let modalName: string = `typeModal-${typeName}`;
+  const modalName: string = `typeModal-${typeName}`;
 
-  let typeColors = {
+  const typeColors = {
     grass: "#78C850",
     fire: "#F08030",
     water: "#6890F0",
@@ -25,10 +25,16 @@
     dark: "#4d4646",
   };
 
+  const blackTypes = [
+    "electric", 
+    "fairy", 
+    "ice", 
+    "ground"
+  ];
+
   let typeColor: string = typeColors[typeName];
 
   const getFontColor = () => {
-    const blackTypes = ["electric", "fairy", "ice"];
 
     if (blackTypes.includes(typeName)) return "black";
 

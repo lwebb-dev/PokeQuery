@@ -70,8 +70,6 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
     isLoading = false;
     console.log(results);
   };
-
-  // loadSessionData(baseUri);
 </script>
 
 <div class="container-fluid my-3">

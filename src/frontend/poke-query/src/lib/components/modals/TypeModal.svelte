@@ -17,7 +17,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-capitalize" id="{modalName}-Label">Type: {typeName}</h5>
+          <h6 class="modal-title text-capitalize" id="{modalName}-Label">Type: {typeName}</h6>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -25,7 +25,7 @@
             <div class="container title-border">
                 <h4>Offensive</h4>
                 {#if damageRelations.doubleDamageTo.length > 0}
-                <h5>Strong Against:</h5>
+                <h6>Strong Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.doubleDamageTo as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
@@ -33,7 +33,7 @@
                 </div>
                 {/if}
                 {#if damageRelations.halfDamageTo.length > 0}
-                <h5>Weak Against:</h5>
+                <h6>Weak Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.halfDamageTo as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
@@ -41,7 +41,7 @@
                 </div>
                 {/if}
                 {#if damageRelations.noDamageTo.length > 0}
-                <h5>Resisted By:</h5>
+                <h6>Resisted By:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.noDamageTo as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
@@ -52,7 +52,7 @@
             <div class="container title-border">
                 <h4>Defensive</h4>
                 {#if damageRelations.halfDamageFrom.length > 0}
-                <h5>Strong Against:</h5>
+                <h6>Strong Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.halfDamageFrom as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
@@ -60,7 +60,7 @@
                 </div>
                 {/if}
                 {#if damageRelations.doubleDamageFrom.length > 0}
-                <h5>Weak Against:</h5>
+                <h6>Weak Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.doubleDamageFrom as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
@@ -68,7 +68,7 @@
                 </div>
                 {/if}
                 {#if damageRelations.noDamageFrom.length > 0}
-                <h5>Immune To:</h5>
+                <h6>Immune To:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
                     {#each damageRelations.noDamageFrom as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
