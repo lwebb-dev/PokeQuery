@@ -25,27 +25,26 @@
 
   const loadMoveDataByVersion = () => {
 
-    let versionMoveData = moveData.filter((x) =>
-      x.VersionGroupDetails.some(
-        (vgd) => vgd.VersionGroup.Name === selectedVersion
-      )
-    );
-    versionMoveData.forEach(
-      (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.VersionGroup.Name === selectedVersion
-        ))
-    );
+    // let versionMoveData = moveData.filter((x) =>
+    //   x.VersionGroupDetails.some(
+    //     (vgd) => vgd.VersionGroup.Name === selectedVersion
+    //   )
+    // );
+    // versionMoveData.forEach(
+    //   (x) =>
+    //     (x.VersionGroupDetails = x.VersionGroupDetails.filter(
+    //       (vgd) => vgd.VersionGroup.Name === selectedVersion
+    //     ))
+    // );
 
-    lvlUpMoveData = structuredClone(versionMoveData);
+    lvlUpMoveData = structuredClone(moveData);
+
     lvlUpMoveData.forEach(
       (x) =>
         (x.VersionGroupDetails = x.VersionGroupDetails.filter(
           (vgd) => vgd.MoveLearnMethod.Name === "level-up"
         ))
     );
-
-    console.log(lvlUpMoveData);
 
     lvlUpMoveData = lvlUpMoveData
       .filter((x) => x.VersionGroupDetails.length > 0)
@@ -55,7 +54,7 @@
           b.VersionGroupDetails[0].LevelLearnedAt
       );
 
-    machineMoveData = structuredClone(versionMoveData);
+    machineMoveData = structuredClone(moveData);
     machineMoveData.forEach(
       (x) =>
         (x.VersionGroupDetails = x.VersionGroupDetails.filter(
@@ -66,7 +65,7 @@
       (x) => x.VersionGroupDetails.length > 0
     );
 
-    eggMoveData = structuredClone(versionMoveData);
+    eggMoveData = structuredClone(moveData);
     eggMoveData.forEach(
       (x) =>
         (x.VersionGroupDetails = x.VersionGroupDetails.filter(
@@ -75,7 +74,7 @@
     );
     eggMoveData = eggMoveData.filter((x) => x.VersionGroupDetails.length > 0);
 
-    tutorMoveData = structuredClone(versionMoveData);
+    tutorMoveData = structuredClone(moveData);
     tutorMoveData.forEach(
       (x) =>
         (x.VersionGroupDetails = x.VersionGroupDetails.filter(
@@ -87,7 +86,8 @@
     );
   };
 
-  let selectedVersion = versionGroups[0];
+  // let selectedVersion = versionGroups[0];
+  let selectedVersion;
   loadMoveDataByVersion();
 </script>
 
@@ -109,7 +109,7 @@
   aria-labelledby="{modalName}-Label"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-capitalize" id="{modalName}-Label">
@@ -123,7 +123,7 @@
         />
       </div>
       <div class="modal-body">
-        <div class="container px-5">
+        <div class="container modal-container px-5">
           <select class="form-select-lg my-3" aria-label="version group select" bind:value={selectedVersion} on:change="{() => loadMoveDataByVersion()}">
             {#each versionGroups as version}
               <option value={version}>{version}</option>
@@ -158,14 +158,18 @@
                       <tr>
                         <th scope="col">Move Name</th>
                         <th scope="col">Level Learned At</th>
+                        <th scope="col">Version(s)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each lvlUpMoveData as move}
+                        {#each move.VersionGroupDetails as versionGroup}
                         <tr>
                           <td class="text-capitalize">{move.Move.Name}</td>
-                          <td>{move.VersionGroupDetails[0].LevelLearnedAt}</td>
+                          <td>{versionGroup.LevelLearnedAt}</td>
+                          <td>{versionGroup.VersionGroup.Name}</td>
                         </tr>
+                          {/each}
                       {/each}
                     </tbody>
                   </table>
@@ -199,14 +203,18 @@
                       <tr>
                         <th scope="col">Move Name</th>
                         <th scope="col">Machine</th>
+                        <th scope="col">Version(s)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each machineMoveData as move}
-                        <tr>
+                          {#each move.VersionGroupDetails as versionGroup}
+                          <tr>
                           <td class="text-capitalize">{move.Move.Name}</td>
                           <td>--</td>
+                          <td>{versionGroup.Name}</td>
                         </tr>
+                          {/each}
                       {/each}
                     </tbody>
                   </table>
@@ -239,13 +247,17 @@
                     <thead>
                       <tr>
                         <th scope="col">Move Name</th>
+                        <th scope="col">Version(s)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each eggMoveData as move}
-                        <tr>
+                          {#each move.VersionGroupDetails as versionGroup}
+                          <tr>
                           <td class="text-capitalize">{move.Move.Name}</td>
+                          <td>{versionGroup.Name}</td>
                         </tr>
+                          {/each}
                       {/each}
                     </tbody>
                   </table>
@@ -278,13 +290,17 @@
                     <thead>
                       <tr>
                         <th scope="col">Move Name</th>
+                        <th scope="col">Version(s)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each tutorMoveData as move}
-                        <tr>
+                          {#each move.VersionGroupDetails as versionGroup}
+                          <tr>
                           <td class="text-capitalize">{move.Move.Name}</td>
+                          <td>{versionGroup.Name}</td>
                         </tr>
+                          {/each}
                       {/each}
                     </tbody>
                   </table>
