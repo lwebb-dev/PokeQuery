@@ -2,6 +2,7 @@
   import ItemCard from "./lib/components/cards/ItemCard.svelte";
   import MoveCard from "./lib/components/cards/MoveCard.svelte";
   import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
+import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
   enum ResourceTypes {
     Pokemon = 0,
@@ -13,64 +14,11 @@
   let query: string;
   let baseUri: string = process.env.API_BASE_URI;
 
-  let loadingTypes: boolean = false;
-  let loadingVersionGroups: boolean = false;
   let isLoading: boolean = false;
-
-  const loadingSessionData = (): boolean => {
-    return loadingTypes || loadingVersionGroups;
-  }
 
   let includePokemon: boolean = true;
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
-
-  const init = async () => {
-    if (typeof(sessionStorage.typeData) === "undefined") {
-      loadingTypes = true;
-      await fetch(`${baseUri}/types`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }
-    })
-      .then((r) => {
-        if (!r.ok) {
-          loadingTypes = false;
-          throw new Error("API FAILED TO RETURN 200 OK ON /TYPES");
-        }
-        return r.json();
-      })
-      .then((data) => {
-        sessionStorage.typeData = JSON.stringify(data);
-        loadingTypes = false;
-      });
-    }
-
-    if (typeof(sessionStorage.versionGroupData) === "undefined") {
-      loadingVersionGroups = true;
-      await fetch(`${baseUri}/version-groups`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }
-    })
-      .then((r) => {
-        if (!r.ok) {
-          loadingVersionGroups = false;
-          throw new Error("API FAILED TO RETURN 200 OK ON /VERSION-GROUPS");
-        }
-        return r.json();
-      })
-      .then((data) => {
-        sessionStorage.versionGroups = JSON.stringify(data);
-        loadingVersionGroups = false;
-      });
-    }
-
-  }
 
   const handleKeyDown = (event): void => {
     if (event.keyCode === 13) {
@@ -80,8 +28,9 @@
 
   const handleSearch = async () => {
     results = [];
+    console.log(isLoadingSessionData);
 
-    if (loadingSessionData())
+    if (isLoadingSessionData)
       return;
 
     if (query === null || typeof query === "undefined" || query === "") {
@@ -122,7 +71,7 @@
     console.log(results);
   };
 
-  init();
+  // loadSessionData(baseUri);
 </script>
 
 <div class="container-fluid my-3">
@@ -142,13 +91,13 @@
         type="submit"
         class="btn btn-primary btn-lg mb-3"
         on:click={handleSearch}>
-        {#if !loadingSessionData()}
+        {#await loadSessionData(baseUri)}
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
-        {:else}
+        {:then}
           Search 🔎
-        {/if}
+        {/await}
         </button
       >
     </div>

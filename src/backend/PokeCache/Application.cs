@@ -45,9 +45,14 @@ namespace PokeCache
                 Console.WriteLine("types.txt exists, skipping...");
 
             if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.VersionGroups)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<PokeApiNet.VersionGroup>(ResourceTypes.VersionGroups);
+                await this.WriteNamedResourceFile<VersionGroup>(ResourceTypes.VersionGroups);
             else
                 Console.WriteLine("versiongroups.txt exists, skipping...");
+
+            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Generations)}{FILE_EXTENSION}"))
+                await this.WriteNamedResourceFile<Generation>(ResourceTypes.Generations);
+            else
+                Console.WriteLine("generations.txt exists, skipping...");
 
             Console.WriteLine("Done!");
         }

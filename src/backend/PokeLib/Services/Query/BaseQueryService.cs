@@ -107,6 +107,9 @@ namespace PokeLib.Services
             if (resource.ResourceType == ResourceTypes.VersionGroups)
                 return await this.GetPokeApiJsonResultAsync<VersionGroup>(resource);
 
+            if (resource.ResourceType == ResourceTypes.Generations)
+                return await this.GetPokeApiJsonResultAsync<Generation>(resource);
+
             throw new NotImplementedException("Unknown Resource Type.");
         }
     }

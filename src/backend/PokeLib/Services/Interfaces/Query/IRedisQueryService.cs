@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using PokeApiNet;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PokeLib.Services
 {
     public interface IRedisQueryService : IBaseQueryService
     {
-        Task<IEnumerable<PokeApiNet.Type>> GetTypesAsync();
-        Task<IEnumerable<PokeApiNet.VersionGroup>> GetVersionGroupsAsync();
+        Task<IEnumerable<T>> GetResourceAsync<T>(ResourceTypes resourceType) where T : NamedApiResource;
     }
 }

@@ -6,6 +6,7 @@
         Moves = 1,
         Items = 2,
         Types = 3,
-        VersionGroups = 4
+        VersionGroups = 4,
+        Generations = 5
     }
 }

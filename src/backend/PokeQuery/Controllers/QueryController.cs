@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PokeApiNet;
 using PokeLib;
 using PokeLib.Models;
 using PokeLib.Services;
@@ -32,15 +33,21 @@ namespace PokeQuery.Controllers
         }
 
         [HttpGet("/types")]
-        public async Task<ActionResult<IEnumerable<PokeApiNet.Type>>> GetTypesAsync()
+        public async Task<ActionResult<IEnumerable<Type>>> GetTypesAsync()
         {
-            return Ok(await this.queryService.GetTypesAsync());
+            return Ok(await this.queryService.GetResourceAsync<Type>(ResourceTypes.Types));
         }
 
         [HttpGet("/version-groups")]
-        public async Task<ActionResult<IEnumerable<PokeApiNet.VersionGroup>>> GetVersionGroupsAsync()
+        public async Task<ActionResult<IEnumerable<VersionGroup>>> GetVersionGroupsAsync()
         {
-            return Ok(await this.queryService.GetVersionGroupsAsync());
+            return Ok(await this.queryService.GetResourceAsync<VersionGroup>(ResourceTypes.VersionGroups));
+        }
+
+        [HttpGet("/generations")]
+        public async Task<ActionResult<IEnumerable<Generation>>> GetGenerationsAsync()
+        {
+            return Ok(await this.queryService.GetResourceAsync<Generation>(ResourceTypes.Generations));
         }
     }
 }

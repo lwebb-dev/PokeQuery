@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokeLib.Cache;
 using PokeLib.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -42,22 +41,14 @@ namespace PokeLib.Services
             return results;
         }
 
-        public async Task<IEnumerable<PokeApiNet.Type>> GetTypesAsync()
+        public async Task<IEnumerable<T>> GetResourceAsync<T>(ResourceTypes resourceType)
+            where T : NamedApiResource
         {
             IEnumerable<CachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
-            cacheResults = cacheResults.Where(x => x.ResourceType == ResourceTypes.Types);
+            cacheResults = cacheResults.Where(x => x.ResourceType == resourceType);
             await this.UpdateResultJsonIfNeeded(cacheResults);
 
-            return cacheResults.Select(x => JsonSerializer.Deserialize<PokeApiNet.Type>(x.Json));
-        }
-
-        public async Task<IEnumerable<VersionGroup>> GetVersionGroupsAsync()
-        {
-            IEnumerable<CachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
-            cacheResults = cacheResults.Where(x => x.ResourceType == ResourceTypes.VersionGroups);
-            await this.UpdateResultJsonIfNeeded(cacheResults);
-
-            return cacheResults.Select(x => JsonSerializer.Deserialize<VersionGroup>(x.Json));
+            return cacheResults.Select(x => JsonSerializer.Deserialize<T>(x.Json));
         }
 
         private async Task UpdateResultJsonIfNeeded(IEnumerable<CachedResource> results)
