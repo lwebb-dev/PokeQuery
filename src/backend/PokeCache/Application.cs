@@ -1,7 +1,9 @@
 ﻿using PokeApiNet;
 using PokeLib;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -13,6 +15,15 @@ namespace PokeCache
         private readonly string CACHE_DIRECTORY;
 
         public string FILE_EXTENSION => ".txt";
+        public Dictionary<ResourceTypes, System.Type> ResourceTypeMap => new Dictionary<ResourceTypes, System.Type>
+        {
+            { ResourceTypes.Pokemon, typeof(PokeApiNet.Pokemon) },
+            { ResourceTypes.Moves, typeof(PokeApiNet.Move) },
+            { ResourceTypes.Items, typeof(PokeApiNet.Item) },
+            { ResourceTypes.Types, typeof(PokeApiNet.Type) },
+            { ResourceTypes.VersionGroups, typeof(PokeApiNet.VersionGroup) },
+            { ResourceTypes.Generations, typeof(PokeApiNet.Generation) }
+        };
 
         public Application()
         {
@@ -23,6 +34,16 @@ namespace PokeCache
         public async Task RunAsync()
         {
             Directory.CreateDirectory(this.CACHE_DIRECTORY);
+
+            MethodInfo writeFileMethod = typeof(Application).GetMethod(nameof(Application.WriteNamedResourceFile));
+            MethodInfo genericMethod;
+            object[] methodParams;
+
+            foreach (var kvp in this.ResourceTypeMap)
+            {
+                genericMethod = writeFileMethod.MakeGenericMethod(kvp.Value);
+                genericMethod.Invoke(this, null);
+            }
 
             if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Pokemon)}{FILE_EXTENSION}"))
                 await this.WriteNamedResourceFile<Pokemon>(ResourceTypes.Pokemon);
@@ -57,7 +78,7 @@ namespace PokeCache
             Console.WriteLine("Done!");
         }
 
-        private async Task WriteNamedResourceFile<T>(ResourceTypes resourceType)
+        public async Task WriteNamedResourceFile<T>(ResourceTypes resourceType)
             where T : NamedApiResource
         {
             DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), resourceType).ToLower()}");
