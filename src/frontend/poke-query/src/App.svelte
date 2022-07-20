@@ -28,7 +28,6 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
   const handleSearch = async () => {
     results = [];
-    console.log(isLoadingSessionData);
 
     if (isLoadingSessionData)
       return;
