@@ -17,12 +17,12 @@ namespace PokeCache
         public string FILE_EXTENSION => ".txt";
         public Dictionary<ResourceTypes, System.Type> ResourceTypeMap => new Dictionary<ResourceTypes, System.Type>
         {
-            { ResourceTypes.Pokemon, typeof(PokeApiNet.Pokemon) },
-            { ResourceTypes.Moves, typeof(PokeApiNet.Move) },
-            { ResourceTypes.Items, typeof(PokeApiNet.Item) },
+            { ResourceTypes.Pokemon, typeof(Pokemon) },
+            { ResourceTypes.Moves, typeof(Move) },
+            { ResourceTypes.Items, typeof(Item) },
             { ResourceTypes.Types, typeof(PokeApiNet.Type) },
-            { ResourceTypes.VersionGroups, typeof(PokeApiNet.VersionGroup) },
-            { ResourceTypes.Generations, typeof(PokeApiNet.Generation) }
+            { ResourceTypes.VersionGroups, typeof(VersionGroup) },
+            { ResourceTypes.Generations, typeof(Generation) }
         };
 
         public Application()
@@ -36,44 +36,23 @@ namespace PokeCache
             Directory.CreateDirectory(this.CACHE_DIRECTORY);
 
             MethodInfo writeFileMethod = typeof(Application).GetMethod(nameof(Application.WriteNamedResourceFile));
-            MethodInfo genericMethod;
-            object[] methodParams;
 
-            foreach (var kvp in this.ResourceTypeMap)
+            foreach (KeyValuePair<ResourceTypes, System.Type> kvp in this.ResourceTypeMap)
             {
-                genericMethod = writeFileMethod.MakeGenericMethod(kvp.Value);
-                genericMethod.Invoke(this, null);
+                string resourceName = Enum.GetName(typeof(ResourceTypes), kvp.Key).ToLower();
+
+                if (File.Exists($"{this.CACHE_DIRECTORY}/{resourceName}{FILE_EXTENSION}"))
+                {
+                    Console.WriteLine($"{resourceName}{FILE_EXTENSION} exists, skipping...");
+                    continue;
+                }
+
+                MethodInfo genericMethod = writeFileMethod.MakeGenericMethod(kvp.Value);
+                object[] methodParams = new object[] { kvp.Key };
+                Task task = (Task)genericMethod.Invoke(this, methodParams);
+                await task.ConfigureAwait(false);
+                PropertyInfo resultProperty = task.GetType().GetProperty("Result");
             }
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Pokemon)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<Pokemon>(ResourceTypes.Pokemon);
-            else
-                Console.WriteLine("pokemon.txt exists, skipping...");
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Moves)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<Move>(ResourceTypes.Moves);
-            else
-                Console.WriteLine("moves.txt exists, skipping...");
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Items)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<Item>(ResourceTypes.Items);
-            else
-                Console.WriteLine("items.txt exists, skipping...");
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Types)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<PokeApiNet.Type>(ResourceTypes.Types);
-            else
-                Console.WriteLine("types.txt exists, skipping...");
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.VersionGroups)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<VersionGroup>(ResourceTypes.VersionGroups);
-            else
-                Console.WriteLine("versiongroups.txt exists, skipping...");
-
-            if (!File.Exists($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(ResourceTypes), ResourceTypes.Generations)}{FILE_EXTENSION}"))
-                await this.WriteNamedResourceFile<Generation>(ResourceTypes.Generations);
-            else
-                Console.WriteLine("generations.txt exists, skipping...");
 
             Console.WriteLine("Done!");
         }
