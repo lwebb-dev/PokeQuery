@@ -23,9 +23,9 @@ namespace PokeLib.Services
             this.redisCache = redisCache;
         }
 
-        public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)
+        public override async Task<IEnumerable<NamedCachedResource>> QueryAsync(QueryOptions json)
         {
-            IEnumerable<CachedResource> results = Enumerable.Empty<CachedResource>();
+            IEnumerable<NamedCachedResource> results = Enumerable.Empty<NamedCachedResource>();
             string query = base.GetSanitizedQuery(json.Query);
 
             if (string.IsNullOrEmpty(query))
@@ -41,24 +41,24 @@ namespace PokeLib.Services
             return results;
         }
 
-        public async Task<IEnumerable<T>> GetResourceAsync<T>(ResourceTypes resourceType)
+        public async Task<IEnumerable<T>> GetResourceAsync<T>(NamedResourceTypes namedResourceType)
             where T : NamedApiResource
         {
-            IEnumerable<CachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
-            cacheResults = cacheResults.Where(x => x.ResourceType == resourceType);
+            IEnumerable<NamedCachedResource> cacheResults = await this.redisCache.GetCachedResourcesByPatternAsync("*");
+            cacheResults = cacheResults.Where(x => x.NamedResourceType == namedResourceType);
             await this.UpdateResultJsonIfNeeded(cacheResults);
 
             return cacheResults.Select(x => JsonSerializer.Deserialize<T>(x.Json));
         }
 
-        private async Task UpdateResultJsonIfNeeded(IEnumerable<CachedResource> results)
+        private async Task UpdateResultJsonIfNeeded(IEnumerable<NamedCachedResource> results)
         {
-            foreach (CachedResource result in results)
+            foreach (NamedCachedResource result in results)
             {
                 if (results.Count() == 1 && results.First() == null)
                     break;
 
-                result.Json = await base.GetFullResourceFromPokeApiAsync(result);
+                result.Json = await base.GetFullNamedResourceFromPokeApiAsync(result);
                 this.redisCache.UpdateCachedResource(result);
             }
         }

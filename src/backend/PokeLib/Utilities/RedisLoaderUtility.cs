@@ -10,9 +10,9 @@ namespace PokeLib.Utilities
         {
             int count = 0;
 
-            foreach (ResourceTypes resourceType in Enum.GetValues(typeof(ResourceTypes)))
+            foreach (NamedResourceTypes namedResourceType in Enum.GetValues(typeof(NamedResourceTypes)))
             {
-                count += redis.LoadResourceFileIntoCache(resourceType);
+                count += redis.LoadNamedResourceFileIntoCache(namedResourceType);
             }
 
 #pragma warning disable CA2253

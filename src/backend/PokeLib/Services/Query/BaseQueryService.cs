@@ -28,15 +28,15 @@ namespace PokeLib.Services
             this.client = client;
         }
 
-        public abstract Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json);
+        public abstract Task<IEnumerable<NamedCachedResource>> QueryAsync(QueryOptions json);
 
         public async Task<string> QueryJsonAsync(QueryOptions json)
         {
-            IEnumerable<CachedResource> result = await this.QueryAsync(json);
+            IEnumerable<NamedCachedResource> result = await this.QueryAsync(json);
             return JsonSerializer.Serialize(result);
         }
 
-        public async Task<string> GetPokeApiJsonResultAsync<T>(CachedResource cachedResource)
+        public async Task<string> GetNamedPokeApiJsonResultAsync<T>(NamedCachedResource cachedResource)
             where T : NamedApiResource
         {
             string[] splitUri = cachedResource.Url.Split("/");
@@ -44,7 +44,7 @@ namespace PokeLib.Services
             T result = await this.client.GetResourceAsync<T>(id);
             this.logger.LogInformation("Request made to PokeApi on {0} at {1}", DateTime.UtcNow, cachedResource.Url);
             cachedResource.Json = JsonSerializer.Serialize(result);
-            string absoluteJsonFilePath = $"{this.CACHE_DIRECTORY}/{cachedResource.ResourceType}/{cachedResource.Name}{FILE_EXTENSION}";
+            string absoluteJsonFilePath = $"{this.CACHE_DIRECTORY}/{cachedResource.NamedResourceType}/{cachedResource.Name}{FILE_EXTENSION}";
             await File.WriteAllTextAsync(absoluteJsonFilePath, cachedResource.Json);
             return cachedResource.Json;
         }
@@ -57,25 +57,25 @@ namespace PokeLib.Services
             return query.ToLower().Replace(' ', '-');
         }
 
-        internal IList<CachedResource> FilterByTypeOptions(IEnumerable<CachedResource> cachedResources, QueryOptions options)
+        internal IList<NamedCachedResource> FilterByTypeOptions(IEnumerable<NamedCachedResource> cachedResources, QueryOptions options)
         {
-            List<CachedResource> filteredResults = new List<CachedResource>();
+            List<NamedCachedResource> filteredResults = new List<NamedCachedResource>();
 
-            foreach (CachedResource cachedResource in cachedResources)
+            foreach (NamedCachedResource cachedResource in cachedResources)
             {
-                if (cachedResource.ResourceType == ResourceTypes.Pokemon && options.IncludePokemon)
+                if (cachedResource.NamedResourceType == NamedResourceTypes.Pokemon && options.IncludePokemon)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
                 }
 
-                if (cachedResource.ResourceType == ResourceTypes.Items && options.IncludeItems)
+                if (cachedResource.NamedResourceType == NamedResourceTypes.Items && options.IncludeItems)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
                 }
 
-                if (cachedResource.ResourceType == ResourceTypes.Moves && options.IncludeMoves)
+                if (cachedResource.NamedResourceType == NamedResourceTypes.Moves && options.IncludeMoves)
                 {
                     filteredResults.Add(cachedResource);
                     continue;
@@ -85,32 +85,33 @@ namespace PokeLib.Services
             return filteredResults;
         }
 
-        internal async Task<string> GetFullResourceFromPokeApiAsync(CachedResource resource)
+        internal async Task<string> GetFullNamedResourceFromPokeApiAsync(NamedCachedResource resource)
         {
             if (!string.IsNullOrEmpty(resource.Json))
                 return resource.Json;
 
-            if (resource.ResourceType == ResourceTypes.Pokemon)
+            // TODO: use reflection to call these programmatically
+            if (resource.NamedResourceType == NamedResourceTypes.Pokemon)
             {
-                return await this.GetPokeApiJsonResultAsync<Pokemon>(resource);
+                return await this.GetNamedPokeApiJsonResultAsync<Pokemon>(resource);
             }
 
-            if (resource.ResourceType == ResourceTypes.Items)
-                return await this.GetPokeApiJsonResultAsync<Item>(resource);
+            if (resource.NamedResourceType == NamedResourceTypes.Items)
+                return await this.GetNamedPokeApiJsonResultAsync<Item>(resource);
 
-            if (resource.ResourceType == ResourceTypes.Moves)
-                return await this.GetPokeApiJsonResultAsync<Move>(resource);
+            if (resource.NamedResourceType == NamedResourceTypes.Moves)
+                return await this.GetNamedPokeApiJsonResultAsync<Move>(resource);
 
-            if (resource.ResourceType == ResourceTypes.Types)
-                return await this.GetPokeApiJsonResultAsync<PokeApiNet.Type>(resource);
+            if (resource.NamedResourceType == NamedResourceTypes.Types)
+                return await this.GetNamedPokeApiJsonResultAsync<PokeApiNet.Type>(resource);
 
-            if (resource.ResourceType == ResourceTypes.VersionGroups)
-                return await this.GetPokeApiJsonResultAsync<VersionGroup>(resource);
+            if (resource.NamedResourceType == NamedResourceTypes.VersionGroups)
+                return await this.GetNamedPokeApiJsonResultAsync<VersionGroup>(resource);
 
-            if (resource.ResourceType == ResourceTypes.Generations)
-                return await this.GetPokeApiJsonResultAsync<Generation>(resource);
+            if (resource.NamedResourceType == NamedResourceTypes.Generations)
+                return await this.GetNamedPokeApiJsonResultAsync<Generation>(resource);
 
-            throw new NotImplementedException("Unknown Resource Type.");
+            throw new NotImplementedException("Unknown NamedResource Type.");
         }
     }
 }

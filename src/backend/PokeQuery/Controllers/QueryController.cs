@@ -21,7 +21,7 @@ namespace PokeQuery.Controllers
         }
 
         [HttpPost("/query")]
-        public async Task<ActionResult<IEnumerable<CachedResource>>> GetAsync(QueryOptions json)
+        public async Task<ActionResult<IEnumerable<NamedCachedResource>>> GetAsync(QueryOptions json)
         {
             return Ok(await this.queryService.QueryAsync(json));
         }
@@ -35,19 +35,19 @@ namespace PokeQuery.Controllers
         [HttpGet("/types")]
         public async Task<ActionResult<IEnumerable<Type>>> GetTypesAsync()
         {
-            return Ok(await this.queryService.GetResourceAsync<Type>(ResourceTypes.Types));
+            return Ok(await this.queryService.GetResourceAsync<Type>(NamedResourceTypes.Types));
         }
 
         [HttpGet("/version-groups")]
         public async Task<ActionResult<IEnumerable<VersionGroup>>> GetVersionGroupsAsync()
         {
-            return Ok(await this.queryService.GetResourceAsync<VersionGroup>(ResourceTypes.VersionGroups));
+            return Ok(await this.queryService.GetResourceAsync<VersionGroup>(NamedResourceTypes.VersionGroups));
         }
 
         [HttpGet("/generations")]
         public async Task<ActionResult<IEnumerable<Generation>>> GetGenerationsAsync()
         {
-            return Ok(await this.queryService.GetResourceAsync<Generation>(ResourceTypes.Generations));
+            return Ok(await this.queryService.GetResourceAsync<Generation>(NamedResourceTypes.Generations));
         }
     }
 }

@@ -5,9 +5,9 @@ namespace PokeLib.Cache
 {
     public interface IRedisCache : IBaseCache
     {
-        Task<IEnumerable<CachedResource>> GetCachedResourcesByPatternAsync(string pattern);
-        Task<CachedResource> GetCachedResourceAsync(string key);
-        bool UpdateCachedResource(CachedResource cachedResource);
+        Task<IEnumerable<NamedCachedResource>> GetCachedResourcesByPatternAsync(string pattern);
+        Task<NamedCachedResource> GetCachedResourceAsync(string key);
+        bool UpdateCachedResource(NamedCachedResource cachedResource);
         int GetKeyCount();
     }
 }

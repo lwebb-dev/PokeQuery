@@ -4,6 +4,6 @@ namespace PokeLib.Cache
 {
     public interface IInMemoryCache : IBaseCache
     {
-        IList<CachedResource> Cache { get; set; }
+        IList<NamedCachedResource> Cache { get; set; }
     }
 }

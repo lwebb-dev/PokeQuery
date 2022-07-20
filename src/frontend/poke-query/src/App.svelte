@@ -4,7 +4,7 @@
   import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
 import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
-  enum ResourceTypes {
+  enum NamedResourceTypes {
     Pokemon = 0,
     Moves = 1,
     Items = 2,
@@ -137,11 +137,11 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
     {/if}
 
     {#each results as result}
-      {#if result.resourceType === ResourceTypes.Pokemon && result.json.IsDefault === true}
+      {#if result.namedResourceType === NamedResourceTypes.Pokemon && result.json.IsDefault === true}
         <PokemonCard data={result} />
-      {:else if result.resourceType === ResourceTypes.Items && !result.name.includes("-candy")}
+      {:else if result.namedResourceType === NamedResourceTypes.Items && !result.name.includes("-candy")}
         <ItemCard data={result} />
-      {:else if result.resourceType === ResourceTypes.Moves}
+      {:else if result.namedResourceType === NamedResourceTypes.Moves}
         <MoveCard data={result} />
       {/if}
     {/each}

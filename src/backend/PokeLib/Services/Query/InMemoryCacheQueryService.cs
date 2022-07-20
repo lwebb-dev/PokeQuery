@@ -28,9 +28,9 @@ namespace PokeLib.Services
             #pragma warning restore CA2253
         }
 
-        public override async Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json)
+        public override async Task<IEnumerable<NamedCachedResource>> QueryAsync(QueryOptions json)
         {
-            IEnumerable<CachedResource> results = Enumerable.Empty<CachedResource>();
+            IEnumerable<NamedCachedResource> results = Enumerable.Empty<NamedCachedResource>();
             string query = base.GetSanitizedQuery(json.Query);
 
             if (string.IsNullOrEmpty(query))
@@ -55,9 +55,9 @@ namespace PokeLib.Services
             //    };
             //}
 
-            foreach (CachedResource result in results)
+            foreach (NamedCachedResource result in results)
             {
-                result.Json = await base.GetFullResourceFromPokeApiAsync(result);
+                result.Json = await base.GetFullNamedResourceFromPokeApiAsync(result);
             }
 
             return results;

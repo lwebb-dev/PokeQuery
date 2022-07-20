@@ -14,7 +14,7 @@ namespace PokeLib.Cache
             this.InstanceId = Guid.NewGuid();
         }
 
-        public abstract int LoadResourceFileIntoCache(ResourceTypes resourceType);
+        public abstract int LoadNamedResourceFileIntoCache(NamedResourceTypes namedResourceType);
 
     }
 }

@@ -5,6 +5,6 @@ namespace PokeLib.Cache
     public interface IBaseCache
     {
         Guid InstanceId { get; }
-        int LoadResourceFileIntoCache(ResourceTypes resourceType);
+        int LoadNamedResourceFileIntoCache(NamedResourceTypes namedResourceType);
     }
 }

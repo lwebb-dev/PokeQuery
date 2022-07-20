@@ -20,15 +20,15 @@ namespace PokeLib.Cache
             this.Redis = ConnectionMultiplexer.Connect(redisConnectionString);
             this.Db = this.Redis.GetDatabase();
 
-            foreach (ResourceTypes resourceType in Enum.GetValues(typeof(ResourceTypes)))
+            foreach (NamedResourceTypes namedResourceType in Enum.GetValues(typeof(NamedResourceTypes)))
             {
-                this.LoadResourceFileIntoCache(resourceType);
+                this.LoadNamedResourceFileIntoCache(namedResourceType);
             }
         }
 
-        public override int LoadResourceFileIntoCache(ResourceTypes resourceType)
+        public override int LoadNamedResourceFileIntoCache(NamedResourceTypes namedResourceType)
         {
-            string resourceTypeName = Enum.GetName(typeof(ResourceTypes), resourceType).ToLower();
+            string resourceTypeName = Enum.GetName(typeof(NamedResourceTypes), namedResourceType).ToLower();
             string absoluteResourceDir = $"{base.CACHE_DIRECTORY}\\{resourceTypeName}";
             string absoluteFilepath = $"{absoluteResourceDir}{base.FILE_EXTENSION}";
 
@@ -36,13 +36,13 @@ namespace PokeLib.Cache
                 return 0;
 
             string[] lines = File.ReadAllLines(absoluteFilepath);
-            CachedResource resource;
+            NamedCachedResource resource;
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.Converters.Add(new JsonStringEnumConverter());
 
             foreach (string line in lines)
             {
-                resource = JsonSerializer.Deserialize<CachedResource>(line, options);
+                resource = JsonSerializer.Deserialize<NamedCachedResource>(line, options);
                 resource.Json = File.ReadAllText($"{absoluteResourceDir}/{resource.Name}{base.FILE_EXTENSION}");
                 this.Db.StringSet(resource.Name, JsonSerializer.Serialize(resource));
             }
@@ -55,10 +55,10 @@ namespace PokeLib.Cache
             return this.GetKeys("*").Count();
         }
 
-        public async Task<IEnumerable<CachedResource>> GetCachedResourcesByPatternAsync(string pattern)
+        public async Task<IEnumerable<NamedCachedResource>> GetCachedResourcesByPatternAsync(string pattern)
         {
             IEnumerable<RedisKey> keys = this.GetKeys(pattern);
-            IList<CachedResource> results = new List<CachedResource>();
+            IList<NamedCachedResource> results = new List<NamedCachedResource>();
             string keyString = string.Empty;
 
             foreach (RedisKey key in keys)
@@ -74,17 +74,17 @@ namespace PokeLib.Cache
             return results;
         }
 
-        public async Task<CachedResource> GetCachedResourceAsync(string key)
+        public async Task<NamedCachedResource> GetCachedResourceAsync(string key)
         {
             string result = await this.Db.StringGetAsync(key);
 
             if (string.IsNullOrEmpty(result))
                 return null;
 
-            return JsonSerializer.Deserialize<CachedResource>(result);
+            return JsonSerializer.Deserialize<NamedCachedResource>(result);
         }
 
-        public bool UpdateCachedResource(CachedResource cachedResource)
+        public bool UpdateCachedResource(NamedCachedResource cachedResource)
         {
             return this.Db.StringSet(cachedResource.Name, JsonSerializer.Serialize(cachedResource));
         }

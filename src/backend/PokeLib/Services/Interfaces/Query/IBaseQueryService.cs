@@ -6,7 +6,7 @@ namespace PokeLib.Services
 {
     public interface IBaseQueryService
     {
-        Task<IEnumerable<CachedResource>> QueryAsync(QueryOptions json);
+        Task<IEnumerable<NamedCachedResource>> QueryAsync(QueryOptions json);
         Task<string> QueryJsonAsync(QueryOptions json);
     }
 }

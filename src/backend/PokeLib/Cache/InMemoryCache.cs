@@ -7,16 +7,16 @@ namespace PokeLib.Cache
 {
     public sealed class InMemoryCache : BaseCache, IInMemoryCache
     {
-        public IList<CachedResource> Cache { get; set; }
+        public IList<NamedCachedResource> Cache { get; set; }
 
         public InMemoryCache(string cacheDirectory) 
             : base(cacheDirectory)
         {
-            this.Cache = new List<CachedResource>();
+            this.Cache = new List<NamedCachedResource>();
 
-            foreach (ResourceTypes resourceType in Enum.GetValues(typeof(ResourceTypes)))
+            foreach (NamedResourceTypes namedResourceType in Enum.GetValues(typeof(NamedResourceTypes)))
             {
-                this.LoadResourceFileIntoCache(resourceType);
+                this.LoadNamedResourceFileIntoCache(namedResourceType);
             }
         }
 
@@ -25,9 +25,9 @@ namespace PokeLib.Cache
         /// </summary>
         /// <param name="fileDirectory">Exact file location on local filesystem</param>
         /// <returns>Number of new objects added to Cache</returns>
-        public override int LoadResourceFileIntoCache(ResourceTypes resourceType)
+        public override int LoadNamedResourceFileIntoCache(NamedResourceTypes namedResourceType)
         {
-            string resourceTypeName = Enum.GetName(typeof(ResourceTypes), resourceType).ToLower();
+            string resourceTypeName = Enum.GetName(typeof(ResourceTypes), namedResourceType).ToLower();
             string fileDirectory = $"{base.CACHE_DIRECTORY}\\{resourceTypeName}{base.FILE_EXTENSION}";
             string[] lines;
 
@@ -38,7 +38,7 @@ namespace PokeLib.Cache
 
             foreach (string line in lines)
             {
-                this.Cache.Add(JsonSerializer.Deserialize<CachedResource>(line));
+                this.Cache.Add(JsonSerializer.Deserialize<NamedCachedResource>(line));
             }
 
             return lines.Length;
