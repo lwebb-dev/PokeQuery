@@ -49,6 +49,20 @@ namespace PokeLib.Services
             return cachedResource.Json;
         }
 
+        public async Task<string> GetPokeApiJsonResultAsync<T>(CachedResource cachedResource)
+            where T : ApiResource
+        {
+            string[] splitUri = cachedResource.Url.Split("/");
+            int id = int.Parse(splitUri[^2]);
+            T result = await this.client.GetResourceAsync<T>(id);
+            this.logger.LogInformation("Request made to PokeApi on {0} at {1}", DateTime.UtcNow, cachedResource.Url);
+            cachedResource.Json = JsonSerializer.Serialize(result);
+            string absoluteJsonFilePath = $"{this.CACHE_DIRECTORY}/{cachedResource.ResourceType}/{cachedResource.ResourceType}_{cachedResource.Id}{FILE_EXTENSION}";
+            await File.WriteAllTextAsync(absoluteJsonFilePath, cachedResource.Json);
+            return cachedResource.Json;
+
+        }
+
         internal string GetSanitizedQuery(string query)
         {
             if (string.IsNullOrEmpty(query) || query.Length < 3)
@@ -112,6 +126,17 @@ namespace PokeLib.Services
                 return await this.GetNamedPokeApiJsonResultAsync<Generation>(resource);
 
             throw new NotImplementedException("Unknown NamedResource Type.");
+        }
+
+        internal async Task<string> GetFullApiResourceFromPokeApiAsync(CachedResource resource)
+        {
+            if (!string.IsNullOrEmpty(resource.Json))
+                return resource.Json;
+
+            if (resource.ResourceType == ResourceTypes.Machines)
+                return await this.GetPokeApiJsonResultAsync<Machine>(resource);
+
+            throw new NotImplementedException("Unknown Resource Type.");
         }
     }
 }

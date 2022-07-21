@@ -40,6 +40,14 @@ namespace PokeCache
         {
             Directory.CreateDirectory(this.CACHE_DIRECTORY);
 
+            await HandleNamedResourceFiles();
+            await HandleApiResourceFiles();
+
+            Console.WriteLine("Done!");
+        }
+
+        public async Task HandleNamedResourceFiles()
+        {
             MethodInfo writeFileMethod = typeof(Application).GetMethod(nameof(Application.WriteNamedResourceFileAsync));
 
             foreach (KeyValuePair<NamedResourceTypes, System.Type> kvp in this.NamedResourceTypeMap)
@@ -58,8 +66,30 @@ namespace PokeCache
                 await task.ConfigureAwait(false);
                 PropertyInfo resultProperty = task.GetType().GetProperty("Result");
             }
+        }
 
-            Console.WriteLine("Done!");
+        // TODO: Abstract out duplicate Method/TypeMap logic into separate method using reflection
+        public async Task HandleApiResourceFiles()
+        {
+            MethodInfo writeFileMethod = typeof(Application).GetMethod(nameof(Application.WriteResourceFileAsync));
+
+            foreach (KeyValuePair<ResourceTypes, System.Type> kvp in this.ResourceTypeMap)
+            {
+                string resourceName = Enum.GetName(typeof(ResourceTypes), kvp.Key).ToLower();
+
+                if (File.Exists($"{this.CACHE_DIRECTORY}/{resourceName}{FILE_EXTENSION}"))
+                {
+                    Console.WriteLine($"{resourceName}{FILE_EXTENSION} exists, skipping...");
+                    continue;
+                }
+
+                MethodInfo genericMethod = writeFileMethod.MakeGenericMethod(kvp.Value);
+                object[] methodParams = new object[] { kvp.Key };
+                Task task = (Task)genericMethod.Invoke(this, methodParams);
+                await task.ConfigureAwait(false);
+                PropertyInfo resultProperty = task.GetType().GetProperty("Result");
+            }
+
         }
 
         public async Task WriteNamedResourceFileAsync<T>(NamedResourceTypes namedResourceType)
@@ -93,7 +123,8 @@ namespace PokeCache
         public async Task WriteResourceFileAsync<T>(ResourceTypes resourceType)
             where T : ApiResource
         {
-            DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{Enum.GetName(typeof(NamedResourceTypes), resourceType).ToLower()}");
+            string resourceName = Enum.GetName(typeof(ResourceTypes), resourceType).ToLower();
+            DirectoryInfo resourceDir = Directory.CreateDirectory($"{this.CACHE_DIRECTORY}/{resourceName}");
             string absoluteFilename = $"{resourceDir.FullName}.txt";
             ApiResourceList<T> resources = await this.client.GetApiResourcePageAsync<T>(100000, 0);
 
@@ -109,7 +140,7 @@ namespace PokeCache
                 };
 
                 await file.WriteLineAsync(JsonSerializer.Serialize(resourceObject));
-                string absoluteFilePath = $"{resourceDir}/{resourceObject.Id}{FILE_EXTENSION}";
+                string absoluteFilePath = $"{resourceDir}/{resourceName}_{resourceObject.Id}{FILE_EXTENSION}";
 
                 if (!File.Exists(absoluteFilePath))
                     await WriteBlankJsonTextFile(absoluteFilePath);
