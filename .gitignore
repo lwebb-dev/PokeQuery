@@ -4,7 +4,7 @@
 
 **/bin/
 **/obj/
-**/docker/
+**/docker/poke-redis
 
 # Logs
 logs

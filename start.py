@@ -47,6 +47,10 @@ def openInVisualStudio():
     subprocess.Popen("python ./scripts/open-pokequery-solution.py", shell=True)
     return
 
+def createPokeDataVolume():
+    subprocess.Popen("python ./scripts/create-poke-data-volume.py", shell=True)
+    return
+
 def lowerInput(prompt):
     return input(prompt).lower()
 
@@ -55,6 +59,7 @@ def handleInput(input):
 
     match input:
         case "1":
+            createPokeDataVolume()
             buildEnvFiles("--use-default")
             runPokeCache()
             startRedis("--new-volume")
@@ -83,6 +88,8 @@ def handleInput(input):
             openInVsCode()
         case "12":
             openInVisualStudio()
+        case "13":
+            createPokeDataVolume()
         case "x":
             handleExit()
         case _:
@@ -107,6 +114,7 @@ def mainMenu(displayOptions):
         print("10. Open Frontend App In Browser")
         print("11. Open Repo in VS Code")
         print("12. Open PokeQuery.sln")
+        print("13. Create PokeData Volume")
         print("X. Exit/Quit")
 
     handleInput(lowerInput("Input Value: "))

@@ -22,9 +22,6 @@ repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 if (len(sys.argv) == 3 and sys.argv[2].lower() == "--new-volume"):
 
-    if (os.path.exists(f"{repoRoot}\docker") == False):
-        os.mkdir(f"{repoRoot}\docker")
-
     if (os.path.exists(f"{repoRoot}\docker\{volumeName}") == False):
         os.mkdir(f"{repoRoot}\docker\{volumeName}")
 
