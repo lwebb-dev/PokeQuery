@@ -2,9 +2,33 @@ version: '3.8'
 
 services:
 
+  data:
+    image: pokequery-data
+    container_name: data
+    profiles: [setup]
+    build:
+      context: docker/poke-data
+      dockerfile: Dockerfile
+    volumes:
+      - poke-data:/poke-data
+
+  redis-stack:
+    image: redis/redis-stack:6.2.2-v5
+    container_name: redis-stack
+    profiles: [all, infrastructure, redis]
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+    - poke-redis:/data
+
+
   frontend:
     image: pokequery-frontend
     container_name: frontend
+    profiles: [all, frontends]
+    depends_on:
+      - redis-stack
     build:
       context: src/frontend/poke-query
       dockerfile: Dockerfile 
@@ -15,4 +39,6 @@ services:
 
 volumes:
   poke-data:
+    driver: local
+  poke-redis:
     driver: local
