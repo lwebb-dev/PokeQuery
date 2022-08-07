@@ -39,7 +39,7 @@ services:
 
   loader:
     image: pokequery-loader
-    container_name: loader
+    container_name: poke-loader
     profiles: [all, infrastructure, redis]
     depends_on:
         - redis-stack

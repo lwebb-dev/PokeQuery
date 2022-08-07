@@ -5,10 +5,9 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["PokeLoader/PokeLoader.csproj", "PokeLoader/"]
-RUN dotnet restore "PokeLoader/PokeLoader.csproj"
+COPY "PokeLoader.csproj" .
+RUN dotnet restore "PokeLoader.csproj"
 COPY . .
-WORKDIR "/src/PokeLoader"
 RUN dotnet build "PokeLoader.csproj" -c Release -o /app/build
 
 FROM build AS publish
