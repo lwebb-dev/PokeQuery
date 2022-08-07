@@ -37,6 +37,18 @@ services:
     environment:
       API_BASE_URI: http://localhost:5244
 
+  loader:
+    image: pokequery-loader
+    container_name: loader
+    profiles: [all, infrastructure, redis]
+    depends_on:
+        - redis-stack
+    build:
+        context: src/backend/PokeLoader
+        dockerfile: Dockerfile
+    volumes:
+        - poke-data:/poke-data
+
 volumes:
   poke-data:
     driver: local
