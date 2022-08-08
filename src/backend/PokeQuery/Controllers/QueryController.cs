@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PokeApiNet;
-using System;
+using PokeQuery.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,39 +9,35 @@ namespace PokeQuery.Controllers
     [Route("[controller]")]
     public class QueryController : ControllerBase
     {
-        //private readonly IRedisQueryService queryService;
+        private readonly IRedisService redisService;
 
-        public QueryController()
+        public QueryController(IRedisService redisService)
         {
-            //this.queryService = queryService;
+            this.redisService = redisService;
         }
 
         [HttpGet("/types")]
-        public async Task<ActionResult<IEnumerable<PokeApiNet.Type>>> GetTypesAsync()
+        public async Task<ActionResult<IEnumerable<string>>> GetTypesJsonAsync()
         {
-            throw new NotImplementedException();
-            //return Ok(await this.queryService.GetNamedResourceAsync<Type>(NamedResourceTypes.Types));
+            return Ok(await this.redisService.GetJsonResultsByPatternAsync("type:*"));
         }
 
         [HttpGet("/version-groups")]
-        public async Task<ActionResult<IEnumerable<VersionGroup>>> GetVersionGroupsAsync()
+        public async Task<ActionResult<IEnumerable<string>>> GetVersionGroupsJsonAsync()
         {
-            throw new NotImplementedException();
-            //return Ok(await this.queryService.GetNamedResourceAsync<VersionGroup>(NamedResourceTypes.VersionGroups));
+            return Ok(await this.redisService.GetJsonResultsByPatternAsync("*version-group:*"));
         }
 
         [HttpGet("/generations")]
-        public async Task<ActionResult<IEnumerable<Generation>>> GetGenerationsAsync()
+        public async Task<ActionResult<IEnumerable<string>>> GetGenerationsJsonAsync()
         {
-            throw new NotImplementedException();
-            //return Ok(await this.queryService.GetNamedResourceAsync<Generation>(NamedResourceTypes.Generations));
+            return Ok(await this.redisService.GetJsonResultsByPatternAsync("*generation:*"));
         }
 
         [HttpGet("/machines")]
-        public async Task<ActionResult<IEnumerable<Machine>>> GetMachinesAsync()
+        public async Task<ActionResult<IEnumerable<string>>> GetMachinesJsonAsync()
         {
-            throw new NotImplementedException();
-            //return Ok(await this.queryService.GetApiResourceAsync<Machine>(ResourceTypes.Machines));
+            return Ok(await this.redisService.GetJsonResultsByPatternAsync("*machine:*"));
         }
     }
 }

@@ -36,7 +36,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      API_BASE_URI: http://api:5244
+      API_BASE_URI: http://api:5112
 
   loader:
     image: pokequery-loader
@@ -63,7 +63,7 @@ services:
       context: src/backend/PokeQuery
       dockerfile: Dockerfile
     ports:
-      - "5244:5244"
+      - "5112:80"
     environment:
       REDIS_CONNECTION: redis-stack
 
