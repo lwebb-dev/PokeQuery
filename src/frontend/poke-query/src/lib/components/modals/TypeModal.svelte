@@ -3,10 +3,11 @@
 
   export let pkmnType;
   
-  let typeName = pkmnType.Name;
+  let typeName = pkmnType.name;
   let modalName = `typeModal-${typeName}`;
-  let typeData = JSON.parse(sessionStorage.typeData.replaceAll(';', ''));
-  let damageRelations = typeData.find(x => x.name === typeName).damageRelations;
+  let typeData = sessionStorage.typeData;
+  console.log(typeData);
+  let damageRelations = typeData.find(x => x.name === typeName).damage_relations;
 </script>
 
 <!-- Button trigger modal -->

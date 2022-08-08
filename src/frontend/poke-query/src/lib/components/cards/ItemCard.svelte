@@ -1,20 +1,23 @@
 <script>
   export let data;
+
+  console.log("Hello from ItemCard.svelte!");
+
 </script>
 
 <div class="card mw-20 m-2 card-item">
   <img
     class="card-img-top h-35  pt-2 ps-5 pe-5"
-    src={data.json.Sprites.Default}
+    src={data.sprites.default}
     alt={data.name}
   />
   <div class="card-body">
     <h4 class="card-title text-capitalize text-center">
-      {data.json.Name.replaceAll("-", " ")}
+      {data.name.replaceAll("-", " ")}
     </h4>
-    {#if typeof data.json.EffectEntries[0] !== "undefined"}
+    {#if typeof data.effect_entries[0] !== "undefined"}
       <p class="card-text text-wrap">
-        {data.json.EffectEntries[0].ShortEffect}
+        {data.effect_entries[0].short_effect}
       </p>
     {/if}
   </div>

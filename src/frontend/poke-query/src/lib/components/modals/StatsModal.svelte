@@ -3,7 +3,7 @@
 
     export let data;
     const MAX_STAT_VALUE = 255;
-    let statData = data.json.Stats;
+    let statData = data.Stats;
     let modalName = `statModal-${data.name}`;
 
     const statNames = {

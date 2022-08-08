@@ -1,24 +1,27 @@
 <script>
   import MovesModal from "../modals/MovesModal.svelte";
-import StatsModal from "../modals/StatsModal.svelte";
+  import StatsModal from "../modals/StatsModal.svelte";
   import TypeModal from "../modals/TypeModal.svelte";
 
   export let data;
+
+  console.log("Hello from PokemonCard.svelte!");
+
 </script>
 
 <div class="card mw-20 m-2 card-pkmn">
   <img
     class="card-img-top h-45 pt-2 ps-5 pe-5"
-    src={data.json.Sprites.Other.Home.FrontDefault}
+    src={data.sprites.other.home.front_default}
     alt={data.name}
   />
   <div class="card-body">
     <h4 class="card-title text-capitalize text-center">
-      {data.json.Name.replaceAll("-", " ")}
+      {data.name.replaceAll("-", " ")}
     </h4>
     <div class="d-flex justify-content-center">
-      {#each data.json.Types as pkmnType}
-        <TypeModal pkmnType={pkmnType.Type} />
+      {#each data.types as pkmnType}
+        <TypeModal pkmnType={pkmnType.type} />
       {/each}
     </div>
     <div class="d-flex mt-1 flex-wrap justify-content-center">

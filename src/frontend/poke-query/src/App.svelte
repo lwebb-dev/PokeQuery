@@ -2,15 +2,11 @@
   import ItemCard from "./lib/components/cards/ItemCard.svelte";
   import MoveCard from "./lib/components/cards/MoveCard.svelte";
   import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
-import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
+  import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
-  enum NamedResourceTypes {
-    Pokemon = 0,
-    Moves = 1,
-    Items = 2,
-  }
-
-  let results: any[] = [];
+  let pkmnResults: any[] = [];
+  let itemResults: any[] = [];
+  let moveResults: any[] = [];
   let query: string;
   let baseUri: string = process.env.API_BASE_URI;
 
@@ -20,15 +16,37 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
 
-  const handleKeyDown = (event): void => {
-    if (event.keyCode === 13) {
-      handleSearch();
-    }
+  const handleQuery = async (prefix: string, flag: boolean, results: any[]) => {
+
+      if (!flag) {
+        console.log(`resolving promise for ${prefix}`);
+        return Promise.resolve();
+      }
+  
+      await fetch(`${baseUri}/${prefix}?query=${query}`, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    },
+  })
+    .then((r) => {
+      if (!r.ok) {
+        throw new Error("API FAILED TO RETURN 200 OK ON /types");
+      }
+      return r.json();
+    })
+    .then((data) => {
+      data.forEach(x => {
+        let jsonObj = JSON.parse(x);
+        results.push(jsonObj);
+        results = results;
+      })
+    });
   };
+    
 
   const handleSearch = async () => {
-    results = [];
-
     if (isLoadingSessionData)
       return;
 
@@ -38,37 +56,27 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
     isLoading = true;
 
-    let requestUri: string = `${baseUri}/query`;
-    let requestBody = {
-      Query: query,
-      IncludePokemon: includePokemon,
-      IncludeItems: includeItems,
-      IncludeMoves: includeMoves,
-    };
-
-    await fetch(requestUri, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((r) => {
-        if (!r.ok) {
-          isLoading = false;
-          throw new Error("API FAILED TO RETURN 200 OK");
-        }
-        return r.json();
-      })
-      .then((data) => {
-        results = data;
-        results.forEach((x) => (x.json = JSON.parse(x.json)));
-      });
-
-    isLoading = false;
-    console.log(results);
+    return Promise.all([
+      pkmnResults = [],
+      itemResults = [],
+      moveResults = [],
+      handleQuery("pokemon", includePokemon, pkmnResults),
+      handleQuery("items", includeItems, itemResults),
+      handleQuery("moves", includeMoves, moveResults)
+    ]).finally(() => {
+      isLoading = false;
+      console.log(pkmnResults);
+      console.log(itemResults);
+      console.log(moveResults);
+    });
   };
+
+  const handleKeyDown = (event): void => {
+    if (event.keyCode === 13) {
+      handleSearch();
+    }
+  };
+
 </script>
 
 <div class="container-fluid my-3">
@@ -134,17 +142,23 @@ import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-    {/if}
-
-    {#each results as result}
-      {#if result.namedResourceType === NamedResourceTypes.Pokemon && result.json.IsDefault === true}
-        <PokemonCard data={result} />
-      {:else if result.namedResourceType === NamedResourceTypes.Items && !result.name.includes("-candy")}
-        <ItemCard data={result} />
-      {:else if result.namedResourceType === NamedResourceTypes.Moves}
-        <MoveCard data={result} />
+    {:else}
+    {#each pkmnResults as pkmnResult}
+      {#if pkmnResult.is_default === true}
+        <PokemonCard data={pkmnResult} />
       {/if}
     {/each}
+
+    {#each itemResults as itemResult}
+    {#if !itemResult.name.includes("-candy")}
+      <ItemCard data={itemResult} />
+    {/if}
+    {/each}
+
+    {#each moveResults as moveResult}
+      <MoveCard data={moveResult} />
+    {/each}
+    {/if}
   </div>
 </div>
 

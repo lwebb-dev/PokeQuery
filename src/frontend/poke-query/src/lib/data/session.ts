@@ -35,7 +35,7 @@ const loadTypeDataIntoSession = async (baseUri) => {
       return r.json();
     })
     .then((data) => {
-      sessionStorage.typeData = JSON.stringify(data);
+      sessionStorage.typeData = data;
 
     });
 };
@@ -55,7 +55,7 @@ const loadVersionGroupDataIntoSession = async (baseUri) => {
       return r.json();
     })
     .then((data) => {
-      sessionStorage.versionGroupData = JSON.stringify(data);
+      sessionStorage.versionGroupData = data;
 
     });
 };

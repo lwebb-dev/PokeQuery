@@ -4,7 +4,7 @@
   export let data;
 
   let modalName = `movesModal-${data.name}`;
-  let moveData = data.json.Moves;
+  let moveData = data.Moves;
   let sessionVersionGroups = JSON.parse(sessionStorage.versionGroupData);
   let versionGroups = [];
   moveData.forEach((x) =>

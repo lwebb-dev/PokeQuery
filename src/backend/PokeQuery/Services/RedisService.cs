@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using NRediSearch;
 using NReJSON;
 using StackExchange.Redis;
 using System.Collections.Generic;
@@ -16,6 +17,13 @@ namespace PokeQuery.Services
         {
             this.redis = ConnectionMultiplexer.Connect(configuration["REDIS_CONNECTION"]);
             this.db = this.redis.GetDatabase();
+        }
+
+        public async Task<IEnumerable<string>> QueryIndexJsonAsync(string index, string query)
+        {
+            var searchClient = new Client(index, this.db);
+            SearchResult searchResult = await searchClient.SearchAsync(new Query(query));
+            return searchResult.Documents.Select(x => x["json"].ToString());
         }
 
         public async Task<IEnumerable<string>> GetJsonResultsByPatternAsync(string pattern)

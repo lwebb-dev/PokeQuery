@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokeQuery.Services;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,6 +16,25 @@ namespace PokeQuery.Controllers
         {
             this.redisService = redisService;
         }
+
+        [HttpGet("/pokemon")]
+        public async Task<ActionResult<IEnumerable<string>>> SearchPokemonJsonAsync(string query)
+        {
+            return Ok(await this.redisService.QueryIndexJsonAsync("idx:pokemon", query));
+        }
+
+        [HttpGet("/items")]
+        public async Task<ActionResult<IEnumerable<string>>> SearchItemJsonAsync(string query)
+        {
+            return Ok(await this.redisService.QueryIndexJsonAsync("idx:item", query));
+        }
+
+        [HttpGet("/moves")]
+        public async Task<ActionResult<IEnumerable<string>>> SearchMoveJsonAsync(string query)
+        {
+            return Ok(await this.redisService.QueryIndexJsonAsync("idx:move", query));
+        }
+
 
         [HttpGet("/types")]
         public async Task<ActionResult<IEnumerable<string>>> GetTypesJsonAsync()
