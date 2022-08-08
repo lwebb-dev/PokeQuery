@@ -3,9 +3,9 @@
     "PokeLoader": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true
+        "CACHE_DIRECTORY": "C:\\Users\\logan\\github.com\\PokeAPI\\api-data\\data\\api\\v2",
+        "REDIS_CONNECTION": "localhost"
+      }
     },
     "Docker": {
       "commandName": "Docker"

@@ -29,6 +29,7 @@ services:
     profiles: [all, frontends]
     depends_on:
       - redis-stack
+      - loader
     build:
       context: src/frontend/poke-query
       dockerfile: Dockerfile 
@@ -48,6 +49,9 @@ services:
         dockerfile: Dockerfile
     volumes:
         - poke-data:/poke-data
+    environment:
+      CACHE_DIRECTORY: /poke-data
+      REDIS_CONNECTION: redis-stack
 
 volumes:
   poke-data:

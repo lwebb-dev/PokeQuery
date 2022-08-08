@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeLoader", "PokeLoader\PokeLoader.csproj", "{1DABBB13-6EAD-499F-B3BD-5A3636359466}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "..\..\docker-compose.dcproj", "{536107AF-0B72-4CC1-BC19-91CB05D5950A}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "../../docker-compose.dcproj", "{536107AF-0B72-4CC1-BC19-91CB05D5950A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeLoader", "PokeLoader\PokeLoader.csproj", "{D542CF1E-E7A1-4588-B945-53BC5A40AB62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1DABBB13-6EAD-499F-B3BD-5A3636359466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DABBB13-6EAD-499F-B3BD-5A3636359466}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DABBB13-6EAD-499F-B3BD-5A3636359466}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DABBB13-6EAD-499F-B3BD-5A3636359466}.Release|Any CPU.Build.0 = Release|Any CPU
 		{536107AF-0B72-4CC1-BC19-91CB05D5950A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{536107AF-0B72-4CC1-BC19-91CB05D5950A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{536107AF-0B72-4CC1-BC19-91CB05D5950A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{536107AF-0B72-4CC1-BC19-91CB05D5950A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D542CF1E-E7A1-4588-B945-53BC5A40AB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D542CF1E-E7A1-4588-B945-53BC5A40AB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D542CF1E-E7A1-4588-B945-53BC5A40AB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D542CF1E-E7A1-4588-B945-53BC5A40AB62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
