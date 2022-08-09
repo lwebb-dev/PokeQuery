@@ -4,14 +4,23 @@
   export let data;
 
   let modalName = `movesModal-${data.name}`;
-  let moveData = data.Moves;
+  let moveData = data.moves;
   let sessionVersionGroups = JSON.parse(sessionStorage.versionGroupData);
+
+  for (let i = 0; i < sessionVersionGroups.length; i++) {
+    sessionVersionGroups[i] = JSON.parse(sessionVersionGroups[i]);
+  }
+
+  console.log(sessionVersionGroups);
+
   let versionGroups = [];
+
   moveData.forEach((x) =>
-    x.VersionGroupDetails.forEach((y) =>
-      versionGroups.push(y.VersionGroup.Name)
+    x.version_group_details.forEach((y) =>
+      versionGroups.push(y.version_group.name)
     )
   );
+
   versionGroups = [...new Set(versionGroups)].sort(
     (a, b) =>
       sessionVersionGroups.find((x) => x.name === a).id -
@@ -32,55 +41,55 @@
 
     let versionMoveData = moveDataClone.filter(
       (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.VersionGroup.Name === selectedVersion
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.version_group.name === selectedVersion
         ))
     );
 
     lvlUpMoveData = structuredClone(versionMoveData);
     lvlUpMoveData.forEach(
       (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.MoveLearnMethod.Name === "level-up"
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.move_learn_method.name === "level-up"
         ))
     );
     lvlUpMoveData = lvlUpMoveData
-      .filter((x) => x.VersionGroupDetails.length > 0)
+      .filter((x) => x.version_group_details.length > 0)
       .sort(
         (a, b) =>
-          a.VersionGroupDetails[0].LevelLearnedAt -
-          b.VersionGroupDetails[0].LevelLearnedAt
+          a.version_group_details[0].level_learned_at -
+          b.version_group_details[0].level_learned_at
       );
 
     machineMoveData = structuredClone(versionMoveData);
     machineMoveData.forEach(
       (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.MoveLearnMethod.Name === "machine"
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.move_learn_method.name === "machine"
         ))
     );
     machineMoveData = machineMoveData.filter(
-      (x) => x.VersionGroupDetails.length > 0
+      (x) => x.version_group_details.length > 0
     );
 
     eggMoveData = structuredClone(versionMoveData);
     eggMoveData.forEach(
       (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.MoveLearnMethod.Name === "egg"
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.move_learn_method.name === "egg"
         ))
     );
-    eggMoveData = eggMoveData.filter((x) => x.VersionGroupDetails.length > 0);
+    eggMoveData = eggMoveData.filter((x) => x.version_group_details.length > 0);
 
     tutorMoveData = structuredClone(versionMoveData);
     tutorMoveData.forEach(
       (x) =>
-        (x.VersionGroupDetails = x.VersionGroupDetails.filter(
-          (vgd) => vgd.MoveLearnMethod.Name === "tutor"
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.move_learn_method.name === "tutor"
         ))
     );
     tutorMoveData = tutorMoveData.filter(
-      (x) => x.VersionGroupDetails.length > 0
+      (x) => x.version_group_details.length > 0
     );
   };
 
@@ -168,10 +177,10 @@
                     </thead>
                     <tbody>
                       {#each lvlUpMoveData as move}
-                        {#each move.VersionGroupDetails as versionGroup}
+                        {#each move.version_group_details as versionGroup}
                           <tr>
-                            <td class="text-capitalize">{move.Move.Name.replace('-', ' ')}</td>
-                            <td>{versionGroup.LevelLearnedAt}</td>
+                            <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
+                            <td>{versionGroup.level_learned_at}</td>
                           </tr>
                         {/each}
                       {/each}
@@ -214,7 +223,7 @@
                     <tbody>
                       {#each machineMoveData as move}
                         <tr>
-                          <td class="text-capitalize">{move.Move.Name.replace('-', ' ')}</td>
+                          <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
                           <td>--</td>
                         </tr>
                       {/each}
@@ -254,7 +263,7 @@
                     <tbody>
                       {#each eggMoveData as move}
                         <tr>
-                          <td class="text-capitalize">{move.Move.Name.replace('-', ' ')}</td>
+                          <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
                         </tr>
                       {/each}
                     </tbody>
@@ -293,7 +302,7 @@
                     <tbody>
                       {#each tutorMoveData as move}
                         <tr>
-                          <td class="text-capitalize">{move.Move.Name.replace('-', ' ')}</td>
+                          <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
                         </tr>
                       {/each}
                     </tbody>

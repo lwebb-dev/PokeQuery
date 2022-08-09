@@ -5,8 +5,12 @@
   
   let typeName = pkmnType.name;
   let modalName = `typeModal-${typeName}`;
-  let typeData = sessionStorage.typeData;
-  console.log(typeData);
+  let typeData = JSON.parse(sessionStorage.typeData);
+
+    for (let i = 0; i < typeData.length; i++) {
+      typeData[i] = JSON.parse(typeData[i]);
+    }
+
   let damageRelations = typeData.find(x => x.name === typeName).damage_relations;
 </script>
 
@@ -25,26 +29,26 @@
           <div class="container px-5">
             <div class="container title-border">
                 <h4>Offensive</h4>
-                {#if damageRelations.doubleDamageTo.length > 0}
+                {#if damageRelations.double_damage_to.length > 0}
                 <h6>Strong Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.doubleDamageTo as type}
+                    {#each damageRelations.double_damage_to as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>
                 {/if}
-                {#if damageRelations.halfDamageTo.length > 0}
+                {#if damageRelations.half_damage_to.length > 0}
                 <h6>Weak Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.halfDamageTo as type}
+                    {#each damageRelations.half_damage_to as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>
                 {/if}
-                {#if damageRelations.noDamageTo.length > 0}
+                {#if damageRelations.no_damage_to.length > 0}
                 <h6>Resisted By:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.noDamageTo as type}
+                    {#each damageRelations.no_damage_to as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>
@@ -52,26 +56,26 @@
             </div>
             <div class="container title-border">
                 <h4>Defensive</h4>
-                {#if damageRelations.halfDamageFrom.length > 0}
+                {#if damageRelations.half_damage_from.length > 0}
                 <h6>Strong Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.halfDamageFrom as type}
+                    {#each damageRelations.half_damage_from as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>
                 {/if}
-                {#if damageRelations.doubleDamageFrom.length > 0}
+                {#if damageRelations.double_damage_from.length > 0}
                 <h6>Weak Against:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.doubleDamageFrom as type}
+                    {#each damageRelations.double_damage_from as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>
                 {/if}
-                {#if damageRelations.noDamageFrom.length > 0}
+                {#if damageRelations.no_damage_from.length > 0}
                 <h6>Immune To:</h6>
                 <div class="d-flex flex-wrap justify-content-center">
-                    {#each damageRelations.noDamageFrom as type}
+                    {#each damageRelations.no_damage_from as type}
                         <TypeChiclet typeName={type.name} isStatic={true} />
                     {/each}
                 </div>

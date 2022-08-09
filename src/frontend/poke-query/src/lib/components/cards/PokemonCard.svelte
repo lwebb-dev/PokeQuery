@@ -12,7 +12,7 @@
 <div class="card mw-20 m-2 card-pkmn">
   <img
     class="card-img-top h-45 pt-2 ps-5 pe-5"
-    src={data.sprites.other.home.front_default}
+    src={data.sprites.other.home.front_default.replace("https://raw.githubusercontent.com/PokeAPI/sprites/master/https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites")}
     alt={data.name}
   />
   <div class="card-body">

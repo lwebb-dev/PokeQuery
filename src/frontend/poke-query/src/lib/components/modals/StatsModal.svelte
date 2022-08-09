@@ -3,7 +3,7 @@
 
     export let data;
     const MAX_STAT_VALUE = 255;
-    let statData = data.Stats;
+    let statData = data.stats;
     let modalName = `statModal-${data.name}`;
 
     const statNames = {
@@ -53,20 +53,20 @@
             {#each statData as stat}
                 <div class="row">
                     <div class="col-4 text-end">
-                        {statNames[stat.Stat.Name]}:
+                        {statNames[stat.stat.name]}:
                     </div>
                     <div class="col-8">
                         <div class="row">
                             <div class="col-2 p-0 text-end">
-                                {stat.BaseStat}
+                                {stat.base_stat}
                             </div>
                             <div class="col-10">
                                 <div class="progress">
                                     <div 
-                                    class="progress-bar bg-{getStatColorClass(stat.BaseStat)}" 
+                                    class="progress-bar bg-{getStatColorClass(stat.base_stat)}" 
                                     role="progressbar" 
-                                    style="width: {getStatPercent((stat.BaseStat))}%"
-                                    aria-valuenow="{stat.BaseStat}"
+                                    style="width: {getStatPercent((stat.base_stat))}%"
+                                    aria-valuenow="{stat.base_stat}"
                                     aria-valuemin="0"
                                     aria-valuemax="{MAX_STAT_VALUE}"
                                     ></div>
