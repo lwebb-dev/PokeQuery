@@ -19,7 +19,6 @@
   const handleQuery = async (prefix: string, flag: boolean, results: any[]) => {
 
       if (!flag) {
-        console.log(`resolving promise for ${prefix}`);
         return Promise.resolve();
       }
   
@@ -65,9 +64,7 @@
       handleQuery("moves", includeMoves, moveResults)
     ]).finally(() => {
       isLoading = false;
-      console.log(pkmnResults);
-      console.log(itemResults);
-      console.log(moveResults);
+      console.log(`query: \"${query}\" | pkmnResults: ${pkmnResults.length} | itemResults: ${itemResults.length} | moveResults: ${moveResults.length}`);
     });
   };
 

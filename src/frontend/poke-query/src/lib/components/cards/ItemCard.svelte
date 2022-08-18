@@ -1,8 +1,5 @@
 <script>
   export let data;
-
-  console.log("Hello from ItemCard.svelte!");
-
 </script>
 
 <div class="card mw-20 m-2 card-item">

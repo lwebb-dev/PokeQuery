@@ -2,9 +2,7 @@
   import TypeModal from "../modals/TypeModal.svelte";
 
   export let data;
-
-  console.log("Hello from MoveCard.svelte!");
-
+  
   const handleNull = (value) => {
     if (value === null || value < 5)
       return "--"

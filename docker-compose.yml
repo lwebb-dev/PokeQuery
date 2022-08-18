@@ -15,7 +15,7 @@ services:
   redis-stack:
     image: redis/redis-stack:6.2.2-v5
     container_name: redis-stack
-    profiles: [all, infrastructure, redis]
+    profiles: [all, backend, redis]
     ports:
       - "6379:6379"
       - "8001:8001"
@@ -26,7 +26,7 @@ services:
   frontend:
     image: pokequery-frontend
     container_name: frontend
-    profiles: [all, frontends]
+    profiles: [all, frontend]
     depends_on:
       - redis-stack
       - loader
@@ -41,7 +41,7 @@ services:
   loader:
     image: pokequery-loader
     container_name: poke-loader
-    profiles: [all, infrastructure, redis]
+    profiles: [all, backend, redis]
     depends_on:
         - redis-stack
     build:
@@ -56,7 +56,7 @@ services:
   api:
     image: pokequery-api
     container_name: api
-    profiles: [all]
+    profiles: [all, backend]
     depends_on:
       - redis-stack
     build:

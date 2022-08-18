@@ -11,8 +11,6 @@
     sessionVersionGroups[i] = JSON.parse(sessionVersionGroups[i]);
   }
 
-  console.log(sessionVersionGroups);
-
   let versionGroups = [];
 
   moveData.forEach((x) =>
@@ -31,10 +29,6 @@
   let machineMoveData;
   let eggMoveData;
   let tutorMoveData;
-
-  const handleMachineAccordionClick = () => {
-    console.log(document.getElementById("machineButton").getAttribute("aria-expanded"));
-  }
 
   const loadMoveDataByVersion = () => {
     let moveDataClone = structuredClone(moveData);
@@ -202,7 +196,6 @@
                   data-bs-target="#panelsStayOpen-collapseTwo-{modalName}"
                   aria-expanded="false"
                   aria-controls="panelsStayOpen-collapseTwo-{modalName}"
-                  on:click={handleMachineAccordionClick}
                 >
                   Machine
                 </button>

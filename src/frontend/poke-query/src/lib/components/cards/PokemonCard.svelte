@@ -4,9 +4,6 @@
   import TypeModal from "../modals/TypeModal.svelte";
 
   export let data;
-
-  console.log("Hello from PokemonCard.svelte!");
-
 </script>
 
 <div class="card mw-20 m-2 card-pkmn">
