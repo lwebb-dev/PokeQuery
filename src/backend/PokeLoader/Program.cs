@@ -56,7 +56,8 @@ public class Program
         }
 
         var schema = new Schema()
-            .AddTextField("$.name");
+            .AddTextField("$.name")
+            .AddSortableNumericField("id");
 
         var options = new ConfiguredIndexOptions(
             new IndexDefinition(

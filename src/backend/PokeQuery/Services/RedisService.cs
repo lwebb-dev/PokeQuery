@@ -22,7 +22,9 @@ namespace PokeQuery.Services
         public async Task<IEnumerable<string>> QueryIndexJsonAsync(string index, string query)
         {
             var searchClient = new Client(index, this.db);
-            SearchResult searchResult = await searchClient.SearchAsync(new Query(query));
+            var searchQuery = new Query($"{query}*");
+            searchQuery.SetSortBy("id");
+            SearchResult searchResult = await searchClient.SearchAsync(searchQuery);
             return searchResult.Documents.Select(x => x["json"].ToString());
         }
 
