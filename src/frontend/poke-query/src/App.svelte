@@ -64,6 +64,7 @@
       handleQuery("moves", includeMoves, moveResults)
     ]).finally(() => {
       isLoading = false;
+      pkmnResults = pkmnResults.sort((a,b) => a.id - b.id);
       console.log(`query: \"${query}\" | pkmnResults: ${pkmnResults.length} | itemResults: ${itemResults.length} | moveResults: ${moveResults.length}`);
     });
   };

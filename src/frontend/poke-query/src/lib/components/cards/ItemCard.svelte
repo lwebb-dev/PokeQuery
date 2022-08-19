@@ -5,7 +5,7 @@
 <div class="card mw-20 m-2 card-item">
   <img
     class="card-img-top h-35  pt-2 ps-5 pe-5"
-    src={data.sprites.default.replace("https://raw.githubusercontent.com/PokeAPI/sprites/master/https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites")}
+    src={data.sprites.default?.replace("https://raw.githubusercontent.com/PokeAPI/sprites/master/https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites")}
     alt={data.name}
   />
   <div class="card-body">
