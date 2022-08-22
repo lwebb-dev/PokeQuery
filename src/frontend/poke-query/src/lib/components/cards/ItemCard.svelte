@@ -31,6 +31,6 @@
     border-width: 0.35em;
     font-size: 0.85rem;
     width: 15rem;
-    height: 20rem;
+    height: 21rem;
   }
 </style>

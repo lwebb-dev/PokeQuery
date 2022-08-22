@@ -47,7 +47,7 @@
     border-color: #bee4fa;
     border-width: 0.35em;
     width: 15rem;
-    height: 20rem;
+    height: 21rem;
   }
 
   .move-attribute {

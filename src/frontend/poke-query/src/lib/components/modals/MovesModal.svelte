@@ -201,7 +201,7 @@
             on:change={() => loadMoveDataByVersion()}
           >
             {#each versionGroups as version}
-              <option class="text-capitalize" value={version}>{version.replace('-', ' ')}</option>
+              <option class="text-capitalize" value={version}>{version.replaceAll('-', ' ')}</option>
             {/each}
           </select>
 

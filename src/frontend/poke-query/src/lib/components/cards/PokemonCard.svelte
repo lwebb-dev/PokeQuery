@@ -14,7 +14,7 @@
   />
   <div class="card-body">
     <h4 class="card-title text-capitalize text-center">
-      {data.name.split('-')[0]}
+      {data.name.replaceAll("-", " ")}
     </h4>
     <div class="d-flex justify-content-center">
       {#each data.types as pkmnType}
@@ -37,6 +37,6 @@
     border-color: #fc8686;
     border-width: 0.35em;
     width: 15rem;
-    height: 20rem;
+    height: 21rem;
   }
 </style>
