@@ -5,19 +5,22 @@
 
   let modalName = `movesModal-${data.name}`;
   let moveData = data.moves;
-  let sessionVersionGroups = JSON.parse(sessionStorage.versionGroupData);
+  const sessionVersionGroups = JSON.parse(sessionStorage.versionGroupData);
+  const sessionMachineData = JSON.parse(sessionStorage.machineData);
 
   for (let i = 0; i < sessionVersionGroups.length; i++) {
     sessionVersionGroups[i] = JSON.parse(sessionVersionGroups[i]);
   }
 
   let versionGroups = [];
+  let machineMoveDict = [];
 
-  moveData.forEach((x) =>
+  moveData.forEach((x) => {
     x.version_group_details.forEach((y) =>
       versionGroups.push(y.version_group.name)
-    )
-  );
+    );
+  });
+
 
   versionGroups = [...new Set(versionGroups)].sort(
     (a, b) =>
@@ -56,6 +59,7 @@
       );
 
     machineMoveData = structuredClone(versionMoveData);
+    machineMoveDict = [];
     machineMoveData.forEach(
       (x) =>
         (x.version_group_details = x.version_group_details.filter(
@@ -65,6 +69,10 @@
     machineMoveData = machineMoveData.filter(
       (x) => x.version_group_details.length > 0
     );
+    machineMoveData.forEach((x) => {
+      machineMoveDict.push({machine: getMachine(x), data: x});
+    });
+    machineMoveDict.sort((a, b) => a.machine.localeCompare(b.machine) );
 
     eggMoveData = structuredClone(versionMoveData);
     eggMoveData.forEach(
@@ -85,6 +93,17 @@
     tutorMoveData = tutorMoveData.filter(
       (x) => x.version_group_details.length > 0
     );
+  };
+
+  const getMachine = (move) => {
+    const machine = sessionMachineData.find((x) => { 
+      const moveId = move.move.url.split('/')[4];
+      const machineJsonObject = JSON.parse(x);
+      const machineMoveUrlId = machineJsonObject.move.url.split('/')[4];
+      return machineMoveUrlId === moveId && machineJsonObject.version_group.name === move.version_group_details[0].version_group.name;
+     });
+
+    return JSON.parse(machine).item.name;
   };
 
   let selectedVersion = versionGroups[0];
@@ -214,10 +233,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {#each machineMoveData as move}
+                      {#each machineMoveDict as move}
                         <tr>
-                          <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
-                          <td>--</td>
+                          <td class="text-capitalize">{move.data.move.name.replace('-', ' ')}</td>
+                          <td>{move.machine.toUpperCase()}</td>
                         </tr>
                       {/each}
                     </tbody>

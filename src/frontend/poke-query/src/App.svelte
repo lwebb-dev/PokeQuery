@@ -27,8 +27,8 @@
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-    },
-  })
+      },
+    })
     .then((r) => {
       if (!r.ok) {
         throw new Error("API FAILED TO RETURN 200 OK ON /types");
@@ -66,6 +66,9 @@
       isLoading = false;
       pkmnResults = pkmnResults.sort((a,b) => a.id - b.id);
       console.log(`query: \"${query}\" | pkmnResults: ${pkmnResults.length} | itemResults: ${itemResults.length} | moveResults: ${moveResults.length}`);
+      console.log(pkmnResults);
+      console.log(itemResults);
+      console.log(moveResults);
     });
   };
 

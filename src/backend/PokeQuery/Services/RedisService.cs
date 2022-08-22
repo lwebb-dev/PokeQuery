@@ -47,9 +47,9 @@ namespace PokeQuery.Services
 
         }
 
-        private async Task<string> GetJsonResultAsync(string key)
+        public async Task<string> GetJsonResultAsync(string key, string[] paths = null)
         {
-            RedisResult result = await this.db.JsonGetAsync(key);
+            RedisResult result = await this.db.JsonGetAsync(key, paths);
 
             if (result.IsNull)
                 return null;
