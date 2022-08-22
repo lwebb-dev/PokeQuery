@@ -1,9 +1,13 @@
 <script>
   // @ts-nocheck
+  import { onMount } from 'svelte';
 
   export let data;
+  let basePkmnData;
+  let baseMoveData;
 
   let modalName = `movesModal-${data.name}`;
+  let baseUri = process.env.API_BASE_URI;
   let moveData = data.moves;
   const sessionVersionGroups = JSON.parse(sessionStorage.versionGroupData);
   const sessionMachineData = JSON.parse(sessionStorage.machineData);
@@ -14,29 +18,63 @@
 
   let versionGroups = [];
   let machineMoveDict = [];
+  let pkmnSpecies;
+  let basePkmnSpecies;
+  let selectedVersion;
 
-  moveData.forEach((x) => {
-    x.version_group_details.forEach((y) =>
-      versionGroups.push(y.version_group.name)
-    );
-  });
+  let lvlUpMoveData = [];
+  let machineMoveData = [];
+  let eggMoveData = [];
+  let tutorMoveData = [];
 
+  const fetchPkmnSpecies = async (id) => {
+    const speciesResponse = await fetch(`${baseUri}/pokemon-species/${id}`);
+    return await speciesResponse.json();
+  }
 
-  versionGroups = [...new Set(versionGroups)].sort(
-    (a, b) =>
-      sessionVersionGroups.find((x) => x.name === a).id -
-      sessionVersionGroups.find((x) => x.name === b).id
-  );
+  const getBasePkmnSpecies = async (species) => {
+    if (species.evolves_from_species === null) {
+      return await species;
+    }
 
-  let lvlUpMoveData;
-  let machineMoveData;
-  let eggMoveData;
-  let tutorMoveData;
+    const evolvesFromSpeciesId = species.evolves_from_species.url.split("/")[4];
+    const evolvesFromSpecies = await fetchPkmnSpecies(evolvesFromSpeciesId);
+    return getBasePkmnSpecies(evolvesFromSpecies);
+  }
+
+  const getBasePkmnData = async (id) => {
+    if (basePkmnSpecies.id === pkmnSpecies.id) {
+      return await data;
+    }
+
+    const pkmnResponse = await fetch(`${baseUri}/pokemon/${basePkmnSpecies.id}`);
+    return await pkmnResponse.json();
+  }
+
+  const getMachine = (move) => {
+    const machine = sessionMachineData.find((x) => { 
+      const moveId = move.move.url.split('/')[4];
+      const machineJsonObject = JSON.parse(x);
+      const machineMoveUrlId = machineJsonObject.move.url.split('/')[4];
+      return machineMoveUrlId === moveId && machineJsonObject.version_group.name === move.version_group_details[0].version_group.name;
+     });
+
+    return JSON.parse(machine).item.name;
+  };
 
   const loadMoveDataByVersion = () => {
+
     let moveDataClone = structuredClone(moveData);
+    let baseMoveDataClone = structuredClone(baseMoveData);
 
     let versionMoveData = moveDataClone.filter(
+      (x) =>
+        (x.version_group_details = x.version_group_details.filter(
+          (vgd) => vgd.version_group.name === selectedVersion
+        ))
+    );
+
+    let baseVersionMoveData = baseMoveDataClone.filter(
       (x) =>
         (x.version_group_details = x.version_group_details.filter(
           (vgd) => vgd.version_group.name === selectedVersion
@@ -74,7 +112,7 @@
     });
     machineMoveDict.sort((a, b) => a.machine.localeCompare(b.machine) );
 
-    eggMoveData = structuredClone(versionMoveData);
+    eggMoveData = structuredClone(baseVersionMoveData);
     eggMoveData.forEach(
       (x) =>
         (x.version_group_details = x.version_group_details.filter(
@@ -95,19 +133,28 @@
     );
   };
 
-  const getMachine = (move) => {
-    const machine = sessionMachineData.find((x) => { 
-      const moveId = move.move.url.split('/')[4];
-      const machineJsonObject = JSON.parse(x);
-      const machineMoveUrlId = machineJsonObject.move.url.split('/')[4];
-      return machineMoveUrlId === moveId && machineJsonObject.version_group.name === move.version_group_details[0].version_group.name;
-     });
+  onMount(async () => {
+    pkmnSpecies = await fetchPkmnSpecies(data.id);
+    basePkmnSpecies = await getBasePkmnSpecies(pkmnSpecies);
+    basePkmnData = await getBasePkmnData();
+    baseMoveData = basePkmnData.moves;
 
-    return JSON.parse(machine).item.name;
-  };
+    moveData.forEach((x) => {
+    x.version_group_details.forEach((y) =>
+      versionGroups.push(y.version_group.name)
+    );
+    });
 
-  let selectedVersion = versionGroups[0];
-  loadMoveDataByVersion();
+
+    versionGroups = [...new Set(versionGroups)].sort(
+      (a, b) =>
+        sessionVersionGroups.find((x) => x.name === a).id -
+        sessionVersionGroups.find((x) => x.name === b).id
+    );
+
+    selectedVersion = versionGroups[0];
+    loadMoveDataByVersion();
+  });
 </script>
 
 <!-- Button trigger modal -->

@@ -59,5 +59,11 @@ namespace PokeQuery.Controllers
         {
             return Ok(await this.redisService.GetJsonResultsByPatternAsync("*machine:*"));
         }
+
+        [HttpGet("/{index}/{id:int}")]
+        public async Task<ActionResult<string>> GetJsonDataByIdAsync(string index, int id)
+        {
+            return Ok(await this.redisService.GetJsonResultAsync($"{index}:{id}"));
+        }
     }
 }
