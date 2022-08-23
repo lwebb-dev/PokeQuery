@@ -1,10 +1,11 @@
 <script>
   // @ts-nocheck
   import { onMount } from 'svelte';
+  import { getIdFromUrl, fetchJson } from '../../common';
 
   export let data;
-  let basePkmnData;
-  let baseMoveData;
+
+  let basePkmnData, baseMoveData;
 
   let modalName = `movesModal-${data.name}`;
   let baseUri = process.env.API_BASE_URI;
@@ -18,27 +19,17 @@
 
   let versionGroups = [];
   let machineMoveDict = [];
-  let pkmnSpecies;
-  let basePkmnSpecies;
+  let pkmnSpecies, basePkmnSpecies;
   let selectedVersion;
 
-  let lvlUpMoveData = [];
-  let machineMoveData = [];
-  let eggMoveData = [];
-  let tutorMoveData = [];
-
-  const fetchPkmnSpecies = async (id) => {
-    const speciesResponse = await fetch(`${baseUri}/pokemon-species/${id}`);
-    return await speciesResponse.json();
-  }
+  let lvlUpMoveData = [], machineMoveData = [], eggMoveData = [], tutorMoveData = []
 
   const getBasePkmnSpecies = async (species) => {
     if (species.evolves_from_species === null) {
       return await species;
     }
 
-    const evolvesFromSpeciesId = species.evolves_from_species.url.split("/")[4];
-    const evolvesFromSpecies = await fetchPkmnSpecies(evolvesFromSpeciesId);
+    const evolvesFromSpecies = await fetchJson(baseUri, "pokemon-species", getIdFromUrl(species.evolves_from_species.url));
     return getBasePkmnSpecies(evolvesFromSpecies);
   }
 
@@ -47,15 +38,14 @@
       return await data;
     }
 
-    const pkmnResponse = await fetch(`${baseUri}/pokemon/${basePkmnSpecies.id}`);
-    return await pkmnResponse.json();
+    return await fetchJson(baseUri, "pokemon", basePkmnSpecies.id);
   }
 
   const getMachine = (move) => {
     const machine = sessionMachineData.find((x) => { 
-      const moveId = move.move.url.split('/')[4];
+      const moveId = getIdFromUrl(move.move.url);
       const machineJsonObject = JSON.parse(x);
-      const machineMoveUrlId = machineJsonObject.move.url.split('/')[4];
+      const machineMoveUrlId = getIdFromUrl(machineJsonObject.move.url);
       return machineMoveUrlId === moveId && machineJsonObject.version_group.name === move.version_group_details[0].version_group.name;
      });
 
@@ -134,7 +124,7 @@
   };
 
   onMount(async () => {
-    pkmnSpecies = await fetchPkmnSpecies(data.id);
+    pkmnSpecies = await fetchJson(baseUri, "pokemon-species", data.id);
     basePkmnSpecies = await getBasePkmnSpecies(pkmnSpecies);
     basePkmnData = await getBasePkmnData();
     baseMoveData = basePkmnData.moves;

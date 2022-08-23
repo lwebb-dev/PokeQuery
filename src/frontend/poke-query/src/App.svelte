@@ -22,7 +22,7 @@
         return Promise.resolve();
       }
   
-      await fetch(`${baseUri}/${prefix}?query=${query}`, {
+      await fetch(`${baseUri}/search/${prefix}/${query}`, {
       method: "GET",
       headers: {
         "Accept": "application/json",
@@ -31,7 +31,7 @@
     })
     .then((r) => {
       if (!r.ok) {
-        throw new Error("API FAILED TO RETURN 200 OK ON /types");
+        throw new Error("API FAILED TO RETURN 200 OK ON /search");
       }
       return r.json();
     })
@@ -46,22 +46,19 @@
     
 
   const handleSearch = async () => {
-    if (isLoadingSessionData)
-      return;
-
-    if (query === null || typeof query === "undefined" || query === "") {
+    if (isLoadingSessionData || query === null || typeof query === "undefined" || query === "") {
       return;
     }
 
     isLoading = true;
-
+    
     return Promise.all([
       pkmnResults = [],
       itemResults = [],
       moveResults = [],
       handleQuery("pokemon", includePokemon, pkmnResults),
-      handleQuery("items", includeItems, itemResults),
-      handleQuery("moves", includeMoves, moveResults)
+      handleQuery("item", includeItems, itemResults),
+      handleQuery("move", includeMoves, moveResults)
     ]).finally(() => {
       isLoading = false;
       pkmnResults = pkmnResults.sort((a,b) => a.id - b.id);
