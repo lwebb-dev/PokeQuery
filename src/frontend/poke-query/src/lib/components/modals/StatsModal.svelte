@@ -8,7 +8,7 @@
     let modalName = `statModal-${data.name}`;
 
     const getStatPercent = (statValue) => {
-        return parseInt(((statValue / MAX_STAT_VALUE) * 100).toPrecision(2));
+        return statValue === 255 ? 100 : parseInt(((statValue / MAX_STAT_VALUE) * 100).toPrecision(2));
     };
 
     const getStatColorClass = (statValue) => {
