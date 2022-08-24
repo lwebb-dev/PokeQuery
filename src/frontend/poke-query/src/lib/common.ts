@@ -1,3 +1,12 @@
+export const statNames = {
+    hp: "HP",
+    attack: "Attack",
+    defense: "Defense",
+    "special-attack": "Sp. Atk",
+    "special-defense": "Sp. Def",
+    speed: "Speed" 
+};
+
 // Expected Url Format: /api/v2/{prefix}/{id}/
 export const getIdFromUrl = (url: string): number => {
     return parseInt(url.split("/")[4]);

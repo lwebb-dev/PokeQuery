@@ -1,19 +1,11 @@
 <script>
 // @ts-nocheck
+    import { statNames } from '../../common';
 
     export let data;
     const MAX_STAT_VALUE = 255;
     let statData = data.stats;
     let modalName = `statModal-${data.name}`;
-
-    const statNames = {
-        hp: "HP",
-        attack: "Attack",
-        defense: "Defense",
-        "special-attack": "Sp. Atk",
-        "special-defense": "Sp. Def",
-        speed: "Speed" 
-    };
 
     const getStatPercent = (statValue) => {
         return parseInt(((statValue / MAX_STAT_VALUE) * 100).toPrecision(2));

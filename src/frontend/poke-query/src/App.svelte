@@ -2,11 +2,13 @@
   import ItemCard from "./lib/components/cards/ItemCard.svelte";
   import MoveCard from "./lib/components/cards/MoveCard.svelte";
   import PokemonCard from "./lib/components/cards/PokemonCard.svelte";
+  import NatureCard from "./lib/components/cards/NatureCard.svelte";
   import { isLoadingSessionData, loadSessionData } from "./lib/data/session";
 
   let pkmnResults: any[] = [];
   let itemResults: any[] = [];
   let moveResults: any[] = [];
+  let natureResults: any[] = [];
   let query: string;
   let baseUri: string = process.env.API_BASE_URI;
 
@@ -15,6 +17,7 @@
   let includePokemon: boolean = true;
   let includeItems: boolean = false;
   let includeMoves: boolean = false;
+  let includeNatures: boolean = false;
 
   const handleQuery = async (prefix: string, flag: boolean, results: any[]) => {
 
@@ -56,16 +59,19 @@
       pkmnResults = [],
       itemResults = [],
       moveResults = [],
+      natureResults = [],
       handleQuery("pokemon", includePokemon, pkmnResults),
       handleQuery("item", includeItems, itemResults),
-      handleQuery("move", includeMoves, moveResults)
+      handleQuery("move", includeMoves, moveResults),
+      handleQuery("nature", includeNatures, natureResults)
     ]).finally(() => {
       isLoading = false;
       pkmnResults = pkmnResults.sort((a,b) => a.id - b.id);
-      console.log(`query: \"${query}\" | pkmnResults: ${pkmnResults.length} | itemResults: ${itemResults.length} | moveResults: ${moveResults.length}`);
+      console.log(`query: \"${query}\" | pkmnResults: ${pkmnResults.length} | itemResults: ${itemResults.length} | moveResults: ${moveResults.length} | natureResults: ${natureResults.length}`);
       console.log(pkmnResults);
       console.log(itemResults);
       console.log(moveResults);
+      console.log(natureResults);
     });
   };
 
@@ -132,6 +138,15 @@
         />
         <label class="form-check-label" for="cbMoves">Moves</label>
       </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          id="cbMoves"
+          type="checkbox"
+          bind:checked={includeNatures}
+        />
+        <label class="form-check-label" for="cbMoves">Natures</label>
+      </div>
     </div>
   </div>
 
@@ -155,6 +170,10 @@
 
     {#each moveResults as moveResult}
       <MoveCard data={moveResult} />
+    {/each}
+
+    {#each natureResults as natureResult}
+      <NatureCard data={natureResult} />
     {/each}
     {/if}
   </div>
