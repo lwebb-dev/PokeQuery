@@ -2,6 +2,7 @@
   // @ts-nocheck
   import { onMount } from 'svelte';
   import { getIdFromUrl, fetchJson } from '../../common';
+  import TypeChiclet from '../TypeChiclet.svelte';
 
   export let data;
 
@@ -156,10 +157,11 @@
               </h2>
               <div id="panelsStayOpen-collapseOne-{modalName}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne-{modalName}">
                 <div class="accordion-body scrolling-table">
-                  <table class="table">
+                  <table class="table table-striped table-sm">
                     <thead>
                       <tr>
                         <th scope="col">Move</th>
+                        <!-- <th scope="col">Type</th> -->
                         <th scope="col">Level</th>
                       </tr>
                     </thead>
@@ -167,8 +169,9 @@
                       {#each lvlUpMoveData as move}
                         {#each move.version_group_details as versionGroup}
                           <tr>
-                            <td class="text-capitalize">{move.move.name.replace('-', ' ')}</td>
-                            <td>{versionGroup.level_learned_at}</td>
+                            <td class="align-middle text-capitalize">{move.move.name.replace('-', ' ')}</td>
+                            <!-- <td class="align-middle"><TypeChiclet typeName={"electric"} isStatic={true} isSmall={true} /></td> -->
+                            <td class="align-middle">{versionGroup.level_learned_at}</td>
                           </tr>
                         {/each}
                       {/each}
@@ -185,7 +188,7 @@
               </h2>
               <div id="panelsStayOpen-collapseTwo-{modalName}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo-{modalName}">
                 <div class="accordion-body scrolling-table">
-                  <table class="table">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">Move</th>
@@ -212,7 +215,7 @@
               </h2>
               <div id="panelsStayOpen-collapseThree-{modalName}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree-{modalName}">
                 <div class="accordion-body scrolling-table">
-                  <table class="table">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">Move</th>
@@ -237,7 +240,7 @@
               </h2>
               <div id="panelsStayOpen-collapseFour-{modalName}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour-{modalName}">
                 <div class="accordion-body scrolling-table">
-                  <table class="table">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">Move</th>

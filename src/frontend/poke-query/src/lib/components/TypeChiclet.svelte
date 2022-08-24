@@ -1,6 +1,7 @@
 <script lang="ts">
   export let typeName: string;
   export let isStatic: boolean;
+  export let isSmall: boolean = false;
 
   const modalName: string = `typeModal-${typeName}`;
 
@@ -34,11 +35,11 @@
 
   let typeColor: string = typeColors[typeName];
 
+  const getSmallChicletClass = () => {
+    return isSmall ? "chiclet-sm" : "";
+  }
   const getFontColor = () => {
-
-    if (blackTypes.includes(typeName)) return "black";
-
-    return "white";
+    return (blackTypes.includes(typeName)) ? "black" : "white";
   };
 
   const lightenDarkenColor = (col, amt) => {
@@ -73,9 +74,10 @@
 
 {#if isStatic === true}
 
-<div
-  class="card-text m-2 pt-1 px-3 text-capitalize static-chiclet"
-  style="--type-color: {typeColor}; --font-color:{getFontColor()};">
+<div class="card-text m-2 pt-1 px-3 text-capitalize chiclet {getSmallChicletClass()}"
+  style="
+  --type-color: {typeColor}; 
+  --font-color:{getFontColor()};">
   <p>
     {typeName}
   </p>
@@ -83,13 +85,12 @@
 
 {:else}
 
-<div
-  class="card-text m-2 pt-1 px-3 text-capitalize chiclet"
+<div class="card-text m-2 pt-1 px-3 text-capitalize chiclet {getSmallChicletClass()} chiclet-btn"
   style="
     --type-color: {typeColor}; 
     --font-color:{getFontColor()}; 
     --type-color-hover:{lightenDarkenColor(typeColor, -20)}; 
-    --type-color-active:{lightenDarkenColor(typeColor, -50)}"
+    --type-color-active:{lightenDarkenColor(typeColor, -50)};"
     data-bs-toggle="modal" 
     data-bs-target="#{modalName}"
     data-bs-dismiss="modal">
@@ -100,21 +101,8 @@
 
 {/if}
 
-
 <style>
-
   .chiclet {
-    cursor: pointer;
-    width: 5rem;
-    height: 2rem;
-    border-radius: 15px;
-    text-align: center;
-    font-size: small;
-    background-color: var(--type-color);
-    color: var(--font-color);
-  }
-
-  .static-chiclet {
     cursor: default;
     width: 5rem;
     height: 2rem;
@@ -125,11 +113,22 @@
     color: var(--font-color);
   }
 
-  .chiclet:hover {
+  .chiclet-sm {
+    padding: 0;
+    width: 4rem;
+    height: 1.5rem;
+    font-size: x-small;
+  }
+
+  .chiclet-btn {
+    cursor: pointer;
+  }
+
+  .chiclet-btn:hover {
     background-color: var(--type-color-hover);
   }
 
-  .chiclet:active {
+  .chiclet-btn:active {
     background-color: var(--type-color-active);
   }
 </style>
