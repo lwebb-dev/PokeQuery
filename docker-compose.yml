@@ -41,7 +41,7 @@ services:
   loader:
     image: pokequery-loader
     container_name: poke-loader
-    profiles: [all, backend, redis]
+    profiles: [all, backend, loader]
     depends_on:
         - redis-stack
     build:
@@ -56,7 +56,7 @@ services:
   api:
     image: pokequery-api
     container_name: api
-    profiles: [all, backend]
+    profiles: [all, backend, api]
     depends_on:
       - redis-stack
     build:
