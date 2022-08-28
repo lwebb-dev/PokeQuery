@@ -1,84 +1,32 @@
-﻿using NRediSearch;
-using NReJSON;
-using StackExchange.Redis;
-using System;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using static NRediSearch.Client;
 
 namespace PokeLoader
 {
-    public class Program
+    public sealed class Program
     {
+        private static string REDIS_CONNECTION;
+        private static string CACHE_DIRECTORY;
+
+        private static Dictionary<string, Dictionary<int, string>> IndexDictionary;
+
         public static void Main(string[] args)
         {
-            string REDIS_CONNECTION = Environment.GetEnvironmentVariable("REDIS_CONNECTION");
-            string CACHE_DIRECTORY = Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
+            REDIS_CONNECTION = args.Contains("--REDIS_CONNECTION") 
+                ? args[Array.IndexOf(args, "--REDIS_CONNECTION") + 1] 
+                : Environment.GetEnvironmentVariable("REDIS_CONNECTION");
 
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(REDIS_CONNECTION);
-            IDatabase db = redis.GetDatabase();
+            CACHE_DIRECTORY = args.Contains("--CACHE_DIRECTORY")
+                ? args[Array.IndexOf(args, "--CACHE_DIRECTORY") + 1]
+                : Environment.GetEnvironmentVariable("CACHE_DIRECTORY");
 
-            foreach (string resourceDir in Directory.GetDirectories(CACHE_DIRECTORY))
-            {
-                Uri resourceUri = new Uri(resourceDir);
-                string index = resourceUri.Segments.Last();
+            IndexDictionary = JsonDataUtility.GetIndexDictionary(CACHE_DIRECTORY, usePresentationModels: true);
 
-                if (!IndexHelper.ValidIndexes.Contains(index))
-                        continue;
-
-                DropCreateIndex(db, index);
-
-                foreach (string itemDir in Directory.GetDirectories(resourceDir))
-                {
-                    Uri itemUri = new Uri(itemDir);
-                    string id = itemUri.Segments.Last();
-                    string[] files = Directory.GetFiles(itemDir);
-                    string rawJson = File.ReadAllText(files.SingleOrDefault(x => x.Contains("index.json")));
-
-                    if (IndexHelper.GetPresentationJsonFromIndex(index, rawJson, out string json))
-                    {
-                        RedisKey key = new RedisKey($"{index}:{id}");
-                        OperationResult result = db.JsonSet(key, json);
-
-                        if (!result.IsSuccess)
-                        {
-                            Console.WriteLine($"{key} failed to write.");
-                        }
-                    }
-                }
-            }
+            var redisLoader = new RedisLoader(REDIS_CONNECTION);
+            redisLoader.Load(IndexDictionary);
 
             Console.WriteLine("Done!");
-        }
-
-        public static void DropCreateIndex(IDatabase db, string index)
-        {
-            string namedIndex = $"idx:{index}";
-
-            try
-            {
-                db.Execute("FT.DROPINDEX", namedIndex);
-
-            }
-            catch
-            {
-
-            }
-
-            var schema = new Schema()
-                .AddTextField("$.name")
-                .AddSortableNumericField("id");
-
-            var options = new ConfiguredIndexOptions(
-                new IndexDefinition(
-                    type: IndexDefinition.IndexType.Json,
-                    prefixes: new[] { $"{index}:" }
-                )
-            );
-
-            Client searchNameClient = new Client(namedIndex, db);
-            bool result = searchNameClient.CreateIndex(schema, options);
-            Console.WriteLine($"{namedIndex}: {result}");
         }
     }
 }
