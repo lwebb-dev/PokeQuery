@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   data:
@@ -13,7 +11,7 @@ services:
       - poke-data:/poke-data
 
   redis-stack:
-    image: redis/redis-stack:6.2.2-v5
+    image: redis/redis-stack:7.2.0-v18
     container_name: redis-stack
     profiles: [all, backend, redis]
     ports:
