@@ -1,3 +1,43 @@
+.h-45 {
+  height: 45%;
+}
+
+.card-pkmn {
+    border-color: #fc8686;
+    border-width: 0.35em;
+    width: 15rem;
+    height: 21rem;
+  }
+
+.shiny-btn {
+  text-align: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 25%;
+  border-color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0.0);
+  filter: grayscale(100%);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.shiny-btn:hover {
+  background-color: #efef99;
+}
+
+.shiny-selected {
+  filter: grayscale(100%) sepia(100%) saturate(500%);
+}
+.shiny-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  z-index: 5;
+}
 #root {
   max-width: 1280px;
   margin: 0 auto;

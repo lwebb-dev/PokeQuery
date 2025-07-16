@@ -18,15 +18,27 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
   const [shinyBtnSelected, setShinyBtnSelected] = useState(false);
 
   return (
-    <div className="card mw-20 m-2 border-4 border-[#fc8686] w-60 h-[21rem] relative">
+    <div className="card card-pkmn mw-20 m-2 position-relative">
       <button
-        className={`absolute top-2 left-2 shiny-btn ${shinyBtnSelected ? 'shiny-selected' : ''}`}
+        className="shiny-btn position-absolute"
+        style={{ top: '0.5rem', right: '0.5rem', background: 'none', border: 'none', padding: 0, outline: 'none', boxShadow: 'none' }}
         onClick={() => setShinyBtnSelected(!shinyBtnSelected)}
+        aria-label="Toggle shiny sprite"
       >
-        ✨
+        <span
+          className="shiny-icon"
+          style={{
+            filter: shinyBtnSelected ? 'none' : 'grayscale(100%)',
+            fontSize: '1.7rem',
+            display: 'inline-block',
+            transition: 'filter 0.2s',
+          }}
+        >
+          ✨
+        </span>
       </button>
       <img
-        className="card-img-top h-[45%] pt-2 ps-5 pe-5 mx-auto"
+        className="card-img-top h-45 pt-2 ps-5 pe-5 mx-auto"
         src={stripGarbageSpriteText(
           shinyBtnSelected
             ? data.sprites?.other?.home?.front_shiny
@@ -34,16 +46,16 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
         )}
         alt={data.name}
       />
-      <div className="card-body p-4">
-        <h4 className="card-title text-capitalize text-center text-lg font-bold">
+      <div className="card-body">
+        <h4 className="card-title text-capitalize text-center">
           {data.name?.replaceAll('-', ' ')}
         </h4>
-        <div className="flex justify-center gap-2 my-2">
+        <div className="d-flex justify-content-center">
           {data.types?.map((pkmnType: any, idx: number) => (
             <TypeModal key={idx} pkmnType={pkmnType.type} />
           ))}
         </div>
-        <div className="flex mt-1 flex-wrap justify-center gap-2">
+        <div className="d-flex mt-1 flex-wrap justify-content-center">
           <StatsModal data={data} />
           <MovesModal data={data} />
         </div>

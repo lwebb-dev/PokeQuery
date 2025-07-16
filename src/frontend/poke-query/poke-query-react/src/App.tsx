@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { loadSessionData } from './sessionData';
 import PokemonCard from './components/PokemonCard';
 import ItemCard from './components/ItemCard';
 import MoveCard from './components/MoveCard';
@@ -58,6 +59,11 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    // Load session data on app mount (only once)
+    loadSessionData(API_BASE_URI);
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         handleSearch();
@@ -68,12 +74,13 @@ const App: React.FC = () => {
   }, [query, includePokemon, includeItems, includeMoves, includeNatures]);
 
   return (
-    <div className="container mx-auto my-3">
-      <h1 className="mb-3 text-center text-3xl font-bold">PokeQuery</h1>
-      <div className="flex justify-center mb-4">
+    <div className="container my-3">
+      <h1 className="mb-3 text-center display-4 font-weight-bold">PokeQuery</h1>
+      <div className="d-flex justify-content-center mb-4 align-items-center">
         <input
           type="text"
-          className="form-input text-lg px-4 py-2 border rounded-lg"
+          className="form-control form-control-lg w-auto"
+          style={{ minWidth: '300px', maxWidth: '400px' }}
           placeholder="pikachu, leftovers, etc..."
           value={query}
           onChange={e => setQuery(e.target.value)}
@@ -81,53 +88,59 @@ const App: React.FC = () => {
         />
         <button
           type="submit"
-          className="btn btn-primary text-lg ml-2 px-4 py-2 rounded-lg bg-blue-500 text-white"
+          className="btn btn-primary btn-lg ml-2"
           onClick={handleSearch}
         >
           {isLoading ? (
-            <span className="animate-spin">🔄</span>
+            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           ) : (
             <>Search 🔍</>
           )}
         </button>
       </div>
-      <div className="flex justify-center mb-4 gap-4">
-        <label className="flex items-center">
+      <div className="d-flex justify-content-center mb-4 gap-4">
+        <label className="d-flex align-items-center mx-2">
           <input type="checkbox" checked={includePokemon} onChange={e => setIncludePokemon(e.target.checked)} />
           <span className="ml-2">Pokemon</span>
         </label>
-        <label className="flex items-center">
+        <label className="d-flex align-items-center mx-2">
           <input type="checkbox" checked={includeItems} onChange={e => setIncludeItems(e.target.checked)} />
           <span className="ml-2">Items</span>
         </label>
-        <label className="flex items-center">
+        <label className="d-flex align-items-center mx-2">
           <input type="checkbox" checked={includeMoves} onChange={e => setIncludeMoves(e.target.checked)} />
           <span className="ml-2">Moves</span>
         </label>
-        <label className="flex items-center">
+        <label className="d-flex align-items-center mx-2">
           <input type="checkbox" checked={includeNatures} onChange={e => setIncludeNatures(e.target.checked)} />
           <span className="ml-2">Natures</span>
         </label>
       </div>
-      <div className="flex flex-wrap justify-center mt-3 gap-4">
-        {isLoading ? (
-          <span className="animate-spin text-2xl">🔄 Loading...</span>
-        ) : (
-          <>
-            {pkmnResults.filter(x => x.is_default).map(pkmn => (
-              <PokemonCard key={pkmn.id} data={pkmn} />
-            ))}
-            {itemResults.filter(x => !x.name.includes('-candy')).map(item => (
-              <ItemCard key={item.id} data={item} />
-            ))}
-            {moveResults.map(move => (
-              <MoveCard key={move.id} data={move} />
-            ))}
-            {natureResults.map(nature => (
-              <NatureCard key={nature.id} data={nature} />
-            ))}
-          </>
-        )}
+      <div className="d-flex justify-content-center mt-3">
+        <div className="row w-100 justify-content-center">
+          {isLoading ? (
+            <span className="spinner-border text-primary" style={{ fontSize: '2rem' }} role="status"></span>
+          ) : (
+            <>
+              {[...pkmnResults.filter(x => x.is_default),
+                ...itemResults.filter(x => !x.name.includes('-candy')),
+                ...moveResults,
+                ...natureResults].slice(0, 12).map((result, idx) => {
+                let CardComponent;
+                if (result.types) CardComponent = PokemonCard;
+                else if (result.effect_entries) CardComponent = ItemCard;
+                else if (result.power !== undefined) CardComponent = MoveCard;
+                else if (result.increased_stat) CardComponent = NatureCard;
+                else return null;
+                return (
+                  <div className="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center mb-4" key={result.id || idx}>
+                    <CardComponent data={result} />
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
