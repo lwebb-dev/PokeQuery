@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { loadSessionData } from './sessionData';
 import PokemonCard from './components/PokemonCard';
@@ -74,76 +75,77 @@ const App: React.FC = () => {
   }, [query, includePokemon, includeItems, includeMoves, includeNatures]);
 
   return (
-    <div className="container my-3">
-      <h1 className="mb-3 text-center display-4 font-weight-bold">PokeQuery</h1>
-      <div className="d-flex justify-content-center mb-4 align-items-center">
-        <input
-          type="text"
-          className="form-control form-control-lg w-auto"
-          style={{ minWidth: '300px', maxWidth: '400px' }}
-          placeholder="pikachu, leftovers, etc..."
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          minLength={1}
-        />
-        <button
-          type="submit"
-          className="btn btn-primary btn-lg ml-2"
-          onClick={handleSearch}
-        >
-          {isLoading ? (
-            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          ) : (
-            <>Search 🔍</>
-          )}
-        </button>
-      </div>
-      <div className="d-flex justify-content-center mb-4 gap-4">
-        <label className="d-flex align-items-center mx-2">
-          <input type="checkbox" checked={includePokemon} onChange={e => setIncludePokemon(e.target.checked)} />
-          <span className="ml-2">Pokemon</span>
-        </label>
-        <label className="d-flex align-items-center mx-2">
-          <input type="checkbox" checked={includeItems} onChange={e => setIncludeItems(e.target.checked)} />
-          <span className="ml-2">Items</span>
-        </label>
-        <label className="d-flex align-items-center mx-2">
-          <input type="checkbox" checked={includeMoves} onChange={e => setIncludeMoves(e.target.checked)} />
-          <span className="ml-2">Moves</span>
-        </label>
-        <label className="d-flex align-items-center mx-2">
-          <input type="checkbox" checked={includeNatures} onChange={e => setIncludeNatures(e.target.checked)} />
-          <span className="ml-2">Natures</span>
-        </label>
-      </div>
-      <div className="d-flex justify-content-center mt-3">
-        <div className="row w-100 justify-content-center">
-          {isLoading ? (
-            <span className="spinner-border text-primary" style={{ fontSize: '2rem' }} role="status"></span>
-          ) : (
-            <>
-              {[...pkmnResults.filter(x => x.is_default),
-                ...itemResults.filter(x => !x.name.includes('-candy')),
-                ...moveResults,
-                ...natureResults].slice(0, 12).map((result, idx) => {
-                let CardComponent;
-                if (result.types) CardComponent = PokemonCard;
-                else if (result.power !== undefined || result.accuracy !== undefined || result.pp !== undefined) CardComponent = MoveCard;
-                else if (result.increased_stat !== undefined || result.decreased_stat !== undefined) CardComponent = NatureCard;
-                else if (result.effect_entries) CardComponent = ItemCard;
-                else return null;
-                return (
-                  <div className="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center mb-4" key={result.id || idx}>
-                    <CardComponent data={result} />
-                  </div>
-                );
-              })}
-            </>
-          )}
+    <div className="container-fluid my-3">
+      <h1 className="row mb-3 justify-content-center">PokeQuery</h1>
+      <div className="row d-flex justify-content-center mb-4 align-items-center">
+        <div className="col col-lg-3">
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            style={{ minWidth: '300px', maxWidth: '400px' }}
+            placeholder="pikachu, leftovers, etc..."
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            minLength={1}
+          />
         </div>
+        <div className="col-auto">
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg"
+            style={{ marginLeft: 0 }}
+            onClick={handleSearch}
+          >
+            {isLoading ? (
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            ) : (
+              <>Search 🔎</>
+            )}
+          </button>
+        </div>
+      </div>
+      <div className="d-flex justify-content-center mb-4">
+        <div className="form-check form-check-inline">
+          <input className="form-check-input" type="checkbox" checked={includePokemon} onChange={e => setIncludePokemon(e.target.checked)} id="cbPkmn" />
+          <label className="form-check-label" htmlFor="cbPkmn">Pokemon</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input className="form-check-input" type="checkbox" checked={includeItems} onChange={e => setIncludeItems(e.target.checked)} id="cbItems" />
+          <label className="form-check-label" htmlFor="cbItems">Items</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input className="form-check-input" type="checkbox" checked={includeMoves} onChange={e => setIncludeMoves(e.target.checked)} id="cbMoves" />
+          <label className="form-check-label" htmlFor="cbMoves">Moves</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input className="form-check-input" type="checkbox" checked={includeNatures} onChange={e => setIncludeNatures(e.target.checked)} id="cbNatures" />
+          <label className="form-check-label" htmlFor="cbNatures">Natures</label>
+        </div>
+      </div>
+      <div className="container mt-3 d-flex flex-wrap justify-content-center">
+        {isLoading ? (
+          <span className="spinner-border text-primary" style={{ fontSize: '2rem' }} role="status"></span>
+        ) : (
+          <>
+            {[...pkmnResults.filter(x => x.is_default),
+              ...itemResults.filter(x => !x.name.includes('-candy')),
+              ...moveResults,
+              ...natureResults].slice(0, 12).map((result, idx) => {
+              let CardComponent;
+              if (result.types) CardComponent = PokemonCard;
+              else if (result.power !== undefined || result.accuracy !== undefined || result.pp !== undefined) CardComponent = MoveCard;
+              else if (result.increased_stat !== undefined || result.decreased_stat !== undefined) CardComponent = NatureCard;
+              else if (result.effect_entries) CardComponent = ItemCard;
+              else return null;
+              return (
+                <CardComponent data={result} key={result.id || idx} />
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );
-};
 
+}
 export default App;

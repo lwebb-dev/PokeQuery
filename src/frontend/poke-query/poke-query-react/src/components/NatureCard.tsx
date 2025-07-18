@@ -8,8 +8,8 @@ interface NatureCardProps {
 const cardNatureStyle = {
   borderColor: "#befad5",
   borderWidth: "0.35em",
-  width: "15rem",
-  height: "21rem"
+  width: "240px",
+  height: "326px"
 };
 
 const statNames: Record<string, string> = {
@@ -28,7 +28,7 @@ const NatureCard: React.FC<NatureCardProps> = ({ data }) => {
         <h2 className="mt-2 card-title text-capitalize text-center">
           {data.name}
         </h2>
-        <div className="mt-5 nature-stats">
+        <div className="mt-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {data.increased_stat === null && data.decreased_stat === null ? (
             <h3>Neutral</h3>
           ) : (

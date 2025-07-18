@@ -8,8 +8,8 @@ const cardItemStyle = {
   borderColor: "#ecf296",
   borderWidth: "0.35em",
   fontSize: "0.85rem",
-  width: "15rem",
-  height: "21rem"
+  width: "240px",
+  height: "326px"
 };
 
 const ItemCard: React.FC<ItemCardProps> = ({ data }) => {

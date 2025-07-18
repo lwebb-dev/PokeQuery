@@ -8,8 +8,12 @@ interface MoveCardProps {
 const cardMoveStyle = {
   borderColor: "#bee4fa",
   borderWidth: "0.35em",
-  width: "15rem",
-  height: "21rem"
+  width: "240px",
+  height: "326px"
+};
+
+const moveAttributeStyle = {
+  margin: '0'
 };
 
 const handleNull = (value: any) => {
@@ -32,10 +36,10 @@ const MoveCard: React.FC<MoveCardProps> = ({ data }) => {
           <TypeModal pkmnType={data.type} />
         </div>
         <div className="d-flex flex-wrap justify-content-center my-2" style={{ columnGap: '1rem' }}>
-          <p className="move-attribute"><strong>Power:</strong> {handleNull(data.power)}</p>
-          <p className="move-attribute"><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
-          <p className="move-attribute"><strong>PP:</strong> {handleNull(data.pp)}</p>
-          <p className="move-attribute text-capitalize"><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
+              <p style={{ margin: 0 }}><strong>Power:</strong> {handleNull(data.power)}</p>
+              <p style={{ margin: 0 }}><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
+              <p style={{ margin: 0 }}><strong>PP:</strong> {handleNull(data.pp)}</p>
+              <p className="text-capitalize" style={{ margin: 0 }}><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
         </div>
         <div className="d-flex flex-wrap justify-content-center">
           {data.effect_entries && data.effect_entries[0] && (
