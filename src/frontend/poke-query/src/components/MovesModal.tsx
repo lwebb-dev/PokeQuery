@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useId } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface MovesModalProps {
   data: any;
@@ -16,7 +16,6 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
   const [selectedVersion, setSelectedVersion] = useState<string>('');
   const [versionGroups, setVersionGroups] = useState<string[]>([]);
   const [lvlUpMoveData, setLvlUpMoveData] = useState<any[]>([]);
-  const [machineMoveData, setMachineMoveData] = useState<any[]>([]);
   const [eggMoveData, setEggMoveData] = useState<any[]>([]);
   const [tutorMoveData, setTutorMoveData] = useState<any[]>([]);
   const [machineMoveDict, setMachineMoveDict] = useState<any[]>([]);
@@ -88,7 +87,6 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
     let baseMoveData = versionMoveData;
     setLvlUpMoveData(filterByLearnMethod(structuredClone(versionMoveData), 'level-up'));
     const machineMoves = filterByLearnMethod(structuredClone(versionMoveData), 'machine');
-    setMachineMoveData(machineMoves);
     setEggMoveData(filterByLearnMethod(structuredClone(baseMoveData), 'egg'));
     setTutorMoveData(filterByLearnMethod(structuredClone(versionMoveData), 'tutor'));
     // Build machineMoveDict

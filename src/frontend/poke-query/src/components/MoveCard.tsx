@@ -12,9 +12,6 @@ const cardMoveStyle = {
   height: "326px"
 };
 
-const moveAttributeStyle = {
-  margin: '0'
-};
 
 const handleNull = (value: any) => {
   if (value === null || value < 5) return '--';

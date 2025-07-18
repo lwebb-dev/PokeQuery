@@ -1,4 +1,4 @@
-import React, { useMemo, useId } from 'react';
+import React, { useMemo } from 'react';
 import TypeChiclet from './TypeChiclet';
 
 interface TypeModalProps {
