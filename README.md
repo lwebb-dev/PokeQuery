@@ -18,5 +18,5 @@ From the repository root directory, simply run `python start.py` and select the 
 2. Run PokeCache, which will cache all the Named Resources in AppData from PokeApi for pokemon, items, and moves. These Named Resources act as the indexes for future queries.
 3. Start the Redis Docker Container with a dedicated volume. This will act as our data warehouse for the Named Resource and Json data that is being cached in AppData.
 4. Start the PokeQuery backend Rest API project.
-5. Start the poke-query frontend Svelte app.
-6. Open the web app in the default web browser (currently set at `http://localhost:3000`).
+5. Start the poke-query frontend React app.
+6. Open the web app in the default web browser (currently set at `http://localhost:5173`).
