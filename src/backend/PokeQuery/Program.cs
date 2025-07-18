@@ -19,7 +19,7 @@ namespace PokeQuery
                                   policy =>
                                   {
                                       policy
-                                        .WithOrigins("http://localhost:3000") 
+                                        .WithOrigins(new string[] { "http://localhost:3000", "http://localhost:5173" }) 
                                         .WithHeaders(HeaderNames.ContentType);
                                   });
             });
