@@ -2,12 +2,26 @@
   height: 45%;
 }
 
+.h-35 {
+  height: 35%;
+}
+
 .card-pkmn {
     border-color: #fc8686;
     border-width: 0.35em;
     width: 15rem;
     height: 21rem;
   }
+
+.move-attribute {
+  margin: 0;
+}
+
+.nature-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .shiny-btn {
   text-align: center;

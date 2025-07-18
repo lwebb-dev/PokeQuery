@@ -7,6 +7,13 @@ interface PokemonCardProps {
   data: any;
 }
 
+const cardPkmnStyle = {
+    borderColor: "#fc8686",
+    borderWidth: "0.35em",
+    width: "15rem",
+    height: "21rem"
+  };
+
 const stripGarbageSpriteText = (text?: string) => {
   return text?.replace(
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites',
@@ -18,7 +25,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
   const [shinyBtnSelected, setShinyBtnSelected] = useState(false);
 
   return (
-    <div className="card card-pkmn mw-20 m-2 position-relative">
+    <div style={cardPkmnStyle} className="card mw-20 m-2 position-relative">
       <button
         className="shiny-btn position-absolute"
         style={{ top: '0.5rem', right: '0.5rem', background: 'none', border: 'none', padding: 0, outline: 'none', boxShadow: 'none' }}

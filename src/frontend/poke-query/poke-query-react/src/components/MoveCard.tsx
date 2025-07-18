@@ -5,6 +5,13 @@ interface MoveCardProps {
   data: any;
 }
 
+const cardMoveStyle = {
+  borderColor: "#bee4fa",
+  borderWidth: "0.35em",
+  width: "15rem",
+  height: "21rem"
+};
+
 const handleNull = (value: any) => {
   if (value === null || value < 5) return '--';
   return value;
@@ -16,23 +23,23 @@ const interpolateEffectChance = (effect: string, chance: any) => {
 
 const MoveCard: React.FC<MoveCardProps> = ({ data }) => {
   return (
-    <div className="card mw-20 m-2 border-4 border-[#bee4fa] w-60 h-[21rem]">
-      <div className="card-body p-4">
-        <h4 className="card-title text-capitalize text-center text-lg font-bold">
+    <div style={cardMoveStyle} className="card mw-20 m-2">
+      <div className="card-body">
+        <h4 className="card-title text-capitalize text-center">
           {data.name?.replaceAll('-', ' ')}
         </h4>
-        <div className="flex justify-center gap-2 my-2">
+        <div className="d-flex justify-content-center">
           <TypeModal pkmnType={data.type} />
         </div>
-        <div className="flex flex-wrap justify-center my-2 gap-4">
-          <p className="move-attribute text-sm"><strong>Power:</strong> {handleNull(data.power)}</p>
-          <p className="move-attribute text-sm"><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
-          <p className="move-attribute text-sm"><strong>PP:</strong> {handleNull(data.pp)}</p>
-          <p className="move-attribute text-sm text-capitalize"><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
+        <div className="d-flex flex-wrap justify-content-center my-2" style={{ columnGap: '1rem' }}>
+          <p className="move-attribute"><strong>Power:</strong> {handleNull(data.power)}</p>
+          <p className="move-attribute"><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
+          <p className="move-attribute"><strong>PP:</strong> {handleNull(data.pp)}</p>
+          <p className="move-attribute text-capitalize"><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
         </div>
-        <div className="flex flex-wrap justify-center">
+        <div className="d-flex flex-wrap justify-content-center">
           {data.effect_entries && data.effect_entries[0] && (
-            <p className="card-text text-wrap text-sm mt-2">
+            <p className="card-text text-wrap">
               {interpolateEffectChance(
                 data.effect_entries[0].short_effect,
                 data.effect_chance

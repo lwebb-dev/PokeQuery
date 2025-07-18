@@ -128,9 +128,9 @@ const App: React.FC = () => {
                 ...natureResults].slice(0, 12).map((result, idx) => {
                 let CardComponent;
                 if (result.types) CardComponent = PokemonCard;
+                else if (result.power !== undefined || result.accuracy !== undefined || result.pp !== undefined) CardComponent = MoveCard;
+                else if (result.increased_stat !== undefined || result.decreased_stat !== undefined) CardComponent = NatureCard;
                 else if (result.effect_entries) CardComponent = ItemCard;
-                else if (result.power !== undefined) CardComponent = MoveCard;
-                else if (result.increased_stat) CardComponent = NatureCard;
                 else return null;
                 return (
                   <div className="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center mb-4" key={result.id || idx}>
