@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import styles from './PokemonCard.module.css';
+import classNames from 'classnames';
 import TypeModal from './TypeModal';
 import MovesModal from './MovesModal';
 import StatsModal from './StatsModal';
@@ -7,12 +9,7 @@ interface PokemonCardProps {
   data: any;
 }
 
-const cardPkmnStyle = {
-    borderColor: "#fc8686",
-    borderWidth: "0.35em",
-    width: "240px",
-    height: "326px"
-  };
+// ...removed inline style, now using CSS module...
 
 const stripGarbageSpriteText = (text?: string) => {
   return text?.replace(
@@ -25,43 +22,19 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ data }) => {
 
   const [shinyBtnSelected, setShinyBtnSelected] = useState(false);
 
-  const shinyBtnStyle : React.CSSProperties = {
-    textAlign: 'center',
-    height: '40px',
-    width: '40px',
-    borderRadius: '25%',
-    borderColor: 'rgba(0, 0, 0, 0.0)',
-    backgroundColor: 'rgba(0, 0, 0, 0.0)',
-    cursor: 'pointer',
-    zIndex: 5,
-    top: '0.5rem',
-    right: '0.5rem',
-    position: 'absolute',
-    border: 'none',
-    padding: 0,
-    outline: 'none',
-    boxShadow: 'none',
-  };
-
-
-  const shinyIconStyle = {
-    filter: shinyBtnSelected ? 'grayscale(100%) sepia(100%) saturate(500%)' : 'grayscale(100%)',
-    fontSize: '1.2rem',
-    display: 'inline-block',
-    transition: 'filter 0.2s',
-  };
+  // ...removed inline style, now using CSS module...
 
   return (
-    <div style={cardPkmnStyle} className="card mw-20 m-2 position-relative">
+    <div className={classNames(styles.cardPkmn, 'card', 'mw-20', 'm-2', 'position-relative')}>
       <button
-        style={shinyBtnStyle}
+        className={styles.shinyBtn}
         onClick={() => setShinyBtnSelected(!shinyBtnSelected)}
         aria-label="Toggle shiny sprite"
-        onMouseOver={e => (e.currentTarget.style.backgroundColor = shinyBtnSelected ? 'rgba(239, 239, 153, 0)' : 'rgba(0, 0, 0, 0.0)')}
-        onMouseOut={e => (e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.0)')}
+        // Optionally, you can use a state to toggle a class for hover effect
       >
         <span
-          style={shinyIconStyle}
+          className={styles.shinyIcon}
+          style={{ filter: shinyBtnSelected ? 'grayscale(100%) sepia(100%) saturate(500%)' : 'grayscale(100%)' }}
         >
           ✨
         </span>

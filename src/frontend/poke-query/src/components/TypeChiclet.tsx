@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
+import styles from './TypeChiclet.module.css';
 
 interface TypeChicletProps {
   typeName: string;
@@ -52,26 +54,20 @@ const TypeChiclet: React.FC<TypeChicletProps> = ({ typeName, isStatic, isSmall }
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  const chicletStyleClass : React.CSSProperties = {
-    cursor: isStatic ? 'default' : 'pointer',
-    backgroundColor: isStatic
-      ? typeColor
-      : isActive
-        ? lightenDarkenColor(typeColor, -50)
-        : isHovered
-          ? lightenDarkenColor(typeColor, -20)
-          : typeColor,
-    color: fontColor,
-    transition: 'background-color 0.2s',
-    outline: 'none',
-    boxShadow: 'none',
-    userSelect: 'none',
-  };
-
   return (
     <span
-      className={`rounded-pill font-bold ${chicletClass}`}
-      style={chicletStyleClass}
+      className={classNames(styles.chiclet, 'rounded-pill', chicletClass)}
+      style={{
+        cursor: isStatic ? 'default' : 'pointer',
+        backgroundColor: isStatic
+          ? typeColor
+          : isActive
+            ? lightenDarkenColor(typeColor, -50)
+            : isHovered
+              ? lightenDarkenColor(typeColor, -20)
+              : typeColor,
+        color: fontColor,
+      }}
       tabIndex={-1}
       onFocus={e => { e.currentTarget.style.outline = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
       onBlur={e => { e.currentTarget.style.outline = 'none'; e.currentTarget.style.boxShadow = 'none'; }}

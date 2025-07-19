@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './StatsModal.module.css';
+import classNames from 'classnames';
 
 interface StatsModalProps {
   data: any;
@@ -63,7 +65,7 @@ const StatsModal: React.FC<StatsModalProps> = ({ data }) => {
                         <div className="col-10">
                           <div className="progress">
                             <div
-                              className={`progress-bar bg-${getStatColorClass(stat.base_stat)}`}
+                              className={classNames('progress-bar', `bg-${getStatColorClass(stat.base_stat)}`, styles.statBar)}
                               role="progressbar"
                               style={{ width: `${getStatPercent(stat.base_stat)}%` }}
                               aria-valuenow={stat.base_stat}

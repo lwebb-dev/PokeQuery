@@ -1,16 +1,13 @@
 import React from 'react';
 import TypeModal from './TypeModal';
+import styles from './MoveCard.module.css';
+import classNames from 'classnames';
 
 interface MoveCardProps {
   data: any;
 }
 
-const cardMoveStyle = {
-  borderColor: "#bee4fa",
-  borderWidth: "0.35em",
-  width: "240px",
-  height: "326px"
-};
+// ...removed inline style, now using CSS module...
 
 
 const handleNull = (value: any) => {
@@ -24,7 +21,7 @@ const interpolateEffectChance = (effect: string, chance: any) => {
 
 const MoveCard: React.FC<MoveCardProps> = ({ data }) => {
   return (
-    <div style={cardMoveStyle} className="card mw-20 m-2">
+    <div className={classNames(styles.cardMove, 'card', 'mw-20', 'm-2')}>
       <div className="card-body">
         <h4 className="card-title text-capitalize text-center">
           {data.name?.replaceAll('-', ' ')}
@@ -32,11 +29,11 @@ const MoveCard: React.FC<MoveCardProps> = ({ data }) => {
         <div className="d-flex justify-content-center">
           <TypeModal pkmnType={data.type} />
         </div>
-        <div className="d-flex flex-wrap justify-content-center my-2" style={{ columnGap: '1rem' }}>
-              <p style={{ margin: 0 }}><strong>Power:</strong> {handleNull(data.power)}</p>
-              <p style={{ margin: 0 }}><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
-              <p style={{ margin: 0 }}><strong>PP:</strong> {handleNull(data.pp)}</p>
-              <p className="text-capitalize" style={{ margin: 0 }}><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
+        <div className={classNames(styles.statsRow, 'd-flex', 'flex-wrap', 'justify-content-center', 'my-2')}>
+          <p className={styles.statsText}><strong>Power:</strong> {handleNull(data.power)}</p>
+          <p className={styles.statsText}><strong>Accuracy:</strong> {handleNull(data.accuracy)}</p>
+          <p className={styles.statsText}><strong>PP:</strong> {handleNull(data.pp)}</p>
+          <p className={classNames('text-capitalize', styles.statsText)}><strong>Type:</strong> {handleNull(data.damage_class?.name)}</p>
         </div>
         <div className="d-flex flex-wrap justify-content-center">
           {data.effect_entries && data.effect_entries[0] && (

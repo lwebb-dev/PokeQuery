@@ -28,7 +28,7 @@ def startPokeQueryBackend():
     return
 
 def openFrontendAppInBrowser():
-    os.system("start http://localhost:3000")
+    os.system("start http://localhost:5173")
     return
 
 def startPokeQueryFrontend():

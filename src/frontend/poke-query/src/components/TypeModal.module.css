@@ -1,0 +1,16 @@
+.title-border {
+  border: 1px solid black;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+.title-border h4 {
+  margin-top: -2rem;
+  margin-left: 10px;
+  padding-left: 1rem;
+  background-color: white;
+  display: block;
+  width: 130px;
+}
+.noDecoration {
+  text-decoration: none;
+}

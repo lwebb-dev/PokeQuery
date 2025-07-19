@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
+import styles from './TypeModal.module.css';
 import TypeChiclet from './TypeChiclet';
+import classNames from 'classnames';
 
 interface TypeModalProps {
   pkmnType: any;
@@ -41,10 +43,9 @@ const TypeModal: React.FC<TypeModalProps> = ({ pkmnType }) => {
       {/* Button trigger modal */}
       <button
         type="button"
-        className="btn btn-link p-0 border-0 align-baseline"
+        className={classNames('btn', 'btn-link', 'p-0', 'border-0', 'align-baseline', styles.noDecoration)}
         data-bs-toggle="modal"
         data-bs-target={`#${modalName}`}
-        style={{ textDecoration: 'none' }}
       >
         <TypeChiclet typeName={typeName} isStatic={false} />
       </button>
@@ -79,21 +80,6 @@ const TypeModal: React.FC<TypeModalProps> = ({ pkmnType }) => {
           </div>
         </div>
       </div>
-      <style>{`
-        .title-border {
-          border: 1px solid black;
-          margin-bottom: 1rem;
-          padding: 1rem;
-        }
-        .title-border h4 {
-          margin-top: -2rem;
-          margin-left: 10px;
-          padding-left: 1rem;
-          background-color: white;
-          display: block;
-          width: 130px;
-        }
-      `}</style>
     </>
   );
 };

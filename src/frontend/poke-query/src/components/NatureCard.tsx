@@ -1,16 +1,11 @@
 import React from 'react';
+import styles from './NatureCard.module.css';
+import classNames from 'classnames';
 // TODO: Import statNames from common if needed
 
 interface NatureCardProps {
   data: any;
 }
-
-const cardNatureStyle = {
-  borderColor: "#befad5",
-  borderWidth: "0.35em",
-  width: "240px",
-  height: "326px"
-};
 
 const statNames: Record<string, string> = {
   hp: 'HP',
@@ -23,18 +18,18 @@ const statNames: Record<string, string> = {
 
 const NatureCard: React.FC<NatureCardProps> = ({ data }) => {
   return (
-    <div style={cardNatureStyle} className="card mw-20 m-2">
+    <div className={classNames(styles.cardNature, 'card', 'mw-20', 'm-2')}>
       <div className="card-body">
         <h2 className="mt-2 card-title text-capitalize text-center">
           {data.name}
         </h2>
-        <div className="mt-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className={classNames(styles.statColumn)}>
           {data.increased_stat === null && data.decreased_stat === null ? (
             <h3>Neutral</h3>
           ) : (
             <>
-              <h3>{statNames[data.increased_stat?.name]} <i className="bi bi-arrow-up-circle-fill" style={{ color: '#ff0000' }}></i></h3>
-              <h3>{statNames[data.decreased_stat?.name]} <i className="bi bi-arrow-down-circle-fill" style={{ color: '#0000ff' }}></i></h3>
+              <h3>{statNames[data.increased_stat?.name]} <i className={classNames('bi', 'bi-arrow-up-circle-fill', styles.statUp)}></i></h3>
+              <h3>{statNames[data.decreased_stat?.name]} <i className={classNames('bi', 'bi-arrow-down-circle-fill', styles.statDown)}></i></h3>
             </>
           )}
         </div>

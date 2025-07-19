@@ -1,0 +1,7 @@
+.chiclet {
+  transition: background-color 0.2s;
+  outline: none;
+  box-shadow: none;
+  user-select: none;
+  font-weight: bold;
+}

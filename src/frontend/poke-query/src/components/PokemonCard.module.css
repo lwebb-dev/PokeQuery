@@ -1,0 +1,30 @@
+.cardPkmn {
+  border-color: #f3b6b6;
+  border-width: 0.35em;
+  width: 240px;
+  height: 326px;
+}
+
+.shinyBtn {
+  text-align: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 25%;
+  border-color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0.0);
+  cursor: pointer;
+  z-index: 5;
+  top: 0.5rem;
+  right: 0.5rem;
+  position: absolute;
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+.shinyIcon {
+  font-size: 1.2rem;
+  display: inline-block;
+  transition: filter 0.2s;
+}

@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import styles from './MovesModal.module.css';
+import classNames from 'classnames';
 
 interface MovesModalProps {
   data: any;
@@ -121,7 +123,7 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
             </div>
             <div className="modal-body">
               <div className="container modal-container px-5">
-                <label htmlFor="version-select" className="my-0" style={{ display: 'block' }}>Version(s):</label>
+                <label htmlFor="version-select" className={"my-0 " + styles.labelBlock}>Version(s):</label>
                 <select
                   id="version-select"
                   className="form-select-lg my-3 mt-1 text-capitalize"
@@ -145,7 +147,7 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
                       </button>
                     </h2>
                     <div id={`panelsStayOpen-collapseOne-${modalName}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingOne-${modalName}`}>
-                      <div className="accordion-body scrolling-table">
+              <div className={classNames('accordion-body', styles.scrollingTable)}>
                         <table className="table table-striped table-sm">
                           <thead>
                             <tr>
@@ -175,7 +177,7 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
                       </button>
                     </h2>
                     <div id={`panelsStayOpen-collapseTwo-${modalName}`} className="accordion-collapse collapse" aria-labelledby={`panelsStayOpen-headingTwo-${modalName}`}>
-                      <div className="accordion-body scrolling-table">
+              <div className={classNames('accordion-body', styles.scrollingTable)}>
                         <table className="table table-striped">
                           <thead>
                             <tr>
@@ -203,7 +205,7 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
                       </button>
                     </h2>
                     <div id={`panelsStayOpen-collapseThree-${modalName}`} className="accordion-collapse collapse" aria-labelledby={`panelsStayOpen-headingThree-${modalName}`}>
-                      <div className="accordion-body scrolling-table">
+              <div className={classNames('accordion-body', styles.scrollingTable)}>
                         <table className="table table-striped">
                           <thead>
                             <tr>
@@ -229,7 +231,7 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
                       </button>
                     </h2>
                     <div id={`panelsStayOpen-collapseFour-${modalName}`} className="accordion-collapse collapse" aria-labelledby={`panelsStayOpen-headingFour-${modalName}`}>
-                      <div className="accordion-body scrolling-table">
+              <div className={classNames('accordion-body', styles.scrollingTable)}>
                         <table className="table table-striped">
                           <thead>
                             <tr>
@@ -258,14 +260,6 @@ const MovesModal: React.FC<MovesModalProps> = ({ data }) => {
           </div>
         </div>
       </div>
-      <style>{`
-        .scrolling-table {
-          max-height: 25rem;
-          width: 100%;
-          overflow: auto;
-          display: inline-block;
-        }
-      `}</style>
     </>
   );
 };

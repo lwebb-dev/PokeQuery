@@ -1,0 +1,14 @@
+.cardMove {
+  border-color: #bee4fa;
+  border-width: 0.35em;
+  width: 240px;
+  height: 326px;
+}
+
+.statsRow {
+  column-gap: 1rem;
+}
+
+.statsText {
+  margin: 0;
+}

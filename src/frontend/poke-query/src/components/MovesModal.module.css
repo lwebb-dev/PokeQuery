@@ -1,0 +1,9 @@
+.scrollingTable {
+  max-height: 25rem;
+  width: 100%;
+  overflow: auto;
+  display: inline-block;
+}
+.labelBlock {
+  display: block;
+}
