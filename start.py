@@ -18,9 +18,18 @@ def stopRedis():
     subprocess.check_call("python ./scripts/poke-redis.py down", shell=True)
     return
 
+def stopMongo():
+    subprocess.check_call("python ./scripts/poke-mongo.py down", shell=True)
+    return
+
 def startRedis(newVolumeParam):
     stopRedis()
     subprocess.check_call(f"python ./scripts/poke-redis.py up {newVolumeParam}", shell=True)
+    return
+
+def startMongo(newVolumeParam):
+    stopMongo()
+    subprocess.check_call(f"python ./scripts/poke-mongo.py up {newVolumeParam}", shell=True)
     return
 
 def startPokeQueryBackend():
@@ -58,31 +67,40 @@ def handleInput(input):
             createPokeDataVolume()
             buildEnvFiles("--use-default")
             startRedis("--new-volume")
+            startMongo("--new-volume")
             startPokeQueryBackend()
             startPokeQueryFrontend()
             openFrontendAppInBrowser()
         case "2":
-            buildEnvFiles("--use-default")
-        case "3":
-            buildEnvFiles("")
-        case "4":
-            startRedis("")
-        case "5":
-            startRedis("--new-volume")
-        case "6":
-            stopRedis()
-        case "7":
-            startPokeQueryBackend()
-        case "8":
-            startPokeQueryFrontend()
-        case "9":
-            openFrontendAppInBrowser()
-        case "10":
-            openInVsCode()
-        case "11":
-            openInVisualStudio()
-        case "12":
             createPokeDataVolume()
+        case "3":
+            buildEnvFiles("--use-default")
+        case "4":
+            buildEnvFiles("")
+        case "5":
+            startMongo("")
+        case "6":
+            startMongo("--new-volume")
+        case "7":
+            stopMongo()
+        case "8":
+            startRedis("")
+        case "9":
+            startRedis("--new-volume")
+        case "10":
+            stopRedis()
+        case "11":
+            startPokeQueryBackend()
+        case "12":
+            startPokeQueryFrontend()
+        case "13":
+            openFrontendAppInBrowser()
+        case "14":
+            openInVsCode()
+        case "15":
+            openInVisualStudio()
+        case "16":
+            buildEnvFiles("")
         case "x":
             handleExit()
         case _:
@@ -94,19 +112,23 @@ def handleInput(input):
 def mainMenu(displayOptions):
 
     if (displayOptions):
-        print("Please select from the following options [1-12, X] or Ctrl + C to Exit.")
+        print("Please select from the following options [1-16, X] or Ctrl + C to Exit.")
         print("1. Start Everything From Scratch")
-        print("2. Build/Rebuild .env Files With Default Values")
-        print("3. Build/Rebuild .env Files With User Defined Values")
-        print("4. Start Redis Container")
-        print("5. Start Redis Container With New Volume")
-        print("6. Stop Redis Container")
-        print("7. Start PokeQuery Backend")
-        print("8. Start poke-query Frontend")
-        print("9. Open Frontend App In Browser")
-        print("10. Open Repo in VS Code")
-        print("11. Open PokeQuery.sln")
-        print("12. Create PokeData Volume")
+        print("2. Create PokeData Volume")
+        print("3. Build/Rebuild .env Files With Default Values")
+        print("4. Build/Rebuild .env Files With User Defined Values")
+        print("5. Start Mongo Container")
+        print("6. Start Mongo Container With New Volume")
+        print("7. Stop Mongo Container")
+        print("8. Start Redis Container")
+        print("9. Start Redis Container With New Volume")
+        print("10. Stop Redis Container")
+        print("11. Start PokeQuery Backend")
+        print("12. Start poke-query Frontend")
+        print("13. Open Frontend App In Browser")
+        print("14. Open Repo in VS Code")
+        print("15. Open PokeQuery.sln")
+        print("16. Build/Rebuild .env Files With User Defined Values")
         print("X. Exit/Quit")
 
     handleInput(lowerInput("Input Value: "))

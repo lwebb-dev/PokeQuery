@@ -2,8 +2,8 @@ import sys, os
 
 repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 projects = [ "src/backend/PokeQuery", "src/frontend/poke-query" ]
-envVars = [ "MAX_RESULT_SIZE", "API_BASE_URI", "REDIS_CONNECTION_STRING" ]
-defaultValues = [ 12, "http://localhost:5112", "localhost:6379" ]
+envVars = [ "MAX_RESULT_SIZE", "API_BASE_URI", "REDIS_CONNECTION", "MONGO_CONNECTION" ]
+defaultValues = [ 12, "http://localhost:5112", "localhost:6379", "mongodb://root:example@mongo:27017/" ]
 useDefaultValues = len(sys.argv) == 2 and sys.argv[1].lower() == "--use-default"
 values = []
 

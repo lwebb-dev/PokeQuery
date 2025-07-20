@@ -20,6 +20,34 @@ services:
     volumes:
     - poke-redis:/data
 
+  mongo:
+    image: mongo
+    container_name: mongo
+    profiles: [all, backend, mongo]
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - poke-mongo:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    profiles: [all, backend, mongo]
+    depends_on:
+      - mongo
+    restart: always
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+
 
   frontend:
     image: pokequery-frontend
@@ -42,6 +70,7 @@ services:
     profiles: [all, backend, loader]
     depends_on:
         - redis-stack
+        - mongo
     build:
         context: src/backend/PokeLoader
         dockerfile: Dockerfile
@@ -50,6 +79,7 @@ services:
     environment:
       CACHE_DIRECTORY: /poke-data
       REDIS_CONNECTION: redis-stack
+      MONGO_CONNECTION: mongodb://root:example@mongo:27017/
 
   api:
     image: pokequery-api
@@ -64,9 +94,12 @@ services:
       - "5112:80"
     environment:
       REDIS_CONNECTION: redis-stack
+      MONGO_CONNECTION: mongodb://root:example@mongo:27017/
 
 volumes:
   poke-data:
     driver: local
   poke-redis:
+    driver: local
+  poke-mongo:
     driver: local
