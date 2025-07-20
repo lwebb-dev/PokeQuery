@@ -99,8 +99,6 @@ def handleInput(input):
             openInVsCode()
         case "15":
             openInVisualStudio()
-        case "16":
-            buildEnvFiles("")
         case "x":
             handleExit()
         case _:
@@ -112,7 +110,7 @@ def handleInput(input):
 def mainMenu(displayOptions):
 
     if (displayOptions):
-        print("Please select from the following options [1-16, X] or Ctrl + C to Exit.")
+        print("Please select from the following options [1-15, X] or Ctrl + C to Exit.")
         print("1. Start Everything From Scratch")
         print("2. Create PokeData Volume")
         print("3. Build/Rebuild .env Files With Default Values")
@@ -128,7 +126,6 @@ def mainMenu(displayOptions):
         print("13. Open Frontend App In Browser")
         print("14. Open Repo in VS Code")
         print("15. Open PokeQuery.sln")
-        print("16. Build/Rebuild .env Files With User Defined Values")
         print("X. Exit/Quit")
 
     handleInput(lowerInput("Input Value: "))

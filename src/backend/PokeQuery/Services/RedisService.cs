@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PokeQuery.Services
 {
-    public class RedisService : IRedisService
+    public class RedisService : IQueryService
     {
         private readonly IConnectionMultiplexer redis;
         private readonly IDatabase db;
