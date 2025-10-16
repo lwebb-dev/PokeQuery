@@ -22,8 +22,8 @@ repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 if (len(sys.argv) == 3 and sys.argv[2].lower() == "--new-volume"):
 
-    if (os.path.exists(f"{repoRoot}\docker\{volumeName}") == False):
-        os.mkdir(f"{repoRoot}\docker\{volumeName}")
+    if (os.path.exists(f"{repoRoot}/docker/{volumeName}") == False):
+        os.mkdir(f"{repoRoot}/docker/{volumeName}")
 
     if volumeName in subprocess.run(f"docker volume rm {volumeName} --force", capture_output=True).stdout.decode("utf-8"):
         print(f"Volume {volumeName} deleted successfully.")
@@ -38,7 +38,7 @@ if (sys.argv[1].lower() == "up"):
     os.system(f"docker run --name mongo-express --link {volumeName}:mongo -e ME_CONFIG_MONGODB_ADMINUSERNAME=root -e ME_CONFIG_MONGODB_ADMINPASSWORD=example -e ME_CONFIG_MONGODB_URL=mongodb://root:example@mongo:27017/ -e ME_CONFIG_BASICAUTH=false -p 8082:8081 -d mongo-express")
 
 if (sys.argv[1].lower() == "down"):
-    os.system(f"docker stop mongo-express")
-    os.system(f"docker rm mongo-express --force")
-    os.system(f"docker stop {volumeName}")
-    os.system(f"docker rm {volumeName} --force")
+    os.system(f"docker stop mongo-express 2>nul")
+    os.system(f"docker rm mongo-express --force 2>nul")
+    os.system(f"docker stop {volumeName} 2>nul")
+    os.system(f"docker rm {volumeName} --force 2>nul")

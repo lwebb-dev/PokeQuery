@@ -1,6 +1,7 @@
 .vs
 .vscode
 .env
+appsettings.Development.json
 
 **/bin/
 **/obj/

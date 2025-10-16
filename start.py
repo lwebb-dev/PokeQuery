@@ -56,6 +56,10 @@ def createPokeDataVolume():
     subprocess.Popen("python ./scripts/create-poke-data-volume.py", shell=True)
     return
 
+def runPokeLoader():
+    subprocess.check_call("python ./scripts/run-poke-loader.py", shell=True)
+    return
+
 def lowerInput(prompt):
     return input(prompt).lower()
 
@@ -68,6 +72,7 @@ def handleInput(input):
             buildEnvFiles("--use-default")
             startRedis("--new-volume")
             startMongo("--new-volume")
+            runPokeLoader()
             startPokeQueryBackend()
             startPokeQueryFrontend()
             openFrontendAppInBrowser()
@@ -90,14 +95,16 @@ def handleInput(input):
         case "10":
             stopRedis()
         case "11":
-            startPokeQueryBackend()
+            runPokeLoader()
         case "12":
-            startPokeQueryFrontend()
+            startPokeQueryBackend()
         case "13":
-            openFrontendAppInBrowser()
+            startPokeQueryFrontend()
         case "14":
-            openInVsCode()
+            openFrontendAppInBrowser()
         case "15":
+            openInVsCode()
+        case "16":
             openInVisualStudio()
         case "x":
             handleExit()
@@ -110,7 +117,7 @@ def handleInput(input):
 def mainMenu(displayOptions):
 
     if (displayOptions):
-        print("Please select from the following options [1-15, X] or Ctrl + C to Exit.")
+        print("Please select from the following options [1-16, X] or Ctrl + C to Exit.")
         print("1. Start Everything From Scratch")
         print("2. Create PokeData Volume")
         print("3. Build/Rebuild .env Files With Default Values")
@@ -121,11 +128,12 @@ def mainMenu(displayOptions):
         print("8. Start Redis Container")
         print("9. Start Redis Container With New Volume")
         print("10. Stop Redis Container")
-        print("11. Start PokeQuery Backend")
-        print("12. Start poke-query Frontend")
-        print("13. Open Frontend App In Browser")
-        print("14. Open Repo in VS Code")
-        print("15. Open PokeQuery.sln")
+        print("11. Run PokeLoader (Load data into Redis/Mongo)")
+        print("12. Start PokeQuery Backend")
+        print("13. Start poke-query Frontend")
+        print("14. Open Frontend App In Browser")
+        print("15. Open Repo in VS Code")
+        print("16. Open PokeQuery.sln")
         print("X. Exit/Quit")
 
     handleInput(lowerInput("Input Value: "))
