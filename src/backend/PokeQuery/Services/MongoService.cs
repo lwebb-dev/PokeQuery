@@ -39,9 +39,12 @@ public class MongoService : IQueryService
 
     public async Task<IEnumerable<string>> GetJsonResultsByPatternAsync(string pattern)
     {
+        // Strip the Redis-style ":*" pattern for MongoDB collection lookup
+        string collectionPrefix = pattern.Replace(":*", "");
+
         IAsyncCursor<string> collections = await database.ListCollectionNamesAsync();
         List<string> matchedCollections = collections.ToList()
-            .Where(name => name.Contains(pattern)).ToList();
+            .Where(name => name == collectionPrefix || name.StartsWith(collectionPrefix + "_")).ToList();
         List<string> results = new List<string>();
 
         foreach (string collectionName in matchedCollections)
