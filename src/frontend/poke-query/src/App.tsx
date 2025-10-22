@@ -7,6 +7,7 @@ import PokemonCard from './components/PokemonCard';
 import ItemCard from './components/ItemCard';
 import MoveCard from './components/MoveCard';
 import NatureCard from './components/NatureCard';
+import { filterPokemonResults } from './utils/pokemonFilters';
 
 const API_BASE_URI = import.meta.env.VITE_API_BASE_URI || '';
 
@@ -38,6 +39,7 @@ const App: React.FC = () => {
     });
     if (!res.ok) throw new Error('API FAILED TO RETURN 200 OK ON /search');
     const data = await res.json();
+    console.log(data);
     return data.map((x: string) => JSON.parse(x));
   };
 
@@ -140,10 +142,12 @@ const App: React.FC = () => {
           <span className={classNames(styles.cardContainerSpinner, 'spinner-border', 'text-primary')} role="status"></span>
         ) : (
           <>
-            {[...pkmnResults.filter(x => x.is_default),
+            {[
+              ...filterPokemonResults(pkmnResults),
               ...itemResults.filter(x => !x.name.includes('-candy')),
               ...moveResults,
-              ...natureResults].slice(0, 12).map((result, idx) => {
+              ...natureResults
+            ].slice(0, 12).map((result, idx) => {
               let CardComponent;
               if (result.types) CardComponent = PokemonCard;
               else if (result.power !== undefined || result.accuracy !== undefined || result.pp !== undefined) CardComponent = MoveCard;
