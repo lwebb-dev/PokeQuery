@@ -1,0 +1,16 @@
+.queryWrapper {
+  margin-top: 1rem;
+}
+
+.searchInput {
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.btnSearch {
+  margin-left: 0;
+}
+
+.cardContainerSpinner {
+  font-size: 2rem;
+}
