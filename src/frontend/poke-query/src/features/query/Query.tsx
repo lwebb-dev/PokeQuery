@@ -92,7 +92,7 @@ const Query: React.FC = () => {
 
   return (
     <div className={classNames(styles.queryWrapper, 'container-fluid', 'my-3')}>
-      <h1 className="row mb-3 justify-content-center">PokeQuery</h1>
+      {/* <h1 className="row mb-3 justify-content-center">PokeQuery</h1> */}
       <div className="row d-flex justify-content-center mb-4 align-items-center">
         <div className={classNames(styles.searchInput, 'col', 'col-lg-3')}>
           <input
