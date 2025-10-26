@@ -62,5 +62,10 @@ namespace PokeQuery.Services
             IServer server = this.redis.GetServer(this.redis.GetEndPoints().First());
             return server.Keys(pattern: pattern);
         }
+
+        public Task<string> GetPokemonNamesAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
