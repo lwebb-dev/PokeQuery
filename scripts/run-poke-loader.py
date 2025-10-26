@@ -1,7 +1,7 @@
 import os, subprocess
 
 repoRoot = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-loaderDir = f"{repoRoot}\\src\\backend\\PokeLoader"
+loaderDir = rf"{repoRoot}\src\backend\PokeLoader"
 
 print("Building PokeLoader image...")
 subprocess.check_call(f"docker build -t pokequery-loader {loaderDir}", shell=True)

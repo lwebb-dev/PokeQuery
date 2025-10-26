@@ -16,7 +16,7 @@ From the repository root directory, run `python start.py` and select the first (
 
 1. Run a bash script in a docker container to cache bulk data from PokeApi repo to a dedicated poke-data volume.
 2. Build .env files for each project using the default values.
-3. Start separate Redis and MongoDB docker containers with empty volumes.\
+3. Start separate Redis and MongoDB docker containers with empty volumes.
 4. Run PokeLoader in a docker container using the poke-data volume, which will then mount the data into both the Redis Cache and MongoDB Database.
 5. Start the PokeQuery backend Rest API project.
 6. Start the poke-query frontend React app.

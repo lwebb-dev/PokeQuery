@@ -85,4 +85,21 @@ public class MongoService : IQueryService
 
         return doc.ToJson();
     }
+
+    public async Task<string> GetPokemonNamesAsync()
+    {
+        IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>("pokemon");
+
+        ProjectionDefinition<BsonDocument> projection = Builders<BsonDocument>.Projection
+            .Include("id")
+            .Include("name")
+            .Exclude("_id");
+
+        List<BsonDocument> docs = await collection
+            .Find(FilterDefinition<BsonDocument>.Empty)
+            .Project(projection)
+            .ToListAsync();
+
+        return docs.ToJson();
+    }
 }

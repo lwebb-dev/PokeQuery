@@ -8,4 +8,5 @@ public interface IQueryService
     Task<IEnumerable<string>> QueryIndexJsonAsync(string index, string query);
     Task<IEnumerable<string>> GetJsonResultsByPatternAsync(string pattern);
     Task<string> GetJsonResultAsync(string key, string[] paths = null);
+    Task<string> GetPokemonNamesAsync();
 }
